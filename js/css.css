@@ -1,0 +1,137 @@
+:root {
+	--bg-color: #ffffff;
+	--tx-color: #000000;
+	--cb-color: #eeeeee;
+	--ct-color: #aaaaaa;
+	--br-radius: 8pt;
+}
+
+html {
+	line-height:1.2;
+	font-family: Inter;
+	color: var(--tx-color);
+	font-display: auto;
+}
+
+body {
+	margin:0;
+}
+
+body,
+*, * > * {
+	box-sizing: border-box;
+}
+
+h1,h2,h3,h4,h5,h6 {
+	margin: 0;
+	letter-spacing: -.03em;
+}
+
+p {
+	margin: .1em 0;
+	word-wrap: break-word;
+	word-break: break-all;
+}
+
+header {
+	display: flex;
+	flex-flow: row nowrap;
+	align-content: center;
+	align-items: center;
+	justify-content: flex-start;
+	margin: 20px;
+	padding: calc(3em - 20px);
+	height: auto;
+	width: auto;
+}
+
+main {
+	display: flex;
+	margin: 20px;
+}
+
+.rounded-element {
+	padding: 20px;
+	border-radius: var(--br-radius);
+	box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.1);
+	background-color: var(--bg-color);
+}
+
+main aside {
+	flex: 0 1 25vw;
+	margin-right: 20px;
+}
+.scroll {
+	overflow: scroll;
+}
+.division {
+	width: 100%;
+	margin-bottom: 20px;
+}
+#content {
+	flex: 1 1 auto;
+	font-family: 'Calling Code';
+}
+#content > * {
+	margin-bottom: 20px;
+}
+#art-res,
+#art-con {
+	height: 200px;
+}
+#art-res {
+	display: flex;
+	flex-flow: row nowrap;
+}
+#div-taq {
+	flex: 0 0 200px;
+	padding: 15px;
+	height: 200px;
+	margin-right: 20px;
+	font-family: Inter;
+}
+.plateau {
+	display: flex;
+	flex-flow: row wrap;
+	align-content: space-around;
+	align-items: center;
+	justify-content: space-around;
+	height: 100%;
+	width: 100%;
+}
+.case {
+	display: flex;
+	flex-flow: row nowrap;
+	align-content: center;
+	align-items: center;
+	align-self: center;
+	justify-content: center;
+	font-weight: bold;
+	border-radius: 3pt;
+	border: 1px solid var(--ct-color);
+	background-color: var(--cb-color);
+	color: var(--ct-color);
+}
+.case.vide {
+	border: 1px solid var(--ct-color);
+	background-color: var(--bg-color);
+}
+#div-res {
+	flex: 1 1 auto;
+}
+.form-section {
+	position: relative;
+	display:flex;
+	flex-flow: column nowrap;
+	margin-bottom: 20px;
+}
+.form-section > h3 {
+	margin-bottom: .5em;
+}
+.form-section label {
+	margin-bottom: .5em;
+}
+:not(input) + input {
+	position: relative;
+	margin: 2em .75em 2em 0;
+}

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Le Taquin</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" media="screen" href="./css.css">
+	<script src="./js.js" defer></script>
+</head>
+<body>
+	<header class="rounded-element">
+		<div></div>
+		<h1 id="title">Le Taquin</h1>
+		<div></div>
+	</header>
+	<main>
+		<aside>
+			<form action="" id="form-mc">
+				<div class="form-section rounded-element">
+					<h3>Paramètres :</h3>
+					<label>Side Length : <input type="number" name="side-length" min="3" value="3" max="10" id="inp-cod"></label>
+				</div>
+				<div class="form-section rounded-element">
+					<label><input type="button" value="Generate" id="but-gen"></label>
+					<label><input type="button" value="Clear Results" id="but-clr-res"></label>
+					<label><input type="button" value="Clear Console" id="but-clr-con"></label>
+				</div>
+			</form>
+		</aside>
+		<section id="content">
+			<article id="art-res" class="division">
+				<div id="div-taq" class="rounded-element"></div>
+				<div id="div-res" class="rounded-element scroll"></div>
+			</article>
+			<article id="art-con" class="division rounded-element scroll"></article>
+		</section>
+	</main>
+
+</body>
+</html>

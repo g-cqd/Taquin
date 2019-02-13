@@ -9,7 +9,6 @@ class generationTaquin:
     def setLargeur(self, Largeur):
         self._Largeur= Largeur
     def generation(self):
-        temps = time.time()
         grilleSolvable = False
         while(grilleSolvable == False):
             liste_init = []

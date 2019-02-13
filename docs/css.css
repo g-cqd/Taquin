@@ -76,9 +76,9 @@ main aside {
 #content > * {
 	margin-bottom: 20px;
 }
-#art-res,
+#div-res,
 #art-con {
-	min-height: 200px;
+	height: 200px;
 }
 #art-res {
 	display: flex;
@@ -147,16 +147,11 @@ main aside {
 	}
 	#art-res {
 		flex-flow: column;
+		height: auto;
 	}
 	#div-taq {
 		align-self: center;
 		margin-bottom: 20px;
 		width: 200px;
-	}
-	#div-res {
-		min-height: 200px;
-	}
-	#art-con {
-		display: block;
 	}
 }

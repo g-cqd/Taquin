@@ -49,6 +49,7 @@ class Taquin {
 		this.sequence = number_sequence;
 		this.sequence.__shuffle__();
 		while (!this.solvable()) {
+			__log__("raté");
 			this.sequence.__shuffle__();
 		}
 		return number_sequence;

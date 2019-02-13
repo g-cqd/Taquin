@@ -37,6 +37,6 @@
 - [x] Création d'une interface Web et génération (JS) de grille de taquins (solvables et non solvables)
 ### 19-02-12
 - [x] Algorithme de Solvabilité (JS)
-- [x] Algorithme de Solvabilité (Python) -> Mélanie
+- [x] Algorithme de Solvabilité (Python) -> @westhood77
 ### 19-02-12
-- [x] Algorithme de Solvabilité (Python) -> Guillaume
+- [x] Algorithme de Solvabilité (Python) -> @originecode

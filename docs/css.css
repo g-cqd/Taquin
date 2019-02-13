@@ -69,6 +69,7 @@ main aside {
 	margin-bottom: 20px;
 }
 #content {
+	position: relative;
 	flex: 1 1 auto;
 	font-family: 'SF Mono','Courier New', Courier, monospace;
 }
@@ -77,7 +78,7 @@ main aside {
 }
 #art-res,
 #art-con {
-	height: 200px;
+	min-height: 200px;
 }
 #art-res {
 	display: flex;
@@ -134,4 +135,28 @@ main aside {
 :not(input) + input {
 	position: relative;
 	margin: 2em .75em 2em 0;
+}
+
+@media screen and (max-width:  800px) {
+	main {
+		flex-flow: column nowrap;
+	}
+	main aside {
+		flex: 1 1 auto;
+		margin-right: 0;
+	}
+	#art-res {
+		flex-flow: column;
+	}
+	#div-taq {
+		align-self: center;
+		margin-bottom: 20px;
+		width: 200px;
+	}
+	#div-res {
+		min-height: 200px;
+	}
+	#art-con {
+		display: block;
+	}
 }

@@ -9,7 +9,8 @@ class generationTaquin:
     def setLargeur(self, Largeur):
         self._Largeur= Largeur
     def generation(self):
-        grilleSolvable = False   
+        temps = time.time()
+        grilleSolvable = False
         while(grilleSolvable == False):
             liste_init = []
             listeFin = []
@@ -24,7 +25,7 @@ class generationTaquin:
             permute = True
             print(liste_init)
             random.shuffle(liste_init)
-            
+
             for item in liste_init:
                 listeFin.append(item)
 
@@ -42,7 +43,6 @@ class generationTaquin:
                         nombrePermutation = nombrePermutation+1
                         permute = True
                     j = j+1
-            
             if((self.getLargeur()%2==1)and(nombrePermutation%2==0)):
                 grilleSolvable = True
             if((self.getLargeur()%2==0)and((self.getLargeur()-ceil(listeFin.index('X')/4))%2==0)and(nombrePermutation%2==1)):
@@ -50,10 +50,6 @@ class generationTaquin:
             if((self.getLargeur()%2==0)and((self.getLargeur()-ceil(listeFin.index('X')/4))%2==1)and(nombrePermutation%2==0)):
                 grilleSolvable = True
         return listeFin
-
-
-
-        
 
 class __main__:
     Largeur = int(input("Dimensions de la grille?"))

@@ -15,14 +15,7 @@ clr_con_el.addEventListener("click", function () {
 	art_con.innerHTML = "";
 }, false);
 
-function __contains__(list, number) {
-	for (var i = 0; i < list.length; i++) {
-		if (number == list[i]) {
-			return true;
-		}
-	}
-	return false;
-}
+
 function __rand__(max,min=0) {
 	return Math.floor( min + (max+1-min) * Math.random() );
 }
@@ -45,10 +38,10 @@ class Taquin {
 		this.cote = cote;
 		this.taille = cote*cote;
 		this.sequence = null;
-		this.solution = this.generate(this.taille, 1);
+		this.solution = this.generate();
 	}
-	generate(taille) {
-		var number_sequence = new Array(taille);
+	generate() {
+		var number_sequence = new Array(this.taille);
 		for (var i = 0; i < number_sequence.length-1; i++) {
 			number_sequence[i] = i+1;
 		}

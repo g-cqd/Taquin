@@ -38,5 +38,5 @@
 ### 19-02-12
 - [x] Algorithme de Solvabilité (JS)
 - [x] Algorithme de Solvabilité (Python) -> @westhood77
-### 19-02-12
+### 19-02-13
 - [x] Algorithme de Solvabilité (Python) -> @originecode

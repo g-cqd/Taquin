@@ -23,17 +23,20 @@
 
 
 ## A Faire
-- [ ] Algorithme de génération de grille aléatoire
-- [ ] Algorithme de vérification de solvabilité d'une grille
+- [x] Algorithme de génération de grille aléatoire
+- [x] Algorithme de vérification de solvabilité d'une grille
 - [ ] Algorithme de calcul des coups possibles à partir d'un état
 - [ ] Trouver la structure de données adéquate
-- [ ]	Implémentation du parcours
+- [ ] Implémentation du parcours
 
 
 
 ## Avancement
 
-### - 19-02-11
+### 19-02-11
 - [x] Création d'une interface Web et génération (JS) de grille de taquins (solvables et non solvables)
-### - 19-02-12
+### 19-02-12
 - [x] Algorithme de Solvabilité (JS)
+- [x] Algorithme de Solvabilité (Python) -> Mélanie
+### 19-02-12
+- [x] Algorithme de Solvabilité (Python) -> Guillaume

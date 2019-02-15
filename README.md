@@ -40,3 +40,7 @@
 - [x] Algorithme de Solvabilité (Python) -> @westhood77
 ### 19-02-13
 - [x] Algorithme de Solvabilité (Python) -> @originecode
+### 19-02-14
+- [x] Réécriture des classes -> @originecode
+	- Préparation à la détection des coups
+	- Préparation à la génération d'enfant

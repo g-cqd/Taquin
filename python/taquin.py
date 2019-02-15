@@ -1,89 +1,109 @@
 from random import shuffle
 
-class Sequence(list):
-	def __grd__(self, size):
-		g = Sequence([None]*size)
-		for i in range(0, size):
-			e = Sequence([None]*size)
-			for j in range(0,size):
-				e[j] = self[(i * size) + j]
-			g[i] = e
-		return g
-	def __lst__(self):
-		l = Sequence([])
-		for i in self:
-			l += self[i]
-		return l
-	def __inv__(self):
-		if len(self):
-			if isinstance(self[0], Sequence): r = self.__lst__()
-			else: r = self
-			n = 0
-			l = len(r)
-			for i in range(0, l):
-				for j in range(i+1, l):
-					if isinstance(r[i], int) and isinstance(r[j], int) and r[i] > r[j]:
-						n += 1
-		else: return False
-		return n
+# Ce qu'il faut :
+#	- Séquence
+# 		=> liste || grille
+#		=> Calcul d'inversions
+#		=> Calcul de Swap Disponibles (mode mono ou multi)
+#		=> Position du Blank
+#		=> Calcul de Solvabilité
+#	- Taquin
+# 		+ Contenu
+# 		+ Chemin
+#		+ Parent
+#	- Environnement
+#		+ Largeur
+#		+ Taille
+#		+ Dico des Etats Explores
+#		+ Liste Frontiere
 
-class Taquin:
-	def __init__(self, sequence, move="Z"):
-		self.sequence = sequence
-		self.move = move
+class Sequence(list):
+	"""Liste à une ou deux dimensions"""
+	def __type__(self):
+		"""Retourne le type de séquence : True => Grille ; False => Liste"""
+		return isinstance(self[0], Sequence)
+	def __grid__(self,width):
+		"""Conversion d'une liste à une dimension en liste à deux dimensions."""
+		x = Sequence([None]*width)
+		for i in range(0, width):
+			y = Sequence([None]*width)
+			for j in range(0,width):
+				y[j] = self[(i * width) + j]
+			x[i] = y
+		return x
+	def __list__(self):
+		x = Sequence([])
+		for i in self:
+			x += self[i]
+		return x
+	def __invr__(self):
+		if len(self):
+			x = self.__list__() if self.__type__() else self
+			y = 0
+			z = len(x)
+			for i in range(0, z):
+				for j in range(i+1, z):
+					y += 1 if (isinstance(x[i], int) and isinstance(x[j], int) and x[i] > x[j]) else 0
+		else: return False
+		return y
+	def __row__(self,width):
+		x = self.__grid__(width)
+		for i in range(0, width):
+			for j in range(0, width):
+				if (x[i][j] == None):
+					return i+1
+	def __test__(self, width):
+		x = self.__invr__()
+		y = self.__row__(width)
+		return True if (((width % 2 == 1) and (x % 2 == 0)) or ((width % 2 == 0) and ((y % 2 == 1) == (x % 2 == 0)))) else False
+	def __move__(self):
+		#return sorted_array_of_possible_moves
+		pass
+	@staticmethod
+	def __act__(taquin, move):
+		#return sequence_after_move
+		pass
+	@staticmethod
+	def magic(width, rand=0):
+		size = width*width
+		if rand == 1:
+			x = Sequence([None]*size)
+			for i in range(1, size):
+				x[i-1] = i
+			shuffle(x)
+			while not x.__test__(width):
+				shuffle(x)
+		return x
 
 class Environment:
-	def __init__(self, size):
-		self._size	= size
-		self._length= size * size
-		self._start = None
-		self._end	= self.__ini__()
-		self._valid	= self.__gen__()
-	def __len__(self):
-		return self._length
-	def __ini__(self):
-		l = Sequence([None]*self._length)
-		for i in range(1,self._length):
-			l[i-1] = i
-		return l
-	def __gen__(self):
-		l = self.__ini__()
-		shuffle(l)
-		self._start = l
-		while not self.__chk__():
-			shuffle(l)
-			self._start = l
-		return True
-	def __row__(self):
-		g = self._start.__grd__(self._size)
-		for i in range(0, self._size):
-			for j in range(0, self._size):
-				if (g[i][j] == None): return i+1
-	def __inv__(self):
-		return self._start.__inv__()
-	def __chk__(self):
-		if ((self._size % 2 == 1) and (self.__inv__() % 2 == 0)) or ((self._size % 2 == 0) and ((self.__row__() % 2 == 1) == (self.__inv__() % 2 == 0))):
-			return True
+	def __init__(self, width):
+		self.number = 0
+		self.width = width
+		self.size = width * width
+		self.start = Taquin(self)
+
+class Taquin:
+	def __init__(self,env,prev=None,move=None,sequence=None):
+		self.number = env.number
+		env.number += 1
+		self.env = env
+		self.prev = prev
+		if sequence == None:
+			if prev == None:
+				if move == None:
+					self.table = Sequence.magic(self.env.width, 1)
+					self.path = ""
+				else:
+					self.table = Sequence([])
+					self.path = self.prev.path + move
+			else:
+				if move != None:
+					self.table = Sequence([])
+					self.path = self.prev.path + move
 		else:
-			return False
-	# Properties
-	def __size__(self):
-		return self._size
-	size = property(__size__)
-	def __end__(self):
-		return self._end.__grd__(self._size)
-	end = property(__end__)
-	def __start__(self):
-		return self._start.__grd__(self._size)
-	start = property(__start__)
-	inversions = property(__inv__)
-	validity = property(__chk__)
+			self.table = Sequence(sequence)
+			self.path = ""
 
 class __main__:
-	size = int(input("Saisissez la largeur de votre Taquin : "))
-	a = Environment(size)
-	print(a.size)
-	print(len(a))
-	print(a.start)
-	print(a.end)
-	print(a.inversions)
+	e = Environment(3)
+	print(e.start.path)

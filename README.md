@@ -37,10 +37,12 @@
 - [x] Création d'une interface Web et génération (JS) de grille de taquins (solvables et non solvables)
 ### 19-02-12
 - [x] Algorithme de Solvabilité (JS)
-- [x] Algorithme de Solvabilité (Python) -> @westhood77
+- [x] @westhood77 : Algorithme de Solvabilité (Python)
 ### 19-02-13
-- [x] Algorithme de Solvabilité (Python) -> @originecode
+- [x] @originecode : Algorithme de Solvabilité (Python)
 ### 19-02-14
-- [x] Réécriture des classes -> @originecode
+- [x] @originecode : Réécriture des classes
 	- Préparation à la détection des coups
 	- Préparation à la génération d'enfant
+### 19-02-16
+- [x] @originecode : Réécriture des classes (suite)

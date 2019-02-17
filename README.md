@@ -46,3 +46,11 @@
 	- Préparation à la génération d'enfant
 ### 19-02-16
 - [x] @originecode : Réécriture des classes (suite)
+
+### 19-02-17
+- [x] @westhood77: ajout fonctions
+	- situation dans le repère (x,y) d'une tuile
+	- inversion de deux tuiles
+	- coups possibles
+	- jouer coups
+	- commencement de la fonction distance de Manhattan

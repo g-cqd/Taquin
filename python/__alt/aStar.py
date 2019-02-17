@@ -12,14 +12,14 @@ class arbre:
 class aStarResolving:
     def __init__(self,taquin):
         self._taquin = taquin
-    
     def setTaquin(self, taquin):
         self._taquin=taquin
     def getTaquin(self):
         return self._taquin
-    
+
+    # -- implémenté --
     def list(self):
-        #transforme matrice en liste 
+        #transforme matrice en liste
         x = []
         i = 0
         while(i<len(self._taquin)):
@@ -37,6 +37,7 @@ class aStarResolving:
         taquin[x2][y2] = taquin[x1][y1]
         return taquin
 
+    # -- implémenté --
     def positionTuile(self,numeroTuile):
         #renvoie la position d'une tuile sous forme de liste [x,y]
         taquinL = self.list()
@@ -44,7 +45,7 @@ class aStarResolving:
         indice = 0
         for i in taquinL:
             if(taquinL[i]==numeroTuile):
-                
+
                 indice = i
                 break
 
@@ -57,12 +58,11 @@ class aStarResolving:
         print(coordonneees)
         return coordonneees
 
-
+    # -- implémenté --
     def coupsPossibles(self):
         #renvoie la liste des coups possibles
         coord = self.positionTuile('X')
         coupsP = []
-
         if(coord[0] != 3):
             coupsP.append('right')
         if(coord[0]!= 1):
@@ -73,22 +73,18 @@ class aStarResolving:
             coupsP.append('down')
         print(coupsP)
         return coupsP
-    
+
     def jouerCoup(self,coup):
-        #joue un coup
         blanc = self.positionTuile('X')
         if(coup =='right'):
             x = blanc[0]-1
             y = blanc[1]
-            
         if(coup =='left'):
             x = blanc[0]+1
             y = blanc[1]
-
         if(coup == 'up'):
             x = blanc[0]
             y = blanc[1]+1
-
         if(coup == 'down'):
             x = blanc[0]
             y = blanc[1]-1
@@ -114,7 +110,7 @@ class aStarResolving:
             if((i)%dimensions != 0 ):
                 posX = i%dimensions
             posY = int(ceil(float((i))/float(dimensions)))
-            distanceM += abs(pos[0] - posX) + abs(pos[1] - posY) 
+            distanceM += abs(pos[0] - posX) + abs(pos[1] - posY)
             i+=1
         return distanceM
 

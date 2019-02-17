@@ -26,7 +26,7 @@ class Environnement(object):
 
 
 # Pas encore implémenté
-class Case(object):
+class Tile(object):
 	def __init__(self,number,x,y):
 		self.number = number
 		self.coord = (x,y)
@@ -81,24 +81,33 @@ class Taquin(object):
 					y += 1 if (isinstance(x[i], int) and isinstance(x[j], int) and x[i] > x[j]) else 0
 		else: return False
 		return y
-	def __row__(self):
-		sizes = self.environment.sizes
+	def __posn__(self,item=None):
+		width = self.environment.sizes[0]
 		x = self.__mtrx__()
-		for i in range(0, sizes[0]):
-			for j in range(0, sizes[0]):
-				if (x[i][j] == None):
-					return i+1
+		for i in range(0, width):
+			for j in range(0, width):
+				if x[i][j] == item: return (i,j)
 	def __move__(self):
-		#return sorted_array_of_possible_moves
-		pass
-	def __act__(self,previous,move):
-		#return sequence_after_move
-		return self.matrix
+		coord = self.__posn__()
+		width = self.environment.sizes[0]-1
+		moves = []
+		if coord[0] != width: moves.append('right')
+		if coord[0] != 0: moves.append('left')
+		if coord[1] != width: moves.append('up')
+		if coord[1] != 0: moves.append('down')
+		return moves
+#
+#
+# 	def __act__(self,previous,move):
+#		for direction in ['left', 'up', 'right', 'down']:
+#		return self.matrix
+
+
 	def __test__(self):
 		sizes = self.environment.sizes
 		x = self.__invr__()
-		y = self.__row__()
-		return True if (((sizes[0] % 2 == 1) and (x % 2 == 0)) or ((sizes[0] % 2 == 0) and ((y % 2 == 1) == (x % 2 == 0)))) else False
+		y = (self.__posn__())[0]+1
+		return True if (((sizes[0] % 2 == 1) and (x % 2 == 0)) or ((sizes[0] % 2 == 0) and ((y[0] % 2 == 1) == (x % 2 == 0)))) else False
 	def magic(self, r=0):
 		sizes = self.environment.sizes
 		x = [None]*sizes[1]

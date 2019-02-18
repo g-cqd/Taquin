@@ -2,7 +2,7 @@ from math import sqrt,ceil
 
 class arbre:
     def __init__(self):
-        tableau = [[7,6,1],[4,8,2],[3,5,'X']]
+        tableau = [7,6,1,4,8,2,3,5,'X'] #Oui, je laisse le X juste pour t embeter :D
         taquin = aStarResolving(tableau)
         taquin.coupsPossibles()
         print('DISTANCE MANHATTAN : ',taquin.distanceManhattanTotale())
@@ -12,42 +12,29 @@ class arbre:
 class aStarResolving:
     def __init__(self,taquin):
         self._taquin = taquin
+    
     def setTaquin(self, taquin):
         self._taquin=taquin
     def getTaquin(self):
         return self._taquin
+    
 
-    # -- implémenté --
-    def list(self):
-        #transforme matrice en liste
-        x = []
-        i = 0
-        while(i<len(self._taquin)):
-            x += self._taquin[i]
-            i += 1
-        print(x)
-
-        return x
-
-    # // non nécessaire //
     def inversionCase(self,x1,y1,x2,y2,taquin):
         #inverse deux tuiles et renvoie le taquin obtenu
+
         temp = taquin[x1][y1]
         taquin[x1][y1] = taquin[x2][y2]
-        taquin[x2][y2] = taquin[x1][y1]
+        taquin[x2][y2] = temp
         return taquin
 
-    # -- implémenté --
     def positionTuile(self,numeroTuile):
         #renvoie la position d'une tuile sous forme de liste [x,y]
-        taquinL = self.list()
+        taquinL = self.getTaquin()
         coordonneees = []
-        indice = 0
-        for i in taquinL:
-            if(taquinL[i]==numeroTuile):
-
-                indice = i
-                break
+        i = 0
+        while (taquinL[i]!=numeroTuile):
+            i +=1
+        indice = i
 
         dimensions = int(sqrt(len(taquinL)))
         if((indice+1)%dimensions == 0):
@@ -55,14 +42,14 @@ class aStarResolving:
         if((indice+1)%dimensions != 0 ):
             coordonneees.append((indice+1)%dimensions)
         coordonneees.append(int(ceil(float((indice+1))/float(dimensions))))
-        print(coordonneees)
         return coordonneees
 
-    # -- implémenté --
+
     def coupsPossibles(self):
         #renvoie la liste des coups possibles
         coord = self.positionTuile('X')
         coupsP = []
+
         if(coord[0] != 3):
             coupsP.append('right')
         if(coord[0]!= 1):
@@ -71,21 +58,23 @@ class aStarResolving:
             coupsP.append('up')
         if(coord[1]!= 1):
             coupsP.append('down')
-        print(coupsP)
         return coupsP
-
-    # -- implémenté --
+    
     def jouerCoup(self,coup):
+        #joue un coup
         blanc = self.positionTuile('X')
         if(coup =='right'):
             x = blanc[0]-1
             y = blanc[1]
+            
         if(coup =='left'):
             x = blanc[0]+1
             y = blanc[1]
+
         if(coup == 'up'):
             x = blanc[0]
             y = blanc[1]+1
+
         if(coup == 'down'):
             x = blanc[0]
             y = blanc[1]-1
@@ -94,25 +83,23 @@ class aStarResolving:
 
         return taquinApres
 
-
     def distanceManhattanTotale(self):
         distanceM = 0
         i = 1
         pos = []
-        taquinL = self.list()
+        taquinL = self.getTaquin()
 
         dimensions = int(sqrt(len(taquinL)))
 
-        while(i!=dimensions*dimensions-1):
-            print('IIIIIIII',i)
+        while(i!=dimensions*dimensions):
             pos = self.positionTuile(i)
-            print('TA MAMAN LA CACAHUETE',pos)
             if((i)%dimensions == 0):
                 posX = 3
             if((i)%dimensions != 0 ):
                 posX = i%dimensions
             posY = int(ceil(float((i))/float(dimensions)))
-            distanceM += abs(pos[0] - posX) + abs(pos[1] - posY)
+            distanceM += abs(pos[0] - posX) + abs(pos[1] - posY) 
+            
             i+=1
         return distanceM
 

@@ -1,4 +1,5 @@
 from random import shuffle
+from math import ceil
 
 # Ce qu'il faut :
 #	- Séquence
@@ -25,12 +26,17 @@ class Environnement(object):
 		self.start = Taquin(self)
 
 
-# Pas encore implémenté
 class Tile(object):
-	def __init__(self,number,x,y):
-		self.number = number
-		self.coord = (x,y)
-
+	def __init__(self, taquin, content, x, y):
+		self.taquin = taquin
+		self._content = content
+		self.coord = (x, y)
+	def getContent(self):
+		return self._content
+	def setContent(self, content):
+		self._content = content
+		return True
+	content = property(getContent,setContent)
 
 
 class Taquin(object):
@@ -38,94 +44,85 @@ class Taquin(object):
 		self.environment = environment
 		self.identity = self.environment.number
 		self.environment.number += 1
-		self.matrix = None
+		self.sequence = None
 		self.previous = None
 		if previous == None:
-			self.matrix = self.magic(1)
+			self.sequence = self.magic(1)
 			self.path = ""
 			self.distance = 0
 		else:
 			assert isinstance(previous,Taquin) and isinstance(move,str)
-			self.matrix = self.__act__(self.previous,move)
+			# self.sequence = self.__act__(self.previous,move)
 			self.path = self.previous.path + move
 			self.distance = self.previous.distance + 1
-	def __type__(self):
-		return isinstance(self.matrix[0], list)
-	def __mtrx__(self):
-		sizes = self.environment.sizes
-		if isinstance(self.matrix[0], list):
-			return False
-		else:
-			x = [None]*sizes[0]
-			for i in range(0,sizes[0]):
-				y = [None]*sizes[0]
-				for j in range(0,sizes[0]):
-					y[j] = self.matrix[(i*sizes[0])+j]
-				x[i] = y
-			return x
-	def __list__(self):
-		if not isinstance(self.matrix[0], list):
-			return False
-		else:
-			x = []
-			for i in self.matrix:
-				x += self.matrix[i]
-			return x
 	def __invr__(self):
-		if len(self.matrix):
-			x = self.__list__() if self.__type__() else self.matrix
+		if len(self.sequence):
+			x = self.sequence
 			y = 0
-			z = len(x)
+			z = self.environment.sizes[1]
 			for i in range(0, z):
 				for j in range(i+1, z):
 					y += 1 if (isinstance(x[i], int) and isinstance(x[j], int) and x[i] > x[j]) else 0
 		else: return False
 		return y
-	def __posn__(self,item=None):
+	def __rowc__(self, content=None):
+		sequence = self.sequence
+		sizes = self.environment.sizes
+		for i in range(0, sizes[1]):
+			if sequence[i] == content:
+				return (ceil((i+1) / sizes[0]))
+	def __moves__(self):
 		width = self.environment.sizes[0]
-		x = self.__mtrx__()
-		for i in range(0, width):
-			for j in range(0, width):
-				if x[i][j] == item: return (i,j)
-	def __move__(self):
-		coord = self.__posn__()
-		width = self.environment.sizes[0]-1
+		x = self.__rowc__()-1
+		y = self.sequence.index(None) - (x*width)
+		bound = width - 1
 		moves = []
-		if coord[0] != width: moves.append('right')
-		if coord[0] != 0: moves.append('left')
-		if coord[1] != width: moves.append('up')
-		if coord[1] != 0: moves.append('down')
+		if y != bound: moves.append('right')
+		if y != 0: moves.append('left')
+		if x != bound: moves.append('up')
+		if x != 0: moves.append('down')
 		return moves
-#
-#
-# 	def __act__(self,previous,move):
-#		for direction in ['left', 'up', 'right', 'down']:
-#		return self.matrix
-
-
+	def __move__(self, move):
+		sequence = self.sequence
+		width = self.environment.sizes[0]
+		x = sequence.index(None)
+		if move == 'right':
+			y = x - 1
+		if move == 'left':
+			y = x + 1
+		if move == 'up':
+			y = x - width
+		if move == 'down':
+			y = x + width
+		self.sequence[x] = self.sequence[y]
+		self.sequence[y] = None
+		self.sequence = sequence
+		return sequence
 	def __test__(self):
 		sizes = self.environment.sizes
 		x = self.__invr__()
-		y = (self.__posn__())[0]+1
+		y = (self.__rowc__())+1
 		return True if (((sizes[0] % 2 == 1) and (x % 2 == 0)) or ((sizes[0] % 2 == 0) and ((y[0] % 2 == 1) == (x % 2 == 0)))) else False
-	def magic(self, r=0):
+	def magic(self, rand=0):
 		sizes = self.environment.sizes
-		x = [None]*sizes[1]
+		sequence = [None]*sizes[1]
 		for i in range(1, sizes[1]):
-			x[i-1] = i
-		if r == 1:
-			shuffle(x)
-			self.matrix = x
+			sequence[i-1] = i
+		if rand == 1:
+			shuffle(sequence)
+			self.sequence = sequence
 			while not self.__test__():
-				shuffle(x)
-				self.matrix = x
-		return x
-
+				shuffle(sequence)
+				self.sequence = sequence
+		return sequence
 
 
 class __main__:
 	e = Environnement(3)
-	print(e)
-	print(e.sizes)
-	print(e.start)
-	print(e.start.matrix)
+	print('Environment:\t',e)
+	print('Width:\t', e.sizes[0])
+	print('Length:\t', e.sizes[1])
+	print('Start Taquin:\t',e.start)
+	print('Start Taquin Sequence:\t', e.start.sequence)
+	print('Blank Position:\t', e.start.__rowc__())
+	print('Index of :\t', e.start.sequence.index(None))

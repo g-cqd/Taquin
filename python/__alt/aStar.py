@@ -29,9 +29,9 @@ class aStarResolving:
 
         return x
 
+    # // non nécessaire //
     def inversionCase(self,x1,y1,x2,y2,taquin):
         #inverse deux tuiles et renvoie le taquin obtenu
-        temp = 0
         temp = taquin[x1][y1]
         taquin[x1][y1] = taquin[x2][y2]
         taquin[x2][y2] = taquin[x1][y1]
@@ -74,6 +74,7 @@ class aStarResolving:
         print(coupsP)
         return coupsP
 
+    # -- implémenté --
     def jouerCoup(self,coup):
         blanc = self.positionTuile('X')
         if(coup =='right'):
@@ -92,6 +93,7 @@ class aStarResolving:
         taquinApres = self.inversionCase(blanc[0],blanc[1],x,y,self.getTaquin())
 
         return taquinApres
+
 
     def distanceManhattanTotale(self):
         distanceM = 0

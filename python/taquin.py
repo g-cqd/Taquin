@@ -24,7 +24,6 @@ class Environnement(object):
 		self.number = 0
 		self.sizes = (width, width*width)
 		self.start = Taquin(self)
-		self.final = self.start.magic(0)
 
 class Taquin(object):
 	def __init__(self, environment, previous=None, move=None):

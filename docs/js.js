@@ -1,12 +1,13 @@
 // var myNotification = new Notification('Hello!');
 
-div_res	=	document.getElementById("div-res");
-div_taq	=	document.getElementById("div-taq");
-art_con	=	document.getElementById("art-con");
-cot_el	=	document.getElementById("inp-cod");
-gen_el	=	document.getElementById("but-gen");
-clr_res_el	=	document.getElementById("but-clr-res");
-clr_con_el	=	document.getElementById("but-clr-con");
+var t = "\t";
+var div_res	= document.getElementById("div-res");
+var div_taq	= document.getElementById("div-taq");
+var art_con	= document.getElementById("art-con");
+var cot_el	= document.getElementById("inp-cod");
+var gen_el	= document.getElementById("but-gen");
+var clr_res_el	= document.getElementById("but-clr-res");
+var clr_con_el	= document.getElementById("but-clr-con");
 
 clr_res_el.addEventListener("click", function () {
 	div_res.innerHTML = "";
@@ -16,47 +17,40 @@ clr_con_el.addEventListener("click", function () {
 }, false);
 
 
-function __rand__(max,min=0) {
-	return Math.floor( min + (max+1-min) * Math.random() );
-}
-Array.prototype.__shuffle__ = function (firsts)
-{
-	if (!firsts) {
-		firsts = this.length;
-	}
-	if(firsts > 1) {
-		var i = __rand__(firsts-1);
+function __rand__(max,min=0) { return Math.floor( min + (max+1-min) * Math.random() ); }
+Array.prototype.__shuffle__ = function (length) {
+	if (!length) { length = this.length; }
+	if (length > 1) {
+		var i = __rand__(length-1);
 		var tmp = this[i];
-		this[i] = this[firsts-1];
-		this[firsts-1] = tmp;
-		this.__shuffle__(firsts-1);
+		this[i] = this[length-1];
+		this[length-1] = tmp;
+		this.__shuffle__(length-1);
 	}
 };
 
 class Environment {
 	constructor(width) {
-		this._number = 0;
-		this.sizes = [width, width * width];
+		this._size = 0;
+		this._sizes = [width, width * width];
 		this.start = new Taquin(this);
 	}
-	get getSizes() {
-		return this.sizes;
+	get sizes() {
+		return this._sizes;
 	}
-
-	get number() {
-		return this.getNumber();
+	get size() {
+		return this._size;
 	}
-
-	getNumber() {
-		return this._number;
+	set size(value) {
+		this._size += value;
 	}
-
 }
 
 class Taquin {
 	constructor(environment, previous = undefined, move = undefined) {
 		this.environment = environment;
-		this.identity = this.environment.number();
+		this.id = this.environment.size;
+		this.environment.size = this.id + 1;
 		this.sequence = undefined;
 		this.previous = previous;
 		if (previous == undefined) {
@@ -76,7 +70,7 @@ class Taquin {
 		if (this.sequence.length) {
 			var x = this.sequence;
 			var y = 0;
-			var z = (this.environment.getSizes())[1];
+			var z = this.environment.sizes[1];
 			for (var i = 0; i < z; i++) {
 				for (var j = i + 1; j < z; j++) {
 					y += (Number.isInteger(x[i]) && Number.isInteger(x[j]) && x[i] > x[j]) ? 1 : 0;
@@ -89,7 +83,7 @@ class Taquin {
 	}
 	__rowc__(content = undefined) {
 		var sequence = this.sequence;
-		var sizes = (this.environment.getSizes());
+		var sizes = this.environment.sizes;
 		for (var i = 0; i < sizes[1]; i++) {
 			if (sequence[i] == content) {
 				return (Math.ceil((i + 1) / sizes[0]));
@@ -97,7 +91,7 @@ class Taquin {
 		}
 	}
 	__moves__() {
-		var width = (this.environment.getSizes())[0];
+		var width = this.environment.sizes[0];
 		var x = this.__rowc__() - 1;
 		var y = this.sequence.indexOf(undefined) - (x * width);
 		var bound = width - 1;
@@ -110,7 +104,7 @@ class Taquin {
 	}
 	__move__(move) {
 		var sequence = this.sequence;
-		var width = (this.environment.getSizes())[0];
+		var width = this.environment.sizes[0];
 		var x = sequence.indexOf(undefined);
 		var y;
 		if (move == 'right') { y = x - 1; }
@@ -123,15 +117,15 @@ class Taquin {
 		return sequence;
 	}
 	__test__() {
-		var sizes = (this.environment.getSizes());
+		var sizes = this.environment.sizes;
 		var x = this.__invr__();
 		var y = (this.__rowc__()) - 1;
 		return ((((sizes[0] % 2 == 1) && (x % 2 == 0)) || ((sizes[0] % 2 == 0) && ((y[0] % 2 == 1) == (x % 2 == 0))))) ? true : false;
 	}
 	manhattan(index = undefined) {
 		var sequence = this.sequence;
-		var width = (this.environment.getSizes())[0];
-		var length = (this.environment.getSizes())[1];
+		var width = this.environment.sizes[0];
+		var length = this.environment.sizes[1];
 		var distance = 0;
 		if (index == undefined) {
 			for (var i = 0; i < length; i++) {
@@ -163,7 +157,7 @@ class Taquin {
 		return distance;
 	}
 	magic(rand = 0) {
-		var length = (this.environment.getSizes())[1];
+		var length = this.environment.sizes[1];
 		var sequence = new Array(length);
 		for (var i = 1; i < length; i++) {
 			sequence[i - 1] = i;
@@ -176,7 +170,7 @@ class Taquin {
 		}
 		return sequence;
 	}
-	translate(sequence = 0) {
+	translate() {
 		var sizes = [div_taq.offsetWidth,div_taq.offsetHeight];
 		var plateau = document.createElement("div");
 		plateau.classList.add("plateau");
@@ -197,7 +191,7 @@ class Taquin {
 }
 
 
-function __log__(element) {
+function __log__(element="") {
 	el = document.createElement("div");
 	el.append(element);
 	art_con.appendChild(el);
@@ -209,40 +203,19 @@ function __res__(element) {
 	a.appendChild(b);
 	div_res.appendChild(a);
 }
-function __add__(a,b) {
-	c = [];
-	if (a.length == b.length) {
-		for (let i = 0; i < a.length ; i++) {
-			c[i] = a[i]+b[i];
-		}
-	}
-	return c;
-}
-function __sub__(a,b) {
-	c = [];
-	if (a.length == b.length) {
-		for (let i = 0; i < a.length ; i++) {
-			c[i] = a[i]-b[i];
-		}
-	}
-	return c;
-}
-function __eq__(a,b) {
-	if (a.length == b.length) {
-		for (let i = 0; i < a.length ; i++) {
-			if (a[i] != b[i]) {
-				return false;
-			}
-		}
-	} else {
-		return false;
-	}
-	return true;
-}
-function __pr__(a) {
-	return a instanceof Taquin ? a.sequence : false;
-}
-
+cust_click = new Event("click");
 gen_el.addEventListener("click", function () {
-	var a = new Environment(3);
+	clr_con_el.dispatchEvent(cust_click);
+	clr_res_el.dispatchEvent(cust_click);
+	var a = new Environment(cot_el.value);
+	a.start.translate();
+	__log__(`Environment:`);
+	__log__(`- Sizes:${t}${a.sizes[0]} / ${a.sizes[1]}`);
+	__log__();
+	__log__(`Start Taquin:`);
+	__log__(`- Sequence:${t}${a.start.sequence}`);
+	__log__(`- Validity: ${t}${a.start.__test__()}`);
+	__log__(`- Inversions:${t}${a.start.__invr__()}`);
+	__log__(`- Moves: ${t}${a.start.__moves__()}`);
+	__log__(`- Distance:${t}${a.start.manhattan()}`);
 }, false);

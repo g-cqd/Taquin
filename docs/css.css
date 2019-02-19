@@ -79,6 +79,8 @@ main aside {
 #div-res,
 #art-con {
 	height: 200px;
+	tab-size: 20px;
+	white-space: pre-wrap;
 }
 #art-res {
 	display: flex;

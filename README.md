@@ -2,8 +2,8 @@
 
 
 ## Collaborateurs
-- Mélanie Marques
-- Guillaume COQUARD
+- Mélanie Marques : @mmrqs
+- Guillaume COQUARD : @originecode
 
 
 ## Caractéristiques du Projet
@@ -37,7 +37,7 @@
 - [x] Création d'une interface Web et génération (JS) de grille de taquins (solvables et non solvables)
 ### 19-02-12
 - [x] Algorithme de Solvabilité (JS)
-- [x] @westhood77 : Algorithme de Solvabilité (Python)
+- [x] @mmrqs : Algorithme de Solvabilité (Python)
 ### 19-02-13
 - [x] @originecode : Algorithme de Solvabilité (Python)
 ### 19-02-14
@@ -48,9 +48,17 @@
 - [x] @originecode : Réécriture des classes (suite)
 
 ### 19-02-17
-- [x] @westhood77: ajout fonctions
+- [x] @mmrqs: ajout fonctions
 	- situation dans le repère (x,y) d'une tuile
 	- inversion de deux tuiles
 	- coups possibles
 	- jouer coups
 	- commencement de la fonction distance de Manhattan
+
+### 19-02-18 | 19
+- [x] @originecode: Implémentations
+	- Abandon de la matrice à 2 dimensions
+	- Implémentation des inversions de tuiles sur liste
+	- Implémentation des coups possibles
+	- Implémentation du jeu de chaque coup
+	- Implémentation de la distance de Manhattan totale

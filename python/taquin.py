@@ -31,7 +31,7 @@ class Taquin(object):
 		self.identity = self.environment.number
 		self.environment.number += 1
 		self.sequence = None
-		self.previous = None
+		self.previous = previous
 		if previous == None:
 			self.sequence = self.magic(1)
 			self.path = ""
@@ -72,16 +72,12 @@ class Taquin(object):
 		sequence = self.sequence
 		width = self.environment.sizes[0]
 		x = sequence.index(None)
-		if move == 'right':
-			y = x - 1
-		if move == 'left':
-			y = x + 1
-		if move == 'up':
-			y = x - width
-		if move == 'down':
-			y = x + width
-		self.sequence[x] = self.sequence[y]
-		self.sequence[y] = None
+		if move == 'right': y = x - 1
+		if move == 'left': y = x + 1
+		if move == 'up': y = x - width
+		if move == 'down': y = x + width
+		sequence[x] = sequence[y]
+		sequence[y] = None
 		self.sequence = sequence
 		return sequence
 	def __test__(self):

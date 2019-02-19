@@ -12,12 +12,12 @@ class arbre:
 class aStarResolving:
     def __init__(self,taquin):
         self._taquin = taquin
-    
+
     def setTaquin(self, taquin):
         self._taquin=taquin
     def getTaquin(self):
         return self._taquin
-    
+
 
     def inversionCase(self,x1,y1,x2,y2,taquin):
         #inverse deux tuiles et renvoie le taquin obtenu
@@ -59,14 +59,14 @@ class aStarResolving:
         if(coord[1]!= 1):
             coupsP.append('down')
         return coupsP
-    
+
     def jouerCoup(self,coup):
         #joue un coup
         blanc = self.positionTuile('X')
         if(coup =='right'):
             x = blanc[0]-1
             y = blanc[1]
-            
+
         if(coup =='left'):
             x = blanc[0]+1
             y = blanc[1]
@@ -83,6 +83,10 @@ class aStarResolving:
 
         return taquinApres
 
+
+
+
+
     def distanceManhattanTotale(self):
         distanceM = 0
         i = 1
@@ -97,9 +101,9 @@ class aStarResolving:
                 posX = 3
             if((i)%dimensions != 0 ):
                 posX = i%dimensions
-            posY = int(ceil(float((i))/float(dimensions)))
-            distanceM += abs(pos[0] - posX) + abs(pos[1] - posY) 
-            
+            posY = ceil(i/dimensions)
+            distanceM += abs(pos[0] - posX) + abs(pos[1] - posY)
+
             i+=1
         return distanceM
 

@@ -24,20 +24,7 @@ class Environnement(object):
 		self.number = 0
 		self.sizes = (width, width*width)
 		self.start = Taquin(self)
-
-
-class Tile(object):
-	def __init__(self, taquin, content, x, y):
-		self.taquin = taquin
-		self._content = content
-		self.coord = (x, y)
-	def getContent(self):
-		return self._content
-	def setContent(self, content):
-		self._content = content
-		return True
-	content = property(getContent,setContent)
-
+		self.final = self.start.magic(0)
 
 class Taquin(object):
 	def __init__(self, environment, previous=None, move=None):
@@ -103,6 +90,35 @@ class Taquin(object):
 		x = self.__invr__()
 		y = (self.__rowc__())+1
 		return True if (((sizes[0] % 2 == 1) and (x % 2 == 0)) or ((sizes[0] % 2 == 0) and ((y[0] % 2 == 1) == (x % 2 == 0)))) else False
+	def manhattan(self, index=False):
+		sequence = self.sequence
+		width = self.environment.sizes[0]
+		distance = 0
+		if not index:
+			for i, e in enumerate(sequence):
+				if e != None:
+					x = self.__rowc__(e) - 1
+					y = i - (x * width)
+					pos = (x, y)
+
+					v = ceil(e / width) - 1
+					w = (e-1) - (v*width)
+					inipos = (v, w)
+
+					distance += abs(pos[0] - inipos[0]) + abs(pos[1] - inipos[1])
+		else:
+			for i, e in enumerate(sequence):
+				if i == index:
+					x = self.__rowc__(e) - 1
+					y = i - (x * width)
+					pos = (x, y)
+
+					v = ceil(e / width) - 1
+					w = (e-1) - (v*width)
+					inipos = (v, w)
+
+					distance = abs(pos[0] - inipos[0]) + abs(pos[1] - inipos[1])
+		return distance
 	def magic(self, rand=0):
 		sizes = self.environment.sizes
 		sequence = [None]*sizes[1]
@@ -116,13 +132,11 @@ class Taquin(object):
 				self.sequence = sequence
 		return sequence
 
-
 class __main__:
 	e = Environnement(3)
-	print('Environment:\t',e)
-	print('Width:\t', e.sizes[0])
-	print('Length:\t', e.sizes[1])
-	print('Start Taquin:\t',e.start)
-	print('Start Taquin Sequence:\t', e.start.sequence)
-	print('Blank Position:\t', e.start.__rowc__())
-	print('Index of :\t', e.start.sequence.index(None))
+	print('Width:\t\t', e.sizes[0])
+	print('Length:\t\t', e.sizes[1])
+	print('Sequence:\t', e.start.sequence)
+	print('Blank Row:\t', e.start.__rowc__())
+	print('Blank Index:\t', e.start.sequence.index(None))
+	print('Manhattan:\t',e.start.manhattan())

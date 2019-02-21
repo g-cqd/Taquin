@@ -5,36 +5,31 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>Le Taquin</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="https://rsms.me/inter/inter.css">
-	<link rel="stylesheet" type="text/css" media="screen" href="./css.css">
+	<link rel="stylesheet" type="text/css" media="screen" href="fonts.css">
+	<link rel="stylesheet" type="text/css" media="screen" href="css.css">
+	<link rel="icon" href="favico.png" type="image/png">
 	<script src="./js.js" defer></script>
 </head>
 <body>
-	<header class="rounded-element">
+	<header>
 		<div></div>
-		<h1 id="title">Le Taquin</h1>
+		<h1 id="title">TA<span id="star">*</span>UIN</h1>
 		<div></div>
 	</header>
 	<main>
-		<aside>
-			<form action="" id="form-mc">
-				<div class="form-section rounded-element">
-					<h3>Paramètres :</h3>
-					<label>Side Length : <input type="number" name="side-length" min="3" value="3" max="10" id="inp-cod"></label>
-				</div>
-				<div class="form-section rounded-element">
+		<section id="content">
+			<article id="art-set" class="form-section rounded-element">
+				<h3>Paramètres :</h3>
+				<label>Side Length : <input type="number" name="side-length" min="3" value="3" max="10" id="inp-cod"></label>
+			</article>
+			<article id="art-taq">
+				<div id="div-taq" class="rounded-element"></div>
+				<div id="div-gen" class="form-section rounded-element">
 					<label><input type="button" value="Generate" id="but-gen"></label>
-					<label><input type="button" value="Clear Results" id="but-clr-res"></label>
 					<label><input type="button" value="Clear Console" id="but-clr-con"></label>
 				</div>
-			</form>
-		</aside>
-		<section id="content">
-			<article id="art-res" class="division">
-				<div id="div-taq" class="rounded-element"></div>
-				<div id="div-res" class="rounded-element scroll"></div>
 			</article>
-			<article id="art-con" class="division rounded-element scroll"></article>
+			<article id="art-con" class="rounded-element"></article>
 		</section>
 	</main>
 

@@ -29,6 +29,10 @@
 - [ ] Trouver la structure de données adéquate
 - [ ] Implémentation du parcours
 
+## Idées à ne pas oublier
+- [ ] Barre de chargement dans l'interface
+- [ ] Tooltips
+- [ ] Choisir les heuristiques pour la résolution via des radios buttons
 
 
 ## Avancement

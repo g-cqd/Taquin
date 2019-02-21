@@ -1,17 +1,12 @@
 // var myNotification = new Notification('Hello!');
 
 var t = "\t";
-var div_res	= document.getElementById("div-res");
 var div_taq	= document.getElementById("div-taq");
 var art_con	= document.getElementById("art-con");
 var cot_el	= document.getElementById("inp-cod");
 var gen_el	= document.getElementById("but-gen");
-var clr_res_el	= document.getElementById("but-clr-res");
 var clr_con_el	= document.getElementById("but-clr-con");
 
-clr_res_el.addEventListener("click", function () {
-	div_res.innerHTML = "";
-}, false);
 clr_con_el.addEventListener("click", function () {
 	art_con.innerHTML = "";
 }, false);
@@ -192,30 +187,28 @@ class Taquin {
 
 
 function __log__(element="") {
-	el = document.createElement("div");
-	el.append(element);
+	el = document.createElement("pre");
+	el.append(element+'\n');
 	art_con.appendChild(el);
 }
-function __res__(element) {
-	a = document.createElement("div");
-	b = document.createElement("p");
-	b.append(element);
-	a.appendChild(b);
-	div_res.appendChild(a);
+function newLine(str,element,end=0) {
+	str += element + (end==0?'\n':'');
+	return str;
 }
 cust_click = new Event("click");
 gen_el.addEventListener("click", function () {
 	clr_con_el.dispatchEvent(cust_click);
-	clr_res_el.dispatchEvent(cust_click);
 	var a = new Environment(cot_el.value);
 	a.start.translate();
-	__log__(`Environment:`);
-	__log__(`- Sizes:${t}${a.sizes[0]} / ${a.sizes[1]}`);
-	__log__();
-	__log__(`Start Taquin:`);
-	__log__(`- Sequence:${t}${a.start.sequence}`);
-	__log__(`- Validity: ${t}${a.start.__test__()}`);
-	__log__(`- Inversions:${t}${a.start.__invr__()}`);
-	__log__(`- Moves: ${t}${a.start.__moves__()}`);
-	__log__(`- Distance:${t}${a.start.manhattan()}`);
+	var affichage = "";
+	affichage = newLine(affichage,`Environment:`,0);
+	affichage = newLine(affichage,`- Sizes:${t}${a.sizes[0]} / ${a.sizes[1]}`,0);
+	affichage = newLine(affichage,"",0);
+	affichage = newLine(affichage,`Start Taquin:`,0);
+	affichage = newLine(affichage,`- Sequence:${t}${a.start.sequence}`,0);
+	affichage = newLine(affichage,`- Validity: ${t}${a.start.__test__()}`,0);
+	affichage = newLine(affichage,`- Inversions:${t}${a.start.__invr__()}`,0);
+	affichage = newLine(affichage,`- Moves: ${t}${a.start.__moves__()}`,0);
+	affichage = newLine(affichage,`- Distance:${t}${a.start.manhattan()}`,1);
+	__log__(affichage);
 }, false);

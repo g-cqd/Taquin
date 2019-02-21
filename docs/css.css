@@ -144,6 +144,12 @@ pre {
 .form-section label {
 	margin-bottom: .5em;
 }
+input {
+	font-size: 1em;
+}
+input[type="number"] {
+	min-width: 50px;
+}
 :not(input) + input {
 	position: relative;
 	margin: 2em .75em 2em 0;
@@ -168,7 +174,6 @@ input[type="button"] {
 	padding: .5em .75em;
 	border: none;
 	border-radius: calc( var(--br-radius) / 2 );
-	font-size: 1em;
 	font-weight: 600;
 	background-color: var(--cb-color);
 	color: var(--ct-color);

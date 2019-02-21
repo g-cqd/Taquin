@@ -38,7 +38,7 @@ header {
 	align-content: center;
 	align-items: center;
 	justify-content: center;
-	margin: 20px;
+	margin: 20px 0;
 	padding: calc(3em - 20px);
 	height: auto;
 	width: auto;
@@ -63,6 +63,7 @@ header {
 main {
 	display: flex;
 	margin: 0 15vw;
+	max-width: 100%;
 }
 .rounded-element {
 	padding: 20px;

@@ -187,7 +187,7 @@ class Environment:
 			moves.pop(moves.index(minimum))
 		return result
 
-	def expand(self):
+	def expanda(self):
 		frontiere = [self.start]
 		while len(frontiere) > 0:
 			if frontiere[0].disord == 0:
@@ -208,11 +208,11 @@ class Environment:
 				frontiere.pop(shift)
 
 
-	def expanda(self):
+	def expand(self):
 		frontiere = [self.start]
 		for taquin in frontiere:
 			print(taquin.sequence)
-			if taquin.inv == 0 : return taquin
+			if taquin.disord == 0 : return taquin
 			elif not taquin.sequence in self.explored.values():
 				moves = taquin.findMoves()
 				taquins = []
@@ -221,20 +221,6 @@ class Environment:
 				taquins = self.sortChildMoves(taquins)
 				frontiere.extend(taquins)
 				self.explored[taquin.path]=taquin.sequence
-
-
-		while len(frontiere) > 0:
-			print(frontiere[0].sequence)
-			moves = frontiere[0].findMoves()
-			taquins = []
-			for move in moves:
-				current = Taquin(self, frontiere[0], move)
-				if current.disord == 0:
-					print(current.sequence)
-					return current
-				else: taquins.append(current)
-			frontiere = self.sortChildMoves(taquins) + frontiere
-			frontiere.pop()
 
 
 

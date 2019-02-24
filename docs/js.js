@@ -115,7 +115,7 @@ class Taquin {
 		var sizes = this.environment.sizes;
 		var x = this.__invr__();
 		var y = (this.__rowc__()) - 1;
-		return ((((sizes[0] % 2 == 1) && (x % 2 == 0)) || ((sizes[0] % 2 == 0) && ((y[0] % 2 == 1) == (x % 2 == 0))))) ? true : false;
+		return ((((sizes[0] % 2 == 1) && (x % 2 == 0)) || ((sizes[0] % 2 == 0) && ((y % 2 == 1) == (x % 2 == 0))))) ? true : false;
 	}
 	manhattan(index = undefined) {
 		var sequence = this.sequence;

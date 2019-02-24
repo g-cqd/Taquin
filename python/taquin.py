@@ -120,8 +120,8 @@ class Taquin:
 			elif index == 6:
 				pi = [1]*length
 			weightings.append((pi,rho))
-		for weights in weightings:
-			print(weights)
+	#	for weights in weightings:
+	#		print(weights)
 		return weightings
 
 	def disorder(self):
@@ -148,7 +148,7 @@ class Taquin:
 				i += 1
 			distance /= weighting[1]
 			distanceSum += distance
-			print(("h({}):\t{}").format(j,distance))
+			#print(("h({}):\t{}").format(j,distance))
 		return distanceSum
 
 	def magic(self, rand=0):
@@ -210,17 +210,23 @@ class Environment:
 
 	def expand(self):
 		frontiere = [self.start]
-		for taquin in frontiere:
-			print(taquin.sequence)
-			if taquin.disord == 0 : return taquin
-			elif not taquin.sequence in self.explored.values():
-				moves = taquin.findMoves()
-				taquins = []
-				for move in moves:
-					taquins.append(Taquin(self,taquin,move))
-				taquins = self.sortChildMoves(taquins)
-				frontiere.extend(taquins)
-				self.explored[taquin.path]=taquin.sequence
+		i = 0
+		while i < len(frontiere):
+			print(frontiere[i].sequence)
+			if frontiere[i].disord == 0: return frontiere[i]
+			else:
+				found = False
+				for seq in self.explored.values():
+					if seq == frontiere[i].sequence: found = True
+				if not found:
+					moves = frontiere[i].findMoves()
+					taquins = []
+					for move in moves:
+						taquins.append(Taquin(self,frontiere[i],move))
+					taquins = self.sortChildMoves(taquins)
+					frontiere.extend(taquins)
+					self.explored[frontiere[i].path] = frontiere[i].sequence
+			i += 1
 
 
 

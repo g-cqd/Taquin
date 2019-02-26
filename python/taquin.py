@@ -13,7 +13,6 @@ class Taquin:
 			self.path = "_"
 			self.g = 1
 		else:
-			assert isinstance(previous,Taquin) and isinstance(move,str)
 			self.sequence = previous.sequence.copy()
 			self.moveTile(move)
 			self.path = self.previous.path + move
@@ -89,7 +88,8 @@ class Taquin:
 				weight = length
 				for i in range(width-1):
 					j = 0
-					while pi[j] != 0: j += 1
+					while pi[j] != 0:
+						j += 1
 					for k in range(width-i):
 						pi[j] = weight
 						j += 1
@@ -98,7 +98,7 @@ class Taquin:
 					pi[j] = weight
 					weight -= 1
 					j += width
-					while j < length - 1:
+					while j < length - 2 :
 						pi[j] = weight
 						weight -= 1
 						j += width

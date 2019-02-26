@@ -14,6 +14,7 @@ class arbre:
 			nouveauxEnfants = etatAExpanser.creationEnfants()
 
 			for item in nouveauxEnfants:
+				a = item.generationHeuristiques(4)
 				if(item.TauxDeDesordre(item.getTaquin())==0):
 					etatFinal = True
 					print('Liste des coups = ',item.getListeCoups())
@@ -162,7 +163,6 @@ class aStarResolving:
 			while(i<self.largeur()*self.largeur()-2):
 				pi.append(self.largeur()*self.largeur()-i-1)
 				i+=1
-
 		if(numero == 4 or numero == 5):
 			while(i<self.largeur()*self.largeur()-1):
 				pi.append(0)
@@ -184,10 +184,11 @@ class aStarResolving:
 				poids -=1
 				j+=self.largeur()
 				while(j<self.largeur()*self.largeur()-2):
-					pi[j] = poids
+					pi[j] = poids                   
 					poids-=1
 					j+=self.largeur()
 				i+=1
+
 
 		if(numero == 6):
 			while(i<self.largeur()*self.largeur()-2):

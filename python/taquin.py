@@ -3,7 +3,6 @@
 
 from random import shuffle
 from math import ceil
-from time import sleep, time
 
 class Taquin:
 	def __init__(self, environment, previous=None, move=None):
@@ -171,13 +170,8 @@ class Environment:
 		self.end = None
 
 
-	@staticmethod
-	def lookForPriorities(explored):
-		shouldBeExpanded = explored[0]
-		
 
-
-	def expandMel(self):
+	def expand(self):
 		root = self.start
 		explored = [root]
 		final = False
@@ -198,5 +192,5 @@ class Environment:
 
 class __main__:
 	a = Environment(3)
-	a.end = a.expandMel()
+	a.end = a.expand()
 	printTaquin(a.end)

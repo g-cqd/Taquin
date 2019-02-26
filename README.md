@@ -66,3 +66,7 @@
 	- Implémentation des coups possibles
 	- Implémentation du jeu de chaque coup
 	- Implémentation de la distance de Manhattan totale
+
+### 19-02-26
+- [x] @originecode: Implémentations
+	- Résolution de Taquins 3x3

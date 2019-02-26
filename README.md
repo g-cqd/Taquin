@@ -70,3 +70,7 @@
 ### 19-02-26
 - [x] @originecode: Implémentations
 	- Résolution de Taquins 3x3
+- [x] @mmrqs : commencement de l'interface graphique
+	- positionnement et personnalisation des boutons
+	- positionnement des labels
+	- génération d'un taquin de taille variable en fonction des paramètres entrés.

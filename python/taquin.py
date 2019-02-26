@@ -6,18 +6,16 @@ from math import ceil
 from time import sleep, time
 
 class Taquin:
-
 	def __init__(self, environment, previous=None, move=None):
 		self.environment = environment
+		self.previous = previous
 		if previous == None:
-			self.previous = previous
 			self.sequence = self.magic(1)
 			self.path = "_"
 			self.g = 1
 		else:
 			assert isinstance(previous,Taquin) and isinstance(move,str)
-			self.previous = previous
-			self.sequence = previous.sequence
+			self.sequence = previous.sequence.copy()
 			self.moveTile(move)
 			self.path = self.previous.path + move
 			self.g = self.previous.g + 1
@@ -26,31 +24,28 @@ class Taquin:
 		self.inv = self.inversions()
 		self.moves = self.findMoves()
 		self.man = self.manhattan()
-		self.disord = self.disorder()
-		self.h = self.man + self.disord
-
+		self.disorder = self.disorderRate()
+		self.h = self.man + self.disorder
+		self.f = self.h + self.g
 	def inversions(self):
 		sequence = self.sequence
 		inv = 0
 		length = self.environment.sizes[1]
 		for i in range(0, length):
 			for j in range(i+1, length):
-				inv += 1 if (isinstance(sequence[i], int) and isinstance(sequence[j], int) and sequence[i] > sequence[j]) else 0
+				inv += 1 if (sequence[i]!=0 and sequence[j] != 0 and sequence[i] > sequence[j]) else 0
 		return inv
-
-	def coordinates(self, content=None):
+	def coordinates(self, content=0):
 		width = self.environment.sizes[0]
-		if isinstance(content, tuple):
+		if isinstance(content, list):
 			return width * content[1] + content[0]
 		else:
 			index = self.sequence.index(content)
-			y = ceil((index+1) / width) - 1
+			y = ceil((index + 1) / width) - 1
 			x = index - (y * width)
-			return (x,y)
-
+			return [x, y]
 	def findMoves(self):
-		width = self.environment.sizes[0]
-		bound = width - 1
+		bound = self.environment.sizes[0] - 1
 		coords = self.coordinates()
 		lastMove = self.path[-1]
 		moves = []
@@ -59,101 +54,90 @@ class Taquin:
 		if coords[1] != 0	  and lastMove != 'u': moves.append('d')
 		if coords[1] != bound and lastMove != 'd': moves.append('u')
 		return moves
-
 	def moveTile(self, move):
+		sequence = self.sequence.copy()
 		width = self.environment.sizes[0]
 		x = self.coordinates(self.coordinates())
 		if move == 'r': y = x - 1
 		if move == 'l': y = x + 1
 		if move == 'd': y = x - width
 		if move == 'u': y = x + width
-		self.sequence[x] = self.sequence[y]
-		self.sequence[y] = None
-
+		sequence[x] = sequence[y]
+		sequence[y] = 0
+		self.sequence = sequence
 	def valid(self):
 		width = self.environment.sizes[0]
 		inv = self.inversions()
 		row = self.coordinates()[1]+1
 		return True if (((width % 2 == 1) and (inv % 2 == 0)) or ((width % 2 == 0) and ((row % 2 == 1) == (inv % 2 == 0)))) else False
-
 	def weightings(self):
 		weightings = []
 		width = self.environment.sizes[0]
-		length = self.environment.sizes[1]-1
-
+		length = self.environment.sizes[1] - 1
 		for index in range(1, 7):
 			pi = []
 			rho = (4 if index % 2 != 0 else 1)
 			if index == 1:
-				pi = [36, 12, 12, 4, 1, 1, 4, 1]
+				if width == 3:
+					pi = [36, 12, 12, 4, 1, 1, 4, 1]
+				else:
+					pi = [None]
 			elif index == 2 or index == 3:
-				for i in range(0, length):
+				for i in range(length):
 					pi.append(length - i)
-
-
 			elif index == 4 or index == 5:
 				pi = [0] * length
 				weight = length
-
-
-
-				for i in range(0, width-1):
+				for i in range(width-1):
 					j = 0
-					while pi[j] != 0:
-						j += 1
-					for k in range(0,width-i):
+					while pi[j] != 0: j += 1
+					for k in range(width-i):
 						pi[j] = weight
 						j += 1
 						weight -= 1
-
 					j += 1
 					pi[j] = weight
 					weight -= 1
 					j += width
-
 					while j < length - 1:
 						pi[j] = weight
 						weight -= 1
 						j += width
-
-
 			elif index == 6:
 				pi = [1]*length
-			weightings.append((pi,rho))
-	#	for weights in weightings:
-	#		print(weights)
+			if (pi != [None]):
+				weightings.append((pi,rho))
 		return weightings
-
-	def disorder(self):
-		disord = 0
+	def disorderRate(self):
+		rate = 0
 		for i, e in enumerate(self.sequence):
-			disord += 1 if e != None and (i + 1) != e else 0
-		return disord
-
+			rate += 1 if e != 0 and (i + 1) != e else 0
+		return rate
 	def manhattan(self):
-		distanceSum = 0
-		j = 0
-		i = 1
+		total = 0
 		pos = []
 		width, length = self.environment.sizes
 		weightings = self.weightings()
 		for weighting in weightings:
 			distance = 0
-			while i != length:
+			for i in range(1, length):
+				j = 0
 				pos = self.coordinates(i)
 				x = i%width
-				xy = ((width - 1) if x == 0 else (x - 1),ceil(i / width) - 1)
-				distance += weighting[0][j] * ( abs( pos[0] - xy[0] ) + abs( pos[1] - xy[1] ) )
+				coords = (((width - 1) if x == 0 else (x - 1)),ceil(i / width) - 1)
+				distance += weighting[0][j] * ( abs( pos[0] - coords[0] ) + abs( pos[1] - coords[1] ) )
 				j += 1
-				i += 1
 			distance /= weighting[1]
-			distanceSum += distance
-			#print(("h({}):\t{}").format(j,distance))
-		return distanceSum
-
+			total += distance
+		return total
+	def childs(self):
+		childList = []
+		for move in self.moves:
+			childList.append(Taquin(self.environment,self,move))
+		return childList
 	def magic(self, rand=0):
 		length = self.environment.sizes[1]
-		sequence = [None]*length
+		sequence = [0]*length
 		for i in range(1, length):
 			sequence[i-1] = i
 		if rand == 1:
@@ -165,7 +149,18 @@ class Taquin:
 		return sequence
 
 
-
+def printTaquin(taquin):
+	print("\n\n")
+	print(("Taquin {}:").format(taquin.identity))
+	print(("	- Seq.\t:\t{}	").format(taquin.sequence))
+	print(("	- Path\t:\t{}	").format(taquin.path))
+	print(("	- g\t:\t{}	").format(taquin.g))
+	print(("	- inv\t:\t{}	").format(taquin.inv))
+	print(("	- moves\t:\t{}	").format(taquin.moves))
+	print(("	- man\t:\t{}	").format(taquin.man))
+	print(("	- ord.\t:\t{}	").format(taquin.disorder))
+	print(("	- h\t:\t{}	").format(taquin.h))
+	print(("	- f\t:\t{}	").format(taquin.f))
 
 
 class Environment:
@@ -173,67 +168,35 @@ class Environment:
 		self.number = 0
 		self.sizes = (width,width*width)
 		self.start = Taquin(self)
-		self.explored = dict()
+		self.end = None
+
 
 	@staticmethod
-	def sortChildMoves(moves):
-		length = len(moves)
-		result = []
-		while len(result) != length:
-			minimum = moves[0]
-			for move in moves:
-				if move.h < minimum.h: minimum = move
-			result.append(minimum)
-			moves.pop(moves.index(minimum))
-		return result
-
-	def expanda(self):
-		frontiere = [self.start]
-		while len(frontiere) > 0:
-			if frontiere[0].disord == 0:
-				print(frontiere[0].sequence)
-				return True
-			elif frontiere[0].sequence in self.explored.values():
-				frontiere.pop(0)
-			else:
-				print(frontiere[0].sequence)
-				moves = frontiere[0].findMoves()
-				shift = len(moves)
-				taquins = []
-				for move in moves:
-					taquins.append(Taquin(self, frontiere[0], move))
-				taquins = self.sortChildMoves(taquins)
-				self.explored[frontiere[0]]=frontiere[0].sequence
-				frontiere = taquins + frontiere
-				frontiere.pop(shift)
+	def lookForPriorities(explored):
+		shouldBeExpanded = explored[0]
+		
 
 
-	def expand(self):
-		frontiere = [self.start]
-		i = 0
-		while i < len(frontiere):
-			print(frontiere[i].sequence)
-			if frontiere[i].disord == 0: return frontiere[i]
-			else:
-				found = False
-				for seq in self.explored.values():
-					if seq == frontiere[i].sequence: found = True
-				if not found:
-					moves = frontiere[i].findMoves()
-					taquins = []
-					for move in moves:
-						taquins.append(Taquin(self,frontiere[i],move))
-					taquins = self.sortChildMoves(taquins)
-					frontiere.extend(taquins)
-					self.explored[frontiere[i].path] = frontiere[i].sequence
-			i += 1
+	def expandMel(self):
+		root = self.start
+		explored = [root]
+		final = False
 
+		while (final == False):
+			shouldBeExpanded = explored[0]
+			for taquin in explored:
+				if (shouldBeExpanded.f > taquin.f): shouldBeExpanded = taquin
+			newChilds = shouldBeExpanded.childs()
 
-
-
+			for child in newChilds:
+				if (child.disorder == 0):
+					return child
+			explored.extend(newChilds)
+			explored.remove(shouldBeExpanded)
 
 
 
 class __main__:
-	e = Environment(3)
-	e.expand()
+	a = Environment(3)
+	a.end = a.expandMel()
+	printTaquin(a.end)

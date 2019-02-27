@@ -68,10 +68,74 @@ class Taquin:
 		inv = self.inversions()
 		row = self.coordinates()[1]+1
 		return True if (((width % 2 == 1) and (inv % 2 == 0)) or ((width % 2 == 0) and ((row % 2 == 1) == (inv % 2 == 0)))) else False
-	def weightings(self):
+	def disorderRate(self):
+		rate = 0
+		for i, e in enumerate(self.sequence):
+			rate += 1 if e != 0 and (i + 1) != e else 0
+		return rate
+	def manhattan(self):
+		total = 0
+		pos = []
+		width, length = self.environment.sizes
+		weightings = self.environment.weightings
+		for weighting in weightings:
+			distance = 0
+			for i in range(1, length):
+				j = 0
+				pos = self.coordinates(i)
+				x = i%width
+				coords = (((width - 1) if x == 0 else (x - 1)),ceil(i / width) - 1)
+				distance += weighting[0][j] * ( abs( pos[0] - coords[0] ) + abs( pos[1] - coords[1] ) )
+				j += 1
+			distance /= weighting[1]
+			total += distance
+		return total
+	def childs(self):
+		childList = []
+		for move in self.moves:
+			child = Taquin(self.environment,self,move)
+			if child.disorder == 0: return child
+			childList.append(child)
+		return childList
+	def magic(self, rand=0):
+		length = self.environment.sizes[1]
+		sequence = [0]*length
+		for i in range(1, length): sequence[i-1] = i
+		if rand == 1:
+			shuffle(sequence)
+			self.sequence = sequence
+			while not self.valid():
+				shuffle(sequence)
+				self.sequence = sequence
+		return sequence
+
+
+def printTaquin(taquin):
+	print("\n\n")
+	print(("Taquin {}:").format(taquin.identity))
+	print(("	- Seq.\t:\t{}	").format(taquin.sequence))
+	print(("	- Path\t:\t{}	").format(taquin.path))
+	print(("	- g\t:\t{}	").format(taquin.g))
+	print(("	- inv\t:\t{}	").format(taquin.inv))
+	print(("	- moves\t:\t{}	").format(taquin.moves))
+	print(("	- man\t:\t{}	").format(taquin.man))
+	print(("	- ord.\t:\t{}	").format(taquin.disorder))
+	print(("	- h\t:\t{}	").format(taquin.h))
+	print(("	- f\t:\t{}	").format(taquin.f))
+
+
+class Environment:
+	def __init__(self,width):
+		self.number = 0
+		self.sizes = (width,width*width)
+		self.weightings = self.getWeightings()
+		self.start = Taquin(self)
+		self.end = None
+
+	def getWeightings(self):
 		weightings = []
-		width = self.environment.sizes[0]
-		length = self.environment.sizes[1] - 1
+		width = self.sizes[0]
+		length = self.sizes[1] - 1
 		for index in range(1, 7):
 			pi = []
 			rho = (4 if index % 2 != 0 else 1)
@@ -106,80 +170,20 @@ class Taquin:
 			if (pi != [None]):
 				weightings.append((pi,rho))
 		return weightings
-	def disorderRate(self):
-		rate = 0
-		for i, e in enumerate(self.sequence):
-			rate += 1 if e != 0 and (i + 1) != e else 0
-		return rate
-	def manhattan(self):
-		total = 0
-		pos = []
-		width, length = self.environment.sizes
-		weightings = self.weightings()
-		for weighting in weightings:
-			distance = 0
-			for i in range(1, length):
-				j = 0
-				pos = self.coordinates(i)
-				x = i%width
-				coords = (((width - 1) if x == 0 else (x - 1)),ceil(i / width) - 1)
-				distance += weighting[0][j] * ( abs( pos[0] - coords[0] ) + abs( pos[1] - coords[1] ) )
-				j += 1
-			distance /= weighting[1]
-			total += distance
-		return total
-	def childs(self):
-		childList = []
-		for move in self.moves: childList.append(Taquin(self.environment,self,move))
-		return childList
-	def magic(self, rand=0):
-		length = self.environment.sizes[1]
-		sequence = [0]*length
-		for i in range(1, length): sequence[i-1] = i
-		if rand == 1:
-			shuffle(sequence)
-			self.sequence = sequence
-			while not self.valid():
-				shuffle(sequence)
-				self.sequence = sequence
-		return sequence
-
-
-def printTaquin(taquin):
-	print("\n\n")
-	print(("Taquin {}:").format(taquin.identity))
-	print(("	- Seq.\t:\t{}	").format(taquin.sequence))
-	print(("	- Path\t:\t{}	").format(taquin.path))
-	print(("	- g\t:\t{}	").format(taquin.g))
-	print(("	- inv\t:\t{}	").format(taquin.inv))
-	print(("	- moves\t:\t{}	").format(taquin.moves))
-	print(("	- man\t:\t{}	").format(taquin.man))
-	print(("	- ord.\t:\t{}	").format(taquin.disorder))
-	print(("	- h\t:\t{}	").format(taquin.h))
-	print(("	- f\t:\t{}	").format(taquin.f))
-
-
-class Environment:
-	def __init__(self,width):
-		self.number = 0
-		self.sizes = (width,width*width)
-		self.start = Taquin(self)
-		self.end = None
-
-
 
 	def expand(self):
 		root = self.start
 		explored = [root]
 		final = False
-		shouldBeExpanded = explored[0]
 		while (final == False):
+			shouldBeExpanded = explored[0]
 			for taquin in explored:
 				if (shouldBeExpanded.f > taquin.f): shouldBeExpanded = taquin
 			newChilds = shouldBeExpanded.childs()
-			for child in newChilds:
-				if (child.disorder == 0):
-					return child
+			if isinstance(newChilds,Taquin):
+				self.end = newChilds
+				return newChilds
+			newChilds.extend(explored)
 			explored.extend(newChilds)
 			explored.remove(shouldBeExpanded)
 
@@ -187,5 +191,5 @@ class Environment:
 
 class __main__:
 	a = Environment(3)
-	a.end = a.expand()
+	a.expand()
 	printTaquin(a.end)

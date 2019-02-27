@@ -31,6 +31,7 @@ gen_el.addEventListener("click", function () {
 	clr_con_el.dispatchEvent(cust_click);
 	var a = new Environment(parseInt(cot_el.value));
 	a.start.translate();
+	a.expand();
 	var affichage = "";
 	affichage = newLine(affichage, `Environment:`, 0);
 	affichage = newLine(affichage, `- Sizes:${t}${a.sizes[0]} / ${a.sizes[1]}`, 0);
@@ -40,7 +41,8 @@ gen_el.addEventListener("click", function () {
 	affichage = newLine(affichage, `- Validity: ${t}${a.start.valid()}`,0);
 	affichage = newLine(affichage, `- Inversions:${t}${a.start.inversions()}`,0);
 	affichage = newLine(affichage, `- Moves: ${t}${a.start.findMoves()}`,0);
-	affichage = newLine(affichage, `- Distance:${t}${a.start.manhattan()}`, 0);
-	affichage = newLine(affichage, `- Resultat:${t}${b}`, 1);
+	affichage = newLine(affichage, `- Distance:${t}${a.start.manhattan()}`, 1);
+	console.log(a.end);
+//	affichage = newLine(affichage, `- Resultat:${t}${b}`, 1);
 	__log__(affichage);
 }, false);

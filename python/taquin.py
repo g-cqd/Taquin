@@ -18,7 +18,7 @@ class Taquin:
 			self.path = self.previous.path + move
 			self.g = self.previous.g + 1
 		self.identity = self.environment.number
-		self.environment.number += 1
+		self.environment.number = self.identity + 1
 		self.inv = self.inversions()
 		self.moves = self.findMoves()
 		self.man = self.manhattan()
@@ -29,7 +29,7 @@ class Taquin:
 		sequence = self.sequence
 		inv = 0
 		length = self.environment.sizes[1]
-		for i in range(0, length):
+		for i in range(length):
 			for j in range(i+1, length):
 				inv += 1 if (sequence[i]!=0 and sequence[j] != 0 and sequence[i] > sequence[j]) else 0
 		return inv
@@ -43,14 +43,14 @@ class Taquin:
 			x = index - (y * width)
 			return [x, y]
 	def findMoves(self):
-		bound = self.environment.sizes[0] - 1
+		limit = self.environment.sizes[0] - 1
 		coords = self.coordinates()
-		lastMove = self.path[-1]
+		last = self.path[-1]
 		moves = []
-		if coords[0] != 0 	  and lastMove != 'l': moves.append('r')
-		if coords[0] != bound and lastMove != 'r': moves.append('l')
-		if coords[1] != 0	  and lastMove != 'u': moves.append('d')
-		if coords[1] != bound and lastMove != 'd': moves.append('u')
+		if coords[0] != 0 	  and last != 'l': moves.append('r')
+		if coords[0] != limit and last != 'r': moves.append('l')
+		if coords[1] != 0	  and last != 'u': moves.append('d')
+		if coords[1] != limit and last != 'd': moves.append('u')
 		return moves
 	def moveTile(self, move):
 		sequence = self.sequence.copy()
@@ -88,17 +88,16 @@ class Taquin:
 				weight = length
 				for i in range(width-1):
 					j = 0
-					while pi[j] != 0:
-						j += 1
+					while pi[j] != 0: j += 1
 					for k in range(width-i):
 						pi[j] = weight
 						j += 1
 						weight -= 1
-					j += 1
+					j += i
 					pi[j] = weight
 					weight -= 1
 					j += width
-					while j < length - 2 :
+					while j < length - 1 :
 						pi[j] = weight
 						weight -= 1
 						j += width
@@ -131,14 +130,12 @@ class Taquin:
 		return total
 	def childs(self):
 		childList = []
-		for move in self.moves:
-			childList.append(Taquin(self.environment,self,move))
+		for move in self.moves: childList.append(Taquin(self.environment,self,move))
 		return childList
 	def magic(self, rand=0):
 		length = self.environment.sizes[1]
 		sequence = [0]*length
-		for i in range(1, length):
-			sequence[i-1] = i
+		for i in range(1, length): sequence[i-1] = i
 		if rand == 1:
 			shuffle(sequence)
 			self.sequence = sequence
@@ -175,13 +172,11 @@ class Environment:
 		root = self.start
 		explored = [root]
 		final = False
-
+		shouldBeExpanded = explored[0]
 		while (final == False):
-			shouldBeExpanded = explored[0]
 			for taquin in explored:
 				if (shouldBeExpanded.f > taquin.f): shouldBeExpanded = taquin
 			newChilds = shouldBeExpanded.childs()
-
 			for child in newChilds:
 				if (child.disorder == 0):
 					return child

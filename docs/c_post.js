@@ -36,13 +36,11 @@ gen_el.addEventListener("click", function () {
 	affichage = newLine(affichage, `- Sizes:${t}${a.sizes[0]} / ${a.sizes[1]}`, 0);
 	affichage = newLine(affichage, "", 0);
 	affichage = newLine(affichage, `Start Taquin:`, 0);
-	affichage = newLine(affichage, `- Coords of 5:${t}${a.start.coordinates(5)}`, 0);
-	affichage = newLine(affichage, `- Coords of 0:${t}${a.start.coordinates(a.start.coordinates())}`, 0);
 	affichage = newLine(affichage, `- Sequence:${t}${a.start.sequence}`,0);
 	affichage = newLine(affichage, `- Validity: ${t}${a.start.valid()}`,0);
 	affichage = newLine(affichage, `- Inversions:${t}${a.start.inversions()}`,0);
 	affichage = newLine(affichage, `- Moves: ${t}${a.start.findMoves()}`,0);
 	affichage = newLine(affichage, `- Distance:${t}${a.start.manhattan()}`, 0);
-	affichage = newLine(affichage, `- Resultat:${t}${a.expand()}`, 1);
+	affichage = newLine(affichage, `- Resultat:${t}${b}`, 1);
 	__log__(affichage);
 }, false);

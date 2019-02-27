@@ -21,14 +21,13 @@ class Taquin {
 		this.h = this.man + this.disorder;
 		this.f = this.h + this.g;
 	}
-	inversions()
-	{
-		let seq = this.sequence;
+	inversions() {
+		let sequence = this.sequence;
 		let inv = 0;
 		let length = this.environment.sizes[1];
 		for (let i of range(length)) {
 			for (let j of range(i+1,length)) {
-				inv += (Number.isInteger(seq[i]) && Number.isInteger(seq[j]) && seq[i] > seq[j]) ? 1 : 0;
+				inv += (sequence[i] != 0 && sequence[j] != 0 && sequence[i] > sequence[j]) ? 1 : 0;
 			}
 		}
 		return inv;
@@ -45,18 +44,17 @@ class Taquin {
 		}
 	}
 	findMoves() {
-		let width = this.environment.sizes[0];
-		let bound = width - 1;
+		let limit = this.environment.sizes[0] - 1;
 		let coords = this.coordinates();
-		let lastMove = this.path[this.path.length - 1];
+		let last = this.path[this.path.length - 1];
 		let moves = [];
-		if (coords[0] != 0 && lastMove != 'l') { moves.push('r'); }
-		if (coords[0] != bound && lastMove != 'r') { moves.push('l'); }
-		if (coords[1] != 0 && lastMove != 'u') { moves.push('d'); }
-		if (coords[1] != bound && lastMove != 'd') { moves.push('u'); }
+		if (coords[0] != 0 && last != 'l') { moves.push('r'); }
+		if (coords[0] != limit && last != 'r') { moves.push('l'); }
+		if (coords[1] != 0 && last != 'u') { moves.push('d'); }
+		if (coords[1] != limit && last != 'd') { moves.push('u'); }
 		return moves;
 	}
-	moveTile(previous,move) {
+	moveTile(move) {
 		let sequence = this.sequence.slice();
 		let width = this.environment.sizes[0];
 		let x = this.coordinates(this.coordinates());
@@ -84,7 +82,11 @@ class Taquin {
 			let rho = (index % 2 != 0) ? 4 : 1;
 			switch (index) {
 				case 1:
-					pi = [36, 12, 12, 4, 1, 1, 4, 1];
+					if (width == 3) {
+						pi = [36, 12, 12, 4, 1, 1, 4, 1];
+					} else {
+						pi = [undefined];
+					}
 					break;
 				case 2:
 				case 3:
@@ -103,6 +105,7 @@ class Taquin {
 							pi[j] = weight--;
 							j++;
 						}
+						j += i;
 						pi[j] = weight--;
 						j += width;
 						while (j < length - 1) {
@@ -117,7 +120,9 @@ class Taquin {
 				default:
 					break;
 			}
-			weightings.push([pi, rho]);
+			if (pi != [undefined]) {
+				weightings.push([pi, rho]);
+			}
 		}
 		return weightings;
 	}
@@ -148,6 +153,13 @@ class Taquin {
 		}
 		return total;
 	}
+	childs() {
+		let childList = [];
+		for (let move of this.moves) {
+			childList.push(new Taquin(this.environment,this,move));
+		}
+		return childList;
+	}
 	magic(rand = 0) {
 		let length = this.environment.sizes[1];
 		let sequence = new Array(length).fill(0);
@@ -170,50 +182,30 @@ class Environment {
 		this._number = 0;
 		this._sizes = [width, width * width];
 		this.start = new Taquin(this);
-		this.explored = new Object();
+		this.end = undefined;
 	}
 	get sizes() { return this._sizes; }
 	get number() { return this._number; }
 	set number(value) { this._number += value; }
-	sortChildMoves(moves) {
-		let length = moves.length;
-		let result = [];
-		while (result.length != length) {
-			let minimum = moves[0];
-			for (let move of moves) {
-				if (move.f < minimum.f) {
-					minimum = move;
-				}
-			}
-			result.push(minimum);
-			moves.splice(moves.indexOf(minimum),1);
-		}
-		return result;
-	}
 	expand() {
-		let frontiere = [this.start];
-		for (let i of range(frontiere.length)) {
-			if (frontiere[i].disorder == 0) { return frontiere[i]; }
-			else {
-				let found = false;
-				for (let j in this.explored) {
-					if (this.explored[j] == frontiere[i].sequence) {
-						found = true;
-						break;
-					}
-				}
-				if (!found) {
-					let moves = frontiere[i].findMoves();
-					let taquins = [];
-					for (let move of moves) {
-						let temp = new Taquin(this, frontiere[i], move);
-						taquins.push(temp);
-					}
-					taquins = this.sortChildMoves(taquins);
-					frontiere.join(taquins);
-					this.explored[frontiere[i].path] = frontiere[i].sequence;
+		let root = this.start;
+		let explored = [root];
+		let final = false;
+		let shouldBeExpanded = explored[0];
+		while (!final) {
+			for (let taquin of explored) {
+				if (shouldBeExpanded.f > taquin.f) {
+					shouldBeExpanded = taquin;
 				}
 			}
+			let newChilds = shouldBeExpanded.childs();
+			for (let child of newChilds) {
+				if (child.disorder == 0) {
+					return child;
+				}
+			}
+			explored.join(newChilds);
+			explored.splice(explored.indexOf(shouldBeExpanded));
 		}
 	}
 }

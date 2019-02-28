@@ -202,11 +202,8 @@ input[type="button"]:active {
 	}
 	#art-taq {
 		order: 0;
-		position: fixed;
-		top: 130px;
 	}
 	#art-set {
-		margin-top: 500px;
 		flex: 1 1 auto;
 		width: 100%;
 		order: 1;

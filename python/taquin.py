@@ -66,7 +66,7 @@ class Taquin:
 	def valid(self):
 		width = self.environment.sizes[0]
 		inv = self.inversions()
-		row = self.coordinates()[1]+1
+		row = abs(self.coordinates()[1] - width)
 		return True if (((width % 2 == 1) and (inv % 2 == 0)) or ((width % 2 == 0) and ((row % 2 == 1) == (inv % 2 == 0)))) else False
 	def disorderRate(self):
 		rate = 0
@@ -194,6 +194,6 @@ class Environment:
 		return self.current
 
 class __main__:
-	a = Environment(3)
+	a = Environment(4)
 	a.expand()
 	printTaquin(a.end)

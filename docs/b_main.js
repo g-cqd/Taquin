@@ -86,7 +86,7 @@ class Taquin {
     valid() {
         let width = this.environment.sizes[0];
         let inv = this.inversions();
-        let row = (this.coordinates())[1] + 1;
+        let row = Math.abs((this.coordinates())[1] - width);
         return (((width % 2 == 1) && (inv % 2 == 0)) || ((width % 2 == 0) && ((row % 2 == 1) == (inv % 2 == 0)))) ? true : false;
     }
     disorderRate() {

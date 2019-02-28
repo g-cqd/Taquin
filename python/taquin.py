@@ -109,19 +109,18 @@ class Taquin:
 				self.sequence = sequence
 		return sequence
 
-
 def printTaquin(taquin):
 	print("\n\n")
 	print(("Taquin {}:").format(taquin.identity))
-	print(("	- Seq.\t:\t{}	").format(taquin.sequence))
-	print(("	- Path\t:\t{}	").format(taquin.path))
-	print(("	- g\t:\t{}	").format(taquin.g))
-	print(("	- inv\t:\t{}	").format(taquin.inv))
-	print(("	- moves\t:\t{}	").format(taquin.moves))
-	print(("	- man\t:\t{}	").format(taquin.man))
-	print(("	- ord.\t:\t{}	").format(taquin.disorder))
-	print(("	- h\t:\t{}	").format(taquin.h))
-	print(("	- f\t:\t{}	").format(taquin.f))
+	print(("\t- Seq.\t:\t{}	").format(taquin.sequence))
+	print(("\t- Path\t:\t{}	").format(taquin.path))
+	print(("\t- g\t:\t{}	").format(taquin.g))
+	print(("\t- inv\t:\t{}	").format(taquin.inv))
+	print(("\t- moves\t:\t{}	").format(taquin.moves))
+	print(("\t- man\t:\t{}	").format(taquin.man))
+	print(("\t- ord.\t:\t{}	").format(taquin.disorder))
+	print(("\t- h\t:\t{}	").format(taquin.h))
+	print(("\t- f\t:\t{}	").format(taquin.f))
 
 
 class Environment:
@@ -130,6 +129,8 @@ class Environment:
 		self.sizes = (width,width*width)
 		self.weightings = self.getWeightings()
 		self.start = Taquin(self)
+		self.moves = []
+		self.current = None
 		self.end = None
 
 	def getWeightings(self):
@@ -183,11 +184,14 @@ class Environment:
 			if isinstance(newChilds,Taquin):
 				self.end = newChilds
 				return newChilds
-			newChilds.extend(explored)
 			explored.extend(newChilds)
 			explored.remove(shouldBeExpanded)
 
-
+	def play(self,move):
+		previous = self.start if len(self.moves) < 1 else self.moves[-1]
+		self.current = Taquin(self,previous,move)
+		self.moves.append((move,self.current))
+		return self.current
 
 class __main__:
 	a = Environment(3)

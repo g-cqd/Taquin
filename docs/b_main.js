@@ -43,21 +43,21 @@ class Taquin {
             return [x, y];
         }
     }
-    findMoves() {
+    findMoves(flex=false) {
         let limit = this.environment.sizes[0] - 1;
         let coords = this.coordinates();
         let last = this.path[this.path.length - 1];
         let moves = [];
-        if (coords[0] != 0 && last != 'l') {
+        if (coords[0] != 0 && (last != 'l' || flex)) {
             moves.push('r');
         }
-        if (coords[0] != limit && last != 'r') {
+        if (coords[0] != limit && (last != 'r' || flex)) {
             moves.push('l');
         }
-        if (coords[1] != 0 && last != 'u') {
+        if (coords[1] != 0 && (last != 'u' || flex)) {
             moves.push('d');
         }
-        if (coords[1] != limit && last != 'd') {
+        if (coords[1] != limit && (last != 'd' || flex)) {
             moves.push('u');
         }
         return moves;
@@ -151,6 +151,8 @@ class Environment {
         this._sizes = [width, width * width];
         this._weightings = this.getWeightings();
 		this.start = new Taquin(this);
+		this.moves = [];
+		this.current = this.start;
         this.end = undefined;
     }
     get sizes() {
@@ -240,5 +242,14 @@ class Environment {
             explored.push(...newChilds);
             explored.splice(explored.indexOf(shouldBeExpanded),1);
         }
-    }
+	}
+	play(move) {
+		let previous = this.moves.length < 1 ? this.start : this.current;
+		this.current = new Taquin(this,previous,move);
+		this.moves.push([move,this.current]);
+        display_taquin.dispatchEvent(played);
+        if (this.current.disorderRate()==0) {
+            document.body.classList.toggle("win");
+        }
+	}
 }

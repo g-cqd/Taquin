@@ -1,14 +1,22 @@
 // var myNotification = new Notification('Hello!');
 
-var t = "\t";
-var div_taq = document.getElementById("div-taq");
-var art_con = document.getElementById("art-con");
-var cot_el = document.getElementById("inp-cod");
-var gen_el = document.getElementById("but-gen");
-var clr_con_el = document.getElementById("but-clr-con");
 
-clr_con_el.addEventListener("click", function () {
-	art_con.innerHTML = "";
+var listEnvironment = [];
+
+var played = document.createEvent("Event");
+played.initEvent("moved",true,true);
+
+t = "\t";
+
+var display_taquin = document.getElementById("div-taq");
+var display_console = document.getElementById("art-con");
+var input_width = document.getElementById("inp-cod");
+var button_generate = document.getElementById("but-gen");
+var button_clear_console = document.getElementById("but-clr-con");
+var banner_winner = document.getElementById("banner-winner");
+
+button_clear_console.addEventListener("click", function () {
+	display_console.innerHTML = "";
 }, false);
 
 
@@ -22,15 +30,25 @@ function range(start, stop = undefined, step = undefined) {
 		b = (stop == undefined ? 0 : start);
 		b < (stop == undefined ? start : stop);
 		b += (step == undefined ? 1 : step)
-	) {
-		a.push(b);
-	}
-	return a;
+		) {
+			a.push(b);
+		}
+		return a;
 }
-Array.prototype.shuffle = function () {
-	return this.map((e, i) => {
-		let r = random(this.length);
-		this[i] = this[r];
-		this[r] = e;
-	});
-};
+
+
+if (!Array.prototype.shuffle) {
+	Array.prototype.shuffle = function () {
+		return this.map((e, i) => {
+			let r = random(this.length);
+			this[i] = this[r];
+			this[r] = e;
+		});
+	};
+}
+
+if (!Array.prototype.last) {
+	Array.prototype.last = function () {
+		return this[this.length - 1];
+	};
+}

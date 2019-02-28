@@ -1,7 +1,7 @@
 Taquin.prototype.translate = function () {
-	var sizes = [div_taq.offsetWidth, div_taq.offsetHeight];
-	var plateau = document.createElement("div");
-	plateau.classList.add("plateau");
+	var sizes = [display_taquin.offsetWidth, display_taquin.offsetHeight];
+	var display_game = document.createElement("div");
+	display_game.classList.add("plateau");
 	for (var item of this.sequence) {
 		var element = document.createElement("div");
 		if (item == 0) {
@@ -11,38 +11,82 @@ Taquin.prototype.translate = function () {
 		}
 		element.setAttribute("style", `height:${(sizes[1] - 40) / this.environment.sizes[0]}px;width:${(sizes[0] - 40) / this.environment.sizes[0]}px;font-size:${((sizes[1] - 40) / this.environment.sizes[0]) * 0.5}px;`);
 		element.innerHTML = item != 0 ? item : "";
-		plateau.appendChild(element);
+		display_game.appendChild(element);
 	}
-	div_taq.innerHTML = "";
-	div_taq.appendChild(plateau);
-}
+	display_taquin.innerHTML = "";
+	display_taquin.appendChild(display_game);
+	button_clear_console.dispatchEvent(cust_click);
+
+	let currentEnv = listEnvironment.last();
+	let currentTaquin = currentEnv.current;
+
+	var affichage = "";
+	affichage = newLine(affichage,`Taquin ${currentTaquin.identitiy}:`,0);
+	affichage = newLine(affichage,`${t}- Path:${t}${currentTaquin.path}`,0);
+	affichage = newLine(affichage,`${t}- g:${t}${currentTaquin.g}`,0);
+	affichage = newLine(affichage,`${t}- Inversions:${t}${currentTaquin.inv}`,0);
+	affichage = newLine(affichage,`${t}- Man:${t}${currentTaquin.man}`,0);
+	affichage = newLine(affichage,`${t}- Disord.:${t}${currentTaquin.disorder}`,0);
+	affichage = newLine(affichage,`${t}- h:${t}${currentTaquin.h}`,0);
+	affichage = newLine(affichage,`${t}- f:${t}${currentTaquin.f}`,1);
+	__log__(affichage);
+};
 
 function __log__(element = "") {
 	el = document.createElement("pre");
 	el.append(element + '\n');
-	art_con.appendChild(el);
+	display_console.appendChild(el);
 }
 function newLine(str, element, end = 0) {
 	str += element + (end == 0 ? '\n' : '');
 	return str;
 }
 cust_click = new Event("click");
-gen_el.addEventListener("click", function () {
-	clr_con_el.dispatchEvent(cust_click);
-	var a = new Environment(parseInt(cot_el.value));
-	a.start.translate();
-	a.expand();
-	var affichage = "";
-	affichage = newLine(affichage, `Environment:`, 0);
-	affichage = newLine(affichage, `- Sizes:${t}${a.sizes[0]} / ${a.sizes[1]}`, 0);
-	affichage = newLine(affichage, "", 0);
-	affichage = newLine(affichage, `Start Taquin:`, 0);
-	affichage = newLine(affichage, `- Sequence:${t}${a.start.sequence}`,0);
-	affichage = newLine(affichage, `- Validity: ${t}${a.start.valid()}`,0);
-	affichage = newLine(affichage, `- Inversions:${t}${a.start.inversions()}`,0);
-	affichage = newLine(affichage, `- Moves: ${t}${a.start.findMoves()}`,0);
-	affichage = newLine(affichage, `- Distance:${t}${a.start.manhattan()}`, 1);
-	console.log(a.end);
-//	affichage = newLine(affichage, `- Resultat:${t}${b}`, 1);
-	__log__(affichage);
+button_generate.addEventListener("click", function () {
+	button_clear_console.dispatchEvent(cust_click);
+	listEnvironment.push(new Environment(parseInt(input_width.value)));
+	display_taquin.dispatchEvent(played);
+	if (document.body.classList.contains("win")) {
+		document.body.classList.toggle("win");
+	}
 }, false);
+
+display_taquin.addEventListener("moved", function() {
+	let currentEnv = listEnvironment.last();
+	currentEnv.current.translate();
+},false);
+
+document.onkeydown = function handlekeydown(e)
+{
+	let currentEnv = listEnvironment.last();
+	if (currentEnv.current.disorderRate() != 0) {
+		let key = e.keyCode;
+		let move;
+		switch (key)
+		{
+			case 37: // left
+				if (currentEnv.current.findMoves(true).includes("l")) {
+					move = "l";
+				}
+				break;
+			case 38: // up
+				if (currentEnv.current.findMoves(true).includes("u")) {
+					move = "u";
+				}
+				break;
+			case 39: // right
+				if (currentEnv.current.findMoves(true).includes("r")) {
+					move = "r";
+				}
+				break;
+			case 40: // down
+				if (currentEnv.current.findMoves(true).includes("d")) {
+					move = "d";
+				}
+				break;
+			default:
+				return;
+		}
+		if (move) { currentEnv.play(move); }
+	}
+};

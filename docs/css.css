@@ -124,6 +124,10 @@ pre {
 	height: 100%;
 	width: 100%;
 }
+body.win .plateau .case:not(.vide) {
+	background-color: green;
+	color: white;
+}
 .case {
 	display: flex;
 	flex-flow: row nowrap;

@@ -56,6 +56,40 @@ display_taquin.addEventListener("moved", function() {
 	currentEnv.current.translate();
 },false);
 
+swipedetect(display_taquin, function(swipedir){
+    let currentEnv = listEnvironment.last();
+	if (currentEnv.current.disorderRate() != 0) {
+		let move;
+		switch (swipedir)
+		{
+			case "left": // left
+				if (currentEnv.current.findMoves(true).includes("l")) {
+					move = "l";
+				}
+				break;
+			case "up": // up
+				if (currentEnv.current.findMoves(true).includes("u")) {
+					move = "u";
+				}
+				break;
+			case "right": // right
+				if (currentEnv.current.findMoves(true).includes("r")) {
+					move = "r";
+				}
+				break;
+			case "down": // down
+				if (currentEnv.current.findMoves(true).includes("d")) {
+					move = "d";
+				}
+				break;
+			default:
+				return;
+		}
+		if (move) { currentEnv.play(move); }
+	}
+});
+
+
 document.onkeydown = function handlekeydown(e)
 {
 	let currentEnv = listEnvironment.last();

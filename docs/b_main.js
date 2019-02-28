@@ -48,18 +48,10 @@ class Taquin {
         let coords = this.coordinates();
         let last = this.path[this.path.length - 1];
         let moves = [];
-        if (coords[0] != 0 && (last != 'l' || flex)) {
-            moves.push('r');
-        }
-        if (coords[0] != limit && (last != 'r' || flex)) {
-            moves.push('l');
-        }
-        if (coords[1] != 0 && (last != 'u' || flex)) {
-            moves.push('d');
-        }
-        if (coords[1] != limit && (last != 'd' || flex)) {
-            moves.push('u');
-        }
+        if (coords[0] != 0 && (last != 'l' || flex)) { moves.push('r'); }
+        if (coords[0] != limit && (last != 'r' || flex)) { moves.push('l'); }
+        if (coords[1] != 0 && (last != 'u' || flex)) { moves.push('d'); }
+        if (coords[1] != limit && (last != 'd' || flex)) { moves.push('u'); }
         return moves;
     }
     moveTile(move) {
@@ -67,18 +59,10 @@ class Taquin {
         let width = this.environment.sizes[0];
         let x = this.coordinates(this.coordinates());
         let y;
-        if (move == 'r') {
-            y = x - 1;
-        }
-        if (move == 'l') {
-            y = x + 1;
-        }
-        if (move == 'd') {
-            y = x - width;
-        }
-        if (move == 'u') {
-            y = x + width;
-        }
+        if (move == 'r') { y = x - 1; }
+        if (move == 'l') { y = x + 1; }
+        if (move == 'd') { y = x - width; }
+        if (move == 'u') { y = x + width; }
         sequence[x] = sequence[y];
         sequence[y] = 0;
         this.sequence = sequence;
@@ -87,16 +71,14 @@ class Taquin {
         let width = this.environment.sizes[0];
         let inv = this.inversions();
         let row = Math.abs((this.coordinates())[1] - width);
-        return (((width % 2 == 1) && (inv % 2 == 0)) || ((width % 2 == 0) && ((row % 2 == 1) == (inv % 2 == 0)))) ? true : false;
+        return ((width % 2 == 1) && (inv % 2 == 0)) || ((width % 2 == 0) && ((row % 2 == 1) == (inv % 2 == 0))) ? true : false;
     }
     disorderRate() {
         let sequence = this.sequence;
         let rate = 0;
         let length = this.environment.sizes[1];
         for (let i of range(length)) {
-            if (sequence[i] != 0 && sequence[i] != i+1) {
-                rate += 1;   
-            }
+            if (sequence[i] != 0 && sequence[i] != i+1) { rate++; }
         }
         return rate;
     }

@@ -22,8 +22,8 @@ class Taquin:
 		self.inv = self.inversions()
 		self.moves = self.findMoves()
 		self.man = self.manhattan()
-		self.disorder = self.disorderRate()
-		self.h = self.man + self.disorder
+		#self.disorder = self.disorderRate()
+		self.h = self.man
 		self.f = self.h + self.g
 	def inversions(self):
 		sequence = self.sequence
@@ -94,7 +94,7 @@ class Taquin:
 		childList = []
 		for move in self.moves:
 			child = Taquin(self.environment,self,move)
-			if child.disorder == 0: return child
+			if child.man == 0: return child
 			childList.append(child)
 		return childList
 	def magic(self, rand=0):
@@ -118,7 +118,7 @@ def printTaquin(taquin):
 	print(("\t- inv\t:\t{}	").format(taquin.inv))
 	print(("\t- moves\t:\t{}	").format(taquin.moves))
 	print(("\t- man\t:\t{}	").format(taquin.man))
-	print(("\t- ord.\t:\t{}	").format(taquin.disorder))
+	#print(("\t- ord.\t:\t{}	").format(taquin.disorder))
 	print(("\t- h\t:\t{}	").format(taquin.h))
 	print(("\t- f\t:\t{}	").format(taquin.f))
 
@@ -137,18 +137,10 @@ class Environment:
 		weightings = []
 		width = self.sizes[0]
 		length = self.sizes[1] - 1
-		for index in range(1, 7):
+		for index in range(1,4):
 			pi = []
 			rho = (4 if index % 2 != 0 else 1)
-			if index == 1:
-				if width == 3:
-					pi = [36, 12, 12, 4, 1, 1, 4, 1]
-				else:
-					pi = [None]
-			elif index == 2 or index == 3:
-				for i in range(length):
-					pi.append(length - i)
-			elif index == 4 or index == 5:
+			if index == 1 or index == 2 :
 				pi = [0] * length
 				weight = length
 				for i in range(width-1):
@@ -166,10 +158,9 @@ class Environment:
 						pi[j] = weight
 						weight -= 1
 						j += width
-			elif index == 6:
+			elif index == 3:
 				pi = [1]*length
-			if (pi != [None]):
-				weightings.append((pi,rho))
+			weightings.append((pi,rho))
 		return weightings
 
 	def expand(self):
@@ -194,6 +185,8 @@ class Environment:
 		return self.current
 
 class __main__:
-	a = Environment(4)
+	env = int(input("Taille du taquin ? "))
+	a = Environment(env)
+	printTaquin(a.start)
 	a.expand()
 	printTaquin(a.end)

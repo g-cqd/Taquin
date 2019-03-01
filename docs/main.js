@@ -1,6 +1,3 @@
-// var myNotification = new Notification('Hello!');
-
-
 var listEnvironment = [];
 
 var played = document.createEvent("Event");
@@ -8,16 +5,18 @@ played.initEvent("moved",true,true);
 
 t = "\t";
 
-var display_taquin = document.getElementById("div-taq");
-var display_console = document.getElementById("art-con");
-var input_width = document.getElementById("inp-cod");
-var button_generate = document.getElementById("but-gen");
-var button_clear_console = document.getElementById("but-clr-con");
-var banner_winner = document.getElementById("banner-winner");
+var display_taquin = document.getElementById("taquin");
+var input_width = document.getElementById("input-width");
+var width_pp = document.getElementById("button-width-pp");
+var width_mm = document.getElementById("button-width-mm");
+var button_generate = document.getElementById("button-new");
+var button_clear = document.getElementById("button-clear");
+var val_coups = document.getElementById("coups");
+var val_manha = document.getElementById("manhattan");
+var val_disor = document.getElementById("disorder");
+var val_inver = document.getElementById("inversions");
 
-button_clear_console.addEventListener("click", function () {
-	display_console.innerHTML = "";
-}, false);
+
 
 
 function random(min, max = undefined) {
@@ -35,8 +34,6 @@ function range(start, stop = undefined, step = undefined) {
 		}
 		return a;
 }
-
-
 if (!Array.prototype.shuffle) {
 	Array.prototype.shuffle = function () {
 		return this.map((e, i) => {
@@ -46,15 +43,12 @@ if (!Array.prototype.shuffle) {
 		});
 	};
 }
-
 if (!Array.prototype.last) {
 	Array.prototype.last = function () {
 		return this[this.length - 1];
 	};
 }
-
 function swipedetect(el, callback){
-  
     var touchsurface = el,
     swipedir,
     startX,
@@ -66,7 +60,6 @@ function swipedetect(el, callback){
     allowedTime = 300,  // default : 300 => maximum time to move
     startTime,
     handleswipe = callback || function(swipedir){};
-  
     touchsurface.addEventListener('touchstart', function(e){
         var touchobj = e.changedTouches[0];
         swipedir = 'none';
@@ -76,7 +69,6 @@ function swipedetect(el, callback){
         startTime = new Date().getTime();
         e.preventDefault();
     }, false);
-  
     touchsurface.addEventListener('touchmove', function(e){
         e.preventDefault();
     }, false);

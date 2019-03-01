@@ -8,32 +8,89 @@
 	<link rel="stylesheet" type="text/css" media="screen" href="css.css">
 	<link rel="icon" href="favico.png" type="image/png">
 	<link rel="apple-touch-icon" href="favico.png" type="image/png">
-	<script src="a_pre.js" defer></script>
-	<script src="b_main.js" defer></script>
-	<script src="c_post.js" defer></script>
+	<script src="main.js" defer></script>
+	<script src="taquin.js" defer></script>
+	<script src="gui.js" defer></script>
 </head>
 <body>
 	<header>
-		<div></div>
 		<h1 id="title">TA<span id="star">*</span>UIN</h1>
-		<div></div>
+		<nav>
+			<div class="toggler" id="menu-toggler">
+				Menu
+			</div>
+			<div id="menu">
+				<div>
+					<h2>Détails</h2>
+					<ul>
+						
+					</ul>
+				</div>
+				<div>
+					<h2>Paramètres</h2>
+					<ul>
+						
+					</ul>
+				</div>
+				<div>
+					<h2>Paramètres</h2>
+					<ul>
+						
+					</ul>
+				</div>
+			</div>
+		</nav>
 	</header>
 	<main>
 		<section id="content">
-			<article id="art-set" class="form-section rounded-element">
-				<h3>Paramètres :</h3>
-				<label>Side Length : <input type="number" name="side-length" min="3" value="3" max="10" id="inp-cod"></label>
-			</article>
-			<article id="art-taq">
-				<div id="div-taq" class="rounded-element"></div>
-				<div id="div-gen" class="form-section rounded-element">
-					<label><input type="button" value="Generate" id="but-gen"></label>
-					<label><input type="button" value="Clear Console" id="but-clr-con"></label>
+			
+			<div id="taquin" class="rounded-element"></div>
+			<div class="bar form-section rounded-element">
+				<label><input type="button" value="New" id="button-new"></label>
+				<!--<label><input type="button" value="&rarr;" id="ex-pand"></label>-->
+				<input type="button" value="Clear" id="button-clear">
+			</div>
+			<div class="bar form-section rounded-element">
+				<input class="icon" type="button" name="width-mm" value="-" id="button-width-mm">
+				<input type="number" name="width" min="3" value="3" max="10" id="input-width">
+				<input class="icon" type="button" name="width-pp" value="+" id="button-width-pp">
+			</div>
+			<div class="grid">
+				<div class="squared">
+					<span class="title">
+						coups
+					</span>
+					<span class="squared-content" id="coups">
+
+					</span>
 				</div>
-			</article>
-			<article id="art-con" class="rounded-element"></article>
+				<div class="squared">
+					<span class="title">
+						manhattan
+					</span>
+					<span class="squared-content" id="manhattan">
+
+					</span>
+				</div>
+				<div class="squared">
+					<div class="title">
+						désordre
+					</div>
+					<div class="squared-content" id="disorder">
+
+					</div>
+				</div>
+				<div class="squared">
+					<div class="title">
+						inversions
+					</div>
+					<div class="squared-content" id="inversions">
+
+					</div>
+				</div>
+			</div>
 		</section>
 	</main>
-
+	
 </body>
 </html>

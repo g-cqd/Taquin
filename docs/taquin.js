@@ -169,7 +169,6 @@ class Environment {
                 break;
             case 4:
 			case 5:
-				if (width == 3) {
                 pi = new Array(length).fill(0);
                 let weight = length;
                 for (let i of range(width - 1)) {
@@ -188,7 +187,7 @@ class Environment {
                         pi[j] = weight--;
                         j += width;
                     }
-                }} else { pi = [undefined]; }
+                }
                 break;
             case 6:
                 pi = new Array(length).fill(1);
@@ -196,7 +195,7 @@ class Environment {
             default:
                 break;
             }
-            if (pi != [undefined]) {
+            if (pi[0] != undefined) {
                 weightings.push([pi, rho]);
             }
         }

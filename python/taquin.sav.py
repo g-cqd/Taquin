@@ -195,7 +195,7 @@ class Environment:
 		return self.current
 
 class __main__:
-	env = int(input("Taille du taquin?"))
-	a = Environment(3)
+	env = int(input("Taille du taquin ? "))
+	a = Environment(env)
 	a.expand()
 	printTaquin(a.end)

@@ -1,3 +1,7 @@
+function newEnvironment(value) {
+    listEnvironment.push(new Environment(value));
+}
+
 Taquin.prototype.translate = function () {
 	var sizes = [display_taquin.offsetWidth, display_taquin.offsetHeight];
 	var display_game = document.createElement("div");
@@ -15,48 +19,60 @@ Taquin.prototype.translate = function () {
 	}
 	display_taquin.innerHTML = "";
 	display_taquin.appendChild(display_game);
-	button_clear_console.dispatchEvent(cust_click);
+	button_clear.click();
 
 	let currentEnv = listEnvironment.last();
 	let currentTaquin = currentEnv.current;
 
-	var affichage = "";
-	affichage = newLine(affichage,`Taquin ${currentTaquin.identitiy}:`,0);
-	affichage = newLine(affichage,`${t}- Path:${t}${currentTaquin.path}`,0);
-	affichage = newLine(affichage,`${t}- g:${t}${currentTaquin.g}`,0);
-	affichage = newLine(affichage,`${t}- Inversions:${t}${currentTaquin.inv}`,0);
-	affichage = newLine(affichage,`${t}- Man:${t}${currentTaquin.man}`,0);
-	affichage = newLine(affichage,`${t}- Disord.:${t}${currentTaquin.disorder}`,0);
-	affichage = newLine(affichage,`${t}- h:${t}${currentTaquin.h}`,0);
-	affichage = newLine(affichage,`${t}- f:${t}${currentTaquin.f}`,1);
-	__log__(affichage);
+	val_coups.innerHTML = currentTaquin.g;
+	val_manha.innerHTML = parseInt(currentTaquin.man).toString();
+	val_disor.innerHTML = parseInt(currentTaquin.disorder).toString();
+	val_inver.innerHTML = parseInt(currentTaquin.inv).toString();
 };
 
-function __log__(element = "") {
-	el = document.createElement("pre");
-	el.append(element + '\n');
-	display_console.appendChild(el);
+
+var togglers = document.getElementsByClassName("toggler");
+for (var toggler of togglers) {
+	toggler.addEventListener("click", () => {
+		toggler.classList.toggle("active");
+	}, false);
 }
-function newLine(str, element, end = 0) {
-	str += element + (end == 0 ? '\n' : '');
-	return str;
-}
-cust_click = new Event("click");
+
+
+
+
 button_generate.addEventListener("click", function () {
-	button_clear_console.dispatchEvent(cust_click);
-	listEnvironment.push(new Environment(parseInt(input_width.value)));
+	button_clear.click();
+	newEnvironment(parseInt(input_width.value));
 	display_taquin.dispatchEvent(played);
 	if (document.body.classList.contains("win")) {
 		document.body.classList.toggle("win");
 	}
 }, false);
 
+
+width_pp.addEventListener("click", function () {
+	input_width.value++;
+	newEnvironment(parseInt(input_width.value));
+	display_taquin.dispatchEvent(played);
+}, false);
+width_mm.addEventListener("click", function () {
+	input_width.value--;
+	newEnvironment(parseInt(input_width.value));
+	display_taquin.dispatchEvent(played);
+}, false);
+/*
+button_expand.addEventListener("click", function() {
+	listEnvironment.last().expand();
+});*/
 display_taquin.addEventListener("moved", function() {
 	let currentEnv = listEnvironment.last();
 	currentEnv.current.translate();
 },false);
 
-swipedetect(display_taquin, function(swipedir){
+
+
+swipedetect(display_taquin, function(swipedir) {
     let currentEnv = listEnvironment.last();
 	if (currentEnv.current.disorderRate() != 0) {
 		let move;
@@ -90,14 +106,12 @@ swipedetect(display_taquin, function(swipedir){
 });
 
 
-document.onkeydown = function handlekeydown(e)
-{
+document.onkeydown = function handlekeydown(e) {
 	let currentEnv = listEnvironment.last();
 	if (currentEnv.current.disorderRate() != 0) {
 		let key = e.keyCode;
 		let move;
-		switch (key)
-		{
+		switch (key) {
 			case 37: // left
 				if (currentEnv.current.findMoves(true).includes("l")) {
 					move = "l";
@@ -123,4 +137,8 @@ document.onkeydown = function handlekeydown(e)
 		}
 		if (move) { currentEnv.play(move); }
 	}
+};
+
+window.onload = function () {
+	button_generate.click();
 };

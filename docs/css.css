@@ -21,13 +21,6 @@ h1,h2,h3,h4,h5,h6 {
 	margin: 0;
 	letter-spacing: -.025em;
 }
-
-p {
-	margin: .1em 0;
-	word-wrap: break-word;
-	word-break: break-all;
-}
-
 header {
 	display: flex;
 	flex-flow: row nowrap;
@@ -77,6 +70,12 @@ header {
 	height: 100%;
 	width: 100%;
 	background-color: var(--bg-color);
+}
+
+p {
+	margin: .1em 0;
+	word-wrap: break-word;
+	word-break: break-all;
 }
 
 .toggler:not(.active) + #menu {

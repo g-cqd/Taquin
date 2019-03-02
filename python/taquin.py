@@ -3,6 +3,7 @@
 
 from random import shuffle
 from math import ceil
+from func import *
 
 class Taquin:
 	def __init__(self, environment, previous=None, move=None):
@@ -11,7 +12,7 @@ class Taquin:
 		if previous == None:
 			self.sequence = self.magic(1)
 			self.path = "_"
-			self.g = 1
+			self.g = 0
 		else:
 			self.sequence = previous.sequence.copy()
 			self.moveTile(move)
@@ -90,12 +91,31 @@ class Taquin:
 			distance /= weighting[1]
 			total += distance
 		return total
+
+
 	def childs(self):
 		childList = []
 		for move in self.moves:
 			child = Taquin(self.environment,self,move)
-			if child.man == 0: return child
-			childList.append(child)
+			if child.man == 0:
+				return child
+			length = len(childList)
+			if length > 0:
+				i = 0
+				while (i < length):
+					if child.f > childList[i].f:
+						i += 1
+					elif child.f == childList[i].f:
+						if child.inv > childList[i].inv:
+							i += 1
+						else:
+							childList.insert(i,child)
+							i = length
+					else:
+						childList.insert(i,child)
+						i = length
+			else:
+				childList.append(child)
 		return childList
 	def magic(self, rand=0):
 		length = self.environment.sizes[1]
@@ -130,53 +150,63 @@ class Environment:
 		self.weightings = self.getWeightings()
 		self.start = Taquin(self)
 		self.moves = []
-		self.current = None
+		self.current = self.start
 		self.end = None
 
 	def getWeightings(self):
 		weightings = []
 		width = self.sizes[0]
 		length = self.sizes[1] - 1
-		for index in range(1,4):
-			pi = []
-			rho = (4 if index % 2 != 0 else 1)
-			if index == 1 or index == 2 :
-				pi = [0] * length
-				weight = length
-				for i in range(width-1):
-					j = 0
-					while pi[j] != 0: j += 1
-					for k in range(width-i):
-						pi[j] = weight
-						j += 1
-						weight -= 1
-					j += i
-					pi[j] = weight
-					weight -= 1
-					j += width
-					while j < length - 1 :
-						pi[j] = weight
-						weight -= 1
-						j += width
-			elif index == 3:
-				pi = [1]*length
-			weightings.append((pi,rho))
+		pi = [0] * length
+		weight = length
+		for i in range(width-1):
+			j = 0
+			while pi[j] != 0: j += 1
+			for k in range(width-i):
+				pi[j] = weight
+				j += 1
+				weight -= 1
+			j += i
+			pi[j] = weight
+			weight -= 1
+			j += width
+			while j < length - 1 :
+				pi[j] = weight
+				weight -= 1
+				j += width
+		weightings.append((pi,1))
 		return weightings
 
+
+
 	def expand(self):
-		root = self.start
-		explored = [root]
-		final = False
-		while (final == False):
-			shouldBeExpanded = explored[0]
-			for taquin in explored:
-				if (shouldBeExpanded.f > taquin.f): shouldBeExpanded = taquin
-			newChilds = shouldBeExpanded.childs()
-			if isinstance(newChilds,Taquin):
-				self.end = newChilds
-				return newChilds
-			explored.extend(newChilds)
-			explored.remove(shouldBeExpanded)
+		pipe = [self.current]
+		tree = dict()
+		while (not self.end):
+			shouldBeExpanded = pipe.pop(0)
+			update(tree,shouldBeExpanded)
+			children = shouldBeExpanded.childs()
+			if isinstance(children,Taquin):
+				self.end = children
+				return children
+			else:
+				extend(pipe,children)
+
+
+	def expand_tmp(self):
+		queue = [self.start]
+		explored = {self.start.sequence:self.start}
+		end = False
+		while (not end):
+			for shouldBeExpanded in queue:
+				sbe_seq = shouldBeExpanded.sequence
+				if not (sbe_seq in explored.keys()):
+					childs = shouldBeExpanded.childs()
+					if isinstance(childs,Taquin):
+						self.end = childs
+						return childs
+					queue.extend(childs)
+				queue.pop(0)
 
 	def play(self,move):
 		previous = self.start if len(self.moves) < 1 else self.moves[-1]

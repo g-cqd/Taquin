@@ -19,7 +19,6 @@ Taquin.prototype.translate = function () {
 	}
 	display_taquin.innerHTML = "";
 	display_taquin.appendChild(display_game);
-	button_clear.click();
 
 	let currentEnv = listEnvironment.last();
 	let currentTaquin = currentEnv.current;
@@ -42,23 +41,21 @@ for (var toggler of togglers) {
 
 
 button_generate.addEventListener("click", function () {
-	button_clear.click();
+	if (input_width.value < 3) { input_width.value = 3; }
+	else if (input_width.value > 10) { input_width.value = 10; }
 	newEnvironment(parseInt(input_width.value));
 	display_taquin.dispatchEvent(played);
-	if (document.body.classList.contains("win")) {
-		document.body.classList.toggle("win");
-	}
+	document.body.classList.remove("win");
 }, false);
 
-
 width_pp.addEventListener("click", function () {
-	input_width.value++;
-	newEnvironment(parseInt(input_width.value));
+	if (input_width.value < 10) { input_width.value++; } 
+	button_generate.click();
 	display_taquin.dispatchEvent(played);
 }, false);
 width_mm.addEventListener("click", function () {
-	input_width.value--;
-	newEnvironment(parseInt(input_width.value));
+	if (input_width.value > 3) { input_width.value--; } 
+	button_generate.click();
 	display_taquin.dispatchEvent(played);
 }, false);
 /*
@@ -72,70 +69,57 @@ display_taquin.addEventListener("moved", function() {
 
 
 
-swipedetect(display_taquin, function(swipedir) {
-    let currentEnv = listEnvironment.last();
-	if (currentEnv.current.disorderRate() != 0) {
+swipedetect(display_taquin, function(direction) {
+	if (!(document.body.classList.contains("win"))) {
 		let move;
-		switch (swipedir)
+		switch (direction)
 		{
-			case "left": // left
-				if (currentEnv.current.findMoves(true).includes("l")) {
-					move = "l";
-				}
+			case "left":
+				move = listEnvironment.last().current.findMoves(true).includes("l") ? "l" : undefined;
 				break;
-			case "up": // up
-				if (currentEnv.current.findMoves(true).includes("u")) {
-					move = "u";
-				}
+			case "up":
+				move = listEnvironment.last().current.findMoves(true).includes("u") ? "u" : undefined;
 				break;
-			case "right": // right
-				if (currentEnv.current.findMoves(true).includes("r")) {
-					move = "r";
-				}
+			case "right":
+				move = listEnvironment.last().current.findMoves(true).includes("r") ? "r" : undefined;
 				break;
-			case "down": // down
-				if (currentEnv.current.findMoves(true).includes("d")) {
-					move = "d";
-				}
+			case "down":
+				move = listEnvironment.last().current.findMoves(true).includes("d") ? "d" : undefined;
 				break;
 			default:
 				return;
 		}
-		if (move) { currentEnv.play(move); }
+		if (move) { listEnvironment.last().play(move); }
 	}
 });
-
-
 document.onkeydown = function handlekeydown(e) {
-	let currentEnv = listEnvironment.last();
-	if (currentEnv.current.disorderRate() != 0) {
-		let key = e.keyCode;
+	if (!(document.body.classList.contains("win"))) {
 		let move;
-		switch (key) {
+		switch (e.keyCode) {
+			case 13:
+				e.preventDefault();
+				button_generate.click();
+				break;
 			case 37: // left
-				if (currentEnv.current.findMoves(true).includes("l")) {
-					move = "l";
-				}
+				e.preventDefault();
+				move = listEnvironment.last().current.findMoves(true).includes("l") ? "l" : undefined;
 				break;
 			case 38: // up
-				if (currentEnv.current.findMoves(true).includes("u")) {
-					move = "u";
-				}
+				e.preventDefault();
+				move = listEnvironment.last().current.findMoves(true).includes("u") ? "u" : undefined;
 				break;
 			case 39: // right
-				if (currentEnv.current.findMoves(true).includes("r")) {
-					move = "r";
-				}
+				e.preventDefault();
+				move = listEnvironment.last().current.findMoves(true).includes("r") ? "r" : undefined;
 				break;
 			case 40: // down
-				if (currentEnv.current.findMoves(true).includes("d")) {
-					move = "d";
-				}
+				e.preventDefault();
+				move = listEnvironment.last().current.findMoves(true).includes("d") ? "d" : undefined;
 				break;
 			default:
 				return;
 		}
-		if (move) { currentEnv.play(move); }
+		if (move) { listEnvironment.last().play(move); }
 	}
 };
 

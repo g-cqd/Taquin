@@ -5,7 +5,7 @@ class Taquin {
         if (previous == undefined) {
             this.sequence = this.magic(1);
             this.path = "_";
-            this.g = 1;
+            this.g = 0;
         } else {
             this.sequence = previous.sequence.slice();
             this.moveTile(move);

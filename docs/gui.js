@@ -25,7 +25,6 @@ Taquin.prototype.translate = function () {
 
 	val_coups.innerHTML = currentTaquin.g;
 	val_manha.innerHTML = parseInt(currentTaquin.man).toString();
-	val_disor.innerHTML = parseInt(currentTaquin.disorder).toString();
 	val_inver.innerHTML = parseInt(currentTaquin.inv).toString();
 };
 
@@ -49,19 +48,20 @@ button_generate.addEventListener("click", function () {
 }, false);
 
 width_pp.addEventListener("click", function () {
-	if (input_width.value < 10) { input_width.value++; } 
+	if (input_width.value < 10) { input_width.value++; }
 	button_generate.click();
 	display_taquin.dispatchEvent(played);
 }, false);
 width_mm.addEventListener("click", function () {
-	if (input_width.value > 3) { input_width.value--; } 
+	if (input_width.value > 3) { input_width.value--; }
 	button_generate.click();
 	display_taquin.dispatchEvent(played);
 }, false);
-/*
+
 button_expand.addEventListener("click", function() {
 	listEnvironment.last().expand();
-});*/
+	console.log(listEnvironment.last().end);
+});
 display_taquin.addEventListener("moved", function() {
 	let currentEnv = listEnvironment.last();
 	currentEnv.current.translate();

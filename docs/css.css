@@ -127,10 +127,6 @@ main {
 	margin-bottom: 20px;
 }
 
-#ex-pand {
-	display: none;
-}
-
 .grid {
 	flex-wrap: wrap;
 	justify-content: space-between;

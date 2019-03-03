@@ -13,6 +13,7 @@ var button_generate = document.getElementById("button-new");
 var button_expand = document.getElementById("ex-pand");
 var val_coups = document.getElementById("coups");
 var val_manha = document.getElementById("manhattan");
+var val_desor = document.getElementById("desordre");
 var val_inver = document.getElementById("inversions");
 
 

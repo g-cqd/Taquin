@@ -22,62 +22,51 @@
 			<div id="menu">
 				<div>
 					<h2>Détails</h2>
-					<ul>
-						
-					</ul>
+					<ul></ul>
 				</div>
 				<div>
 					<h2>Paramètres</h2>
-					<ul>
-						
-					</ul>
+					<ul></ul>
 				</div>
 				<div>
 					<h2>Paramètres</h2>
-					<ul>
-						
-					</ul>
+					<ul></ul>
 				</div>
 			</div>
 		</nav>
 	</header>
 	<main>
 		<section id="content">
-			
 			<div id="taquin" class="rounded-element"></div>
 			<div class="bar form-section rounded-element">
-				<input type="button" value="New" id="button-new">
-				<input type="button" value="&rarr;" id="ex-pand">
+				<input type="button" value="nouveau" id="button-new">
+				<input type="button" value="aide ?" id="ex-pand">
 			</div>
 			<div class="bar form-section rounded-element">
-				<input class="icon" type="button" name="width-mm" value="moins" id="button-width-mm">
+				<input class="icon" type="button" name="width-mm" value="-" id="button-width-mm">
 				<input type="number" name="width" min="3" value="3" max="10" id="input-width">
-				<input class="icon" type="button" name="width-pp" value="plus" id="button-width-pp">
+				<input class="icon" type="button" name="width-pp" value="+" id="button-width-pp">
 			</div>
-			<div class="grid">
+			<div class="grid" id="grid">
 				<div class="squared">
-					<span class="title">
-						coups
-					</span>
-					<span class="squared-content" id="coups">
-
-					</span>
+					<span class="title">coups</span>
+					<span class="squared-content toggler" id="coups"></span>
+					<div class="info"></div>
 				</div>
 				<div class="squared">
-					<span class="title">
-						manhattan
-					</span>
-					<span class="squared-content" id="manhattan">
-
-					</span>
+					<span class="title">manhattan</span>
+					<span class="squared-content toggler" id="manhattan"></span>
+					<div class="info"></div>
 				</div>
-				<div class="squared">
-					<div class="title">
-						inversions
-					</div>
-					<div class="squared-content" id="inversions">
-
-					</div>
+				<div class="squared last">
+					<span class="title">desordre</span>
+					<span class="squared-content toggler" id="desordre"></span>
+					<div class="info"></div>
+				</div>
+				<div class="squared last">
+					<span class="title">inversions</span>
+					<span class="squared-content toggler" id="inversions"></span>
+					<div class="info"></div>
 				</div>
 			</div>
 		</section>

@@ -26,6 +26,7 @@ Taquin.prototype.translate = function () {
 	val_coups.innerHTML = currentTaquin.g;
 	val_manha.innerHTML = parseInt(currentTaquin.man).toString();
 	val_inver.innerHTML = parseInt(currentTaquin.inv).toString();
+	val_desor.innerHTML = parseInt(currentTaquin.dis).toString();
 };
 
 

@@ -4,6 +4,7 @@
 	--cb-color: #eeeeee;
 	--ct-color: #aaaaaa;
 	--br-radius: 8pt;
+	--ax: #0080FF;
 }
 html {
 	line-height:1.2;
@@ -14,7 +15,7 @@ html {
 	-moz-osx-font-smoothing: grayscale;
 }
 body {
-	margin:0 0 calc(3em - 20px) 0;
+	margin:0 0 3em 0;
 }
 body,
 *, * > * {
@@ -31,7 +32,7 @@ header {
 	align-items: center;
 	justify-content: center;
 	margin: 20px 0;
-	padding: calc(3em - 20px);
+	padding: calc(3em - 20px) 0 calc(3em - 30px);
 	height: auto;
 	width: auto;
 	text-align: center;
@@ -98,7 +99,10 @@ main {
 	background-color: var(--bg-color);
 }
 #content {
+	margin-left: auto;
+	margin-right: auto;
 	width: 100%;
+	max-width: 640px;
 	display: flex;
 	flex-flow: row wrap;
 	align-items: flex-start;
@@ -146,7 +150,6 @@ main {
 	flex: 0 0 140px;
 	height: 140px;
 	border-radius: var(--br-radius);
-	border-radius: var(--br-radius);
 	box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.1);
 	background-color: var(--bg-color);
 	cursor: pointer;
@@ -155,9 +158,6 @@ main {
 	margin-bottom: 20px;
 }
 
-#button-clear {
-	display: none;
-}
 
 .squared:hover .title {
 	color: var(--tx-color);
@@ -183,7 +183,25 @@ main {
 	font-weight: bold;
 }
 
-.plateau {
+.squared:not(.active) .info {
+	display: none;
+}
+.squared .info {
+	display: block;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%,-50%);
+	box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.1);
+	z-index: 3;
+	border-radius: var(--br-radius);
+	background-color: var(--bg-color);
+	padding: 20px;
+	height: auto;
+	width: 300px;
+}
+
+.game {
 	display: flex;
 	flex-flow: row wrap;
 	align-content: space-around;
@@ -192,9 +210,9 @@ main {
 	height: 100%;
 	width: 100%;
 }
-body.win .plateau .case:not(.vide) {
-	background-color: green;
-	color: white;
+body.win .game .case:not(.vide) {
+	background-color: var(--ax);
+	color: var(--bg-color);
 }
 .case {
 	display: flex;
@@ -231,9 +249,11 @@ body.win .plateau .case:not(.vide) {
 #div-gen > * {
 	margin-bottom: 0;
 }
-input {
+input,
+button {
 	font-size: 1em;
 	font-feature-settings: "calt";
+	background-color: var(--bg-color);
 }
 #input-width {
 	text-align: center;
@@ -297,7 +317,7 @@ input[type="text"]:focus {
 	color: var(--tx-color);
 	border-color: var(--tx-color);
 	transition-property: color, border;
-	transition-duration: 300ms;
+	transition-duration: 125ms;
 	transition-timing-function: ease-in-out;
 }
 .icon {
@@ -305,7 +325,7 @@ input[type="text"]:focus {
 	padding-bottom: calc(.5em + 1.5px);
 	min-width: 36px;
 }
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 900px) {
 	main {
 		margin: 0 7.5vw;
 	}

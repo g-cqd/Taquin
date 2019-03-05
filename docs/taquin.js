@@ -1,25 +1,24 @@
 "use strict";
 
-function extend(l,cs) {
+function extend(l,...cs) {
 	while(cs[0]) {
-		let c = cs.shift(),
+		let n = l.length,
+		c = cs.shift(),
 		i = 0,
 		j = 0,
-		n = l.length;
+		r = 0;
 		if (n > 0) {
 			while (j < n) {
-				if (c.f > l[i].f) {
-					i++;
+				if (c.f < l[i].f) {
+					j = n;
 				}
-				else if (c.f == l[i].f) {
-					if (c.inv > l[i].inv) {
-						i++;
-					}
+				else {
+					i++;
 				}
 				j++;
 			}
 		}
-		l.splice(i,0,c);
+		l.splice(i,r,c);
 	}
 }
 
@@ -28,6 +27,7 @@ class Taquin {
 		this.environment = environment;
 		this.previous = previous;
 		this.inv = undefined;
+		this.ord = undefined;
 		this.dis = undefined;
 		this.man = undefined;
 		if (previous == undefined) {
@@ -39,10 +39,10 @@ class Taquin {
 			this.moveTile(move);
 			this.move = move;
 			this.g = this.previous.g + 1;
-			[this.inv,this.dis,this.man] = this.details();
+			[this.inv,this.ord,this.dis,this.man] = this.details();
 		}
 		this.moves = this.findMoves();
-		this.h = this.man + this.dis;
+		this.h = this.man;
 		this.f = this.h + this.g;
 	}
 	coordinates(content=0) {
@@ -63,8 +63,17 @@ class Taquin {
 		inv = 0,
 		rate = 0,
 		man = 0,
+		ord = 0,
+		computeOrder = true,
 		k = 0;
 		for (let i = 0; i < length; i++) {
+			if (computeOrder) {
+				if (sequence[i] == i+1) {
+					ord++;
+				} else {
+					computeOrder = false;
+				}
+			}
 			if (sequence[i] != 0 && (i+1)!=sequence[i]) {
 				rate++;
 			}
@@ -84,7 +93,7 @@ class Taquin {
 		if (weighting[1] > 1) {
 				man /= weighting[1];
 			}
-		return [inv,rate,man];
+		return [inv,ord,rate,man];
 	}
 	findMoves(flex=false) {
 		let limit = this.environment.sizes[0] - 1;
@@ -111,7 +120,7 @@ class Taquin {
 	}
 	valid() {
 		let width = this.environment.sizes[0];
-		[this.inv,this.dis,this.man] = this.details();
+		[this.inv,this.ord,this.dis,this.man] = this.details();
 		let inv = this.inv,
 		row = Math.abs((this.coordinates())[1] - width);
 		return ((width % 2 == 1) && (inv % 2 == 0)) || ((width % 2 == 0) && ((row % 2 == 1) == (inv % 2 == 0))) ? true : false;
@@ -119,9 +128,9 @@ class Taquin {
 	childs() {
 		let childList = [];
 		for (let move of this.moves) {
-			let childArray = [new Taquin(this.environment,this,move)];
-			if (childArray[0].h == 0) { return childArray[0]; }
-			extend(childList,childArray);
+			let child = new Taquin(this.environment,this,move);
+			if (child.h == 0) { return child; }
+			extend(childList,child);
 		}
 		return childList;
 	}
@@ -144,6 +153,7 @@ class Environment {
 		this._sizes = [width, width * width];
 		this._weighting = this.computeWeighting();
 		this.start = new Taquin(this);
+		this.pipe = [];
 		this.moves = [];
 		this.current = this.start;
 		this.end = undefined;
@@ -179,15 +189,15 @@ class Environment {
 		return this._weighting;
 	}
 	expand() {
-		let pipe = [this.current];
+		this.pipe = [this.current];
 		while (!this.end) {
-			let shouldBeExpanded = pipe.shift();
+			let shouldBeExpanded = this.pipe.shift();
 			let children = shouldBeExpanded.childs();
 			if (children instanceof Taquin) {
 				this.end = children;
 				return children;
 			} else {
-				extend(pipe,children);
+				extend(this.pipe,...children);
 			}
 		}
 	}

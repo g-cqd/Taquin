@@ -1,41 +1,76 @@
-function newEnvironment(value) {
+const newEnvironment = (value) => {
     listEnvironment.push(new Environment(value));
-}
-
-Taquin.prototype.translate = function () {
-	var sizes = [display_taquin.offsetWidth, display_taquin.offsetHeight];
-	var display_game = document.createElement("div");
-	display_game.classList.add("plateau");
-	for (var item of this.sequence) {
-		var element = document.createElement("div");
-		if (item == 0) {
-			element.classList.add("case", "vide");
-		} else {
-			element.classList.add("case");
+};
+const max = (...elements) => {
+	let max = elements[0];
+	for (const element of elements) { if (element >= max) {max = element;} }
+	return max;
+};
+Element.prototype.getStyle = function (...properties) {
+	let styles = {};
+	if (properties.length) {
+		for (let property of properties) {
+			styles[property] = window.getComputedStyle(this).getPropertyValue(property);
 		}
-		element.setAttribute("style", `height:${(sizes[1] - 40) / this.environment.sizes[0]}px;width:${(sizes[0] - 40) / this.environment.sizes[0]}px;font-size:${((sizes[1] - 40) / this.environment.sizes[0]) * 0.5}px;`);
-		element.innerHTML = item != 0 ? item : "";
-		display_game.appendChild(element);
+	} else {
+		for (let property in window.getComputedStyle(this)) {
+			const value = window.getComputedStyle(this).getPropertyValue(property);
+			if (value) { styles[property] = value; }
+		}
 	}
-	display_taquin.innerHTML = "";
-	display_taquin.appendChild(display_game);
+	return styles;
+};
 
-	let currentEnv = listEnvironment.last();
-	let currentTaquin = currentEnv.current;
+Taquin.prototype.translate = function (e) {
+	const environmentSizes = {
+		width:this.environment.sizes[0],
+		length:this.environment.sizes[1]
+	},
+	computedSizes = {
+		width:e.offsetWidth,
+		height:e.offsetHeight
+	},
+	g = document.createElement("div"),
+	gap = 10,
+	rawPadding = e.getStyle("padding-top","padding-right","padding-bottom","padding-left"),
+	paddings = [];
+	for (let property in rawPadding) { paddings.push(rawPadding[property]); }
+	paddings.map( (element,index) => { paddings[index] = parseInt(element.replace(/px/g,'')); });
+	const padding = {
+		height:(paddings[0]+paddings[2]),
+		width:(paddings[1]+paddings[3])
+	};
 
-	val_coups.innerHTML = currentTaquin.g;
-	val_manha.innerHTML = parseInt(currentTaquin.man).toString();
-	val_inver.innerHTML = parseInt(currentTaquin.inv).toString();
-	val_desor.innerHTML = parseInt(currentTaquin.dis).toString();
+	g.classList.add("game");
+	for (let value of this.sequence) {
+		let c = document.createElement("div");
+		if (value==0) { c.classList.add("case","vide"); }
+		else { c.classList.add("case"); }
+		const factor = 1.6,
+		height = Math.floor((computedSizes.height - (padding.height + gap)) / environmentSizes.width),
+		width = Math.floor((computedSizes.width - (padding.width + gap)) / environmentSizes.width),
+		fontSize = max(Math.ceil((height / (environmentSizes.width/factor))),12);
+		c.setAttribute('style',`height:${height}px;width:${width}px;font-size:${fontSize}px;`);
+		c.innerHTML = value != 0 ? value : "";
+		g.appendChild(c);
+	}
+	e.innerHTML = "";
+	e.appendChild(g);
+};
+Taquin.prototype.infos = function(g=val_coups,inv=val_inver,man=val_manha,dis=val_desor) {
+	g.innerHTML = this.g;
+	man.innerHTML = parseInt(this.man).toString();
+	inv.innerHTML = parseInt(this.inv).toString();
+	dis.innerHTML = parseInt(this.dis).toString();
 };
 
 
-var togglers = document.getElementsByClassName("toggler");
-for (var toggler of togglers) {
+let togglers = Array.from(document.getElementsByClassName("toggler"));
+togglers.forEach( (toggler) => {
 	toggler.addEventListener("click", () => {
 		toggler.classList.toggle("active");
 	}, false);
-}
+});
 
 
 
@@ -60,12 +95,15 @@ width_mm.addEventListener("click", function () {
 }, false);
 
 button_expand.addEventListener("click", function() {
-	listEnvironment.last().expand();
-	console.log(listEnvironment.last().end);
+	if (listEnvironment.last().sizes[0] == 3) {
+		listEnvironment.last().expand();
+		console.log(listEnvironment.last().end);	
+	}
 });
 display_taquin.addEventListener("moved", function() {
-	let currentEnv = listEnvironment.last();
-	currentEnv.current.translate();
+	let currentTaquin = listEnvironment.last().current;
+	currentTaquin.translate(display_taquin);
+	currentTaquin.infos();
 },false);
 
 

@@ -12,7 +12,8 @@ class Fenetre(QWidget):
         #self.maliste = QListWidget()
         #self.box = []
         #Chargement de la police inter bold
-        id = QFontDatabase.addApplicationFont("/Users/melaniemarques/Downloads/Inter-3/Inter (TTF)/Inter-Bold.ttf")
+        #id = QFontDatabase.addApplicationFont("/Users/melaniemarques/Downloads/Inter-3/Inter (TTF)/Inter-Bold.ttf")
+        id = QFontDatabase.addApplicationFont("/Users/guillaumecoquard/Library/Fonts/Inter-Bold.ttf")
         fontstr = QFontDatabase.applicationFontFamilies(id)[0]
         self.font = QFont(fontstr, 18)
         
@@ -20,7 +21,7 @@ class Fenetre(QWidget):
 
         self.setWindowTitle("Taquin")
         self.resize(1000,500)
-        self.setStyleSheet('background-color: rgb(252,252,252)')
+        self.setStyleSheet('background-color: #FFFFFF;')
 
 
         # Label

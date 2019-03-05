@@ -13,8 +13,6 @@ def extend(l,cs):
 		if n > 0:
 			while (j < n):
 				if c.f > l[i].f: i += 1
-				elif c.f == l[i].f:
-					if c.inv > l[i].inv: i += 1
 				j += 1
 		l.insert(i,c)
 

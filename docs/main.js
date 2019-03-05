@@ -44,7 +44,7 @@ function swipedetect(el, callback){
 	allowedTime = 300,  // default : 300 => maximum time to move
 	startTime,
 	handleswipe = callback || function(swipedir){};
-	touchsurface.addEventListener('touchstart', function(e){
+	touchsurface.addEventListener('touchstart', function(e) {
 		var touchobj = e.changedTouches[0];
 		swipedir = 'none';
 		dist = 0;

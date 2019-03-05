@@ -3,39 +3,27 @@
 
 from random import shuffle
 from math import ceil
-
-def extend(l,cs):
-	while len(cs) > 0:
-		c = cs.pop(0)
-		i = 0
-		j = 0
-		n = len(l)
-		if n > 0:
-			while (j < n):
-				if c.f > l[i].f: i += 1
-				j += 1
-		l.insert(i,c)
-
+from collections import OrderedDict
+import time
 
 class Taquin:
 	def __init__(self, environment, previous=None, move=None):
 		self.environment = environment
 		self.previous = previous
 		self.inv = None
-		self.dis = None
 		self.man = None
 		if previous == None:
-			self.sequence = self.magic(1)
-			self.move = "_"
+			self.path = "_"
 			self.g = 0
+			self.sequence = self.magic(1)
 		else:
+			self.path = previous.path + move
+			self.g = previous.g + 1
 			self.sequence = previous.sequence.copy()
 			self.moveTile(move)
-			self.move = move
-			self.g = self.previous.g + 1
-			self.inv,self.dis,self.man = self.details()
+			self.inv,self.man = self.details()
 		self.moves = self.findMoves()
-		self.h = self.man + self.dis
+		self.h = self.man
 		self.f = self.h + self.g
 	def coordinates(self, content=0):
 		width = self.environment.sizes[0]
@@ -48,47 +36,50 @@ class Taquin:
 			return [x, y]
 	def details(self):
 		width, length = self.environment.sizes
-		weighting = self.environment.weighting
+		weightings = self.environment.weightings
 		sequence = self.sequence
 		inv = 0
-		rate = 0
 		man = 0
-		k = 0
-		for i, e in enumerate(sequence):
-			if (e != 0 and (i+1) != e): rate += 1
-			for j in range(i+1, length):
-				if (e!=0 and sequence[j] != 0 and e > sequence[j]): inv += 1
-			if (i > 0):
-				pos = self.coordinates(i)
-				x = i%width
-				coords = (((width - 1) if x == 0 else (x - 1)), ceil(i / width) - 1)
-				man += weighting[0][k] * (abs(pos[0]-coords[0]) + abs(pos[1]-coords[1]))
-				k += 1
-		if (weighting[1] > 1): man /= weighting[1]
-		return (inv,rate,man)
-	def findMoves(self):
+		for weighting in weightings:
+			k = 0
+			stepMan = 0
+			for i, e in enumerate(sequence):
+				for j in range(i+1, length):
+					if (e!=0 and sequence[j] != 0 and e > sequence[j]):
+						inv += 1
+				if (i > 0):
+					pos = self.coordinates(i)
+					x = i%width
+					coords = (((width - 1) if x == 0 else (x - 1)), ceil(i / width) - 1)
+					man += (abs(pos[0]-coords[0]) + abs(pos[1]-coords[1])) * weighting[0][k]
+					k += 1
+			if (weighting[1] > 1):
+				man /= weighting[1]
+		man += stepMan
+		return (inv,man)
+	def findMoves(self,flex=False):
 		limit = self.environment.sizes[0] - 1
 		coords = self.coordinates()
-		last = self.move
+		last = self.path[-1]
 		moves = []
-		if coords[0] != 0 	  and last != 'l': moves.append('r')
-		if coords[0] != limit and last != 'r': moves.append('l')
-		if coords[1] != 0	  and last != 'u': moves.append('d')
-		if coords[1] != limit and last != 'd': moves.append('u')
+		if coords[0] != 0 	  and (last != 'L' or flex): moves.append('R')
+		if coords[0] != limit and (last != 'R' or flex): moves.append('L')
+		if coords[1] != 0	  and (last != 'U' or flex): moves.append('D')
+		if coords[1] != limit and (last != 'D' or flex): moves.append('U')
 		return moves
 	def moveTile(self, move):
 		sequence = self.sequence
 		width = self.environment.sizes[0]
 		x = self.coordinates(self.coordinates())
-		if move == 'r': y = x - 1
-		if move == 'l': y = x + 1
-		if move == 'd': y = x - width
-		if move == 'u': y = x + width
+		if move == 'R': y = x - 1
+		if move == 'L': y = x + 1
+		if move == 'D': y = x - width
+		if move == 'U': y = x + width
 		sequence[x] = sequence[y]
 		sequence[y] = 0
 	def valid(self):
 		width = self.environment.sizes[0]
-		self.inv,self.dis,self.man = self.details()
+		self.inv,self.man = self.details()
 		inv = self.inv
 		row = abs(self.coordinates()[1] - width)
 		return True if (((width % 2 == 1) and (inv % 2 == 0)) or ((width % 2 == 0) and ((row % 2 == 1) == (inv % 2 == 0)))) else False
@@ -96,9 +87,8 @@ class Taquin:
 		childList = []
 		for move in self.moves:
 			child = Taquin(self.environment,self,move)
-			childArray = [child]
-			if childArray[0].h == 0: return childArray[0]
-			extend(childList,childArray)
+			if child.h == 0: return child
+			childList.append(child)
 		return childList
 	def magic(self, rand=0):
 		length = self.environment.sizes[1]
@@ -115,60 +105,84 @@ class Taquin:
 def printTaquin(taquin):
 	print("\n")
 	print("Taquin :")
-	print(("\t- seq\t:\t{}	").format(taquin.sequence))
-	print(("\t- move\t:\t{}	").format(taquin.move))
-	print(("\t- moves\t:\t{}").format(taquin.moves))
-	print(("\t- inv\t:\t{}	").format(taquin.inv))
-	print(("\t- man\t:\t{}	").format(taquin.man))
-	print(("\t- dis\t:\t{}	").format(taquin.dis))
-	print(("\t- g\t:\t{}	").format(taquin.g))
-	print(("\t- h\t:\t{}	").format(taquin.h))
-	print(("\t- f\t:\t{}	").format(taquin.f))
+	print(("\t- seq : {}\t	").format(taquin.sequence))
+	print(("\t- pat : {}\t	").format(taquin.path))
+	print(("\t- mov : {}\t	").format(taquin.moves))
+	print(("\t- inv : {}\t- g : {}").format(taquin.inv,taquin.g))
+	print(("\t- man : {}\t- h : {}").format(taquin.man,taquin.h))
+	print(("\t- f   : {}").format(taquin.f))
 	print("\n")
 
 
 class Environment:
-	def __init__(self,width):
+	def __init__(self,width,choices=None):
 		self.sizes = (width,width*width)
-		self.weighting = self.computeWeighting()
+		self.weightings = self.getWeightings(choices)
 		self.start = Taquin(self)
 		self.moves = []
 		self.current = self.start
 		self.end = None
-	def computeWeighting(self):
+	def getWeightings(self,choices):
+		if (choices == None):
+			choices = [i for i in range(1,7)]
+		weightings = []
 		width = self.sizes[0]
 		length = self.sizes[1] - 1
-		pi = [0] * length
-		weight = length
-		for i in range(width-1):
-			j = 0
-			while pi[j] != 0:
-				j += 1
-			k = 0
-			while (k < width - i):
-				pi[j] = weight
-				j += 1
-				weight -= 1
-				k += 1
-			j += i
-			pi[j] = weight
-			weight -= 1
-			j += width
-			while j < length - 1 :
-				pi[j] = weight
-				weight -= 1
-				j += width
-		return (pi,1)
+		pi = []
+		for index in choices:
+			rho = (4 if index % 2 != 0 else 1)
+			if index == 1:
+				if width == 3:
+					pi = [36, 12, 12, 4, 1, 1, 4, 1]
+			if index == 2 or index == 3:
+				pi = [(length+1) - i for i in range(1,length+1)]
+			if index == 4 or index == 5:
+				pi = [0] * length
+				weight = length
+				for i in range(width-1):
+					j = 0
+					while pi[j] != 0:
+						j += 1
+					k = 0
+					while k < width-i:
+						pi[j] = weight
+						j += 1
+						weight -= 1
+						k += 1
+					j += i
+					pi[j] = weight
+					weight -= 1
+					j += width
+					while j < length - 1 :
+						pi[j] = weight
+						weight -= 1
+						j += width
+			if index == 6:
+					pi = [1] * length
+			if (len(pi)>0):
+				weightings.append((pi,rho))
+		return weightings
 	def expand(self):
-		pipe = [self.current]
+		
+		Dictionnaire = dict()
+		Dictionnaire[self.current.f] = [self.current]
 		while (not self.end):
-			shouldBeExpanded = pipe.pop(0)
+			shouldBeExpanded = Dictionnaire[list(Dictionnaire.keys())[0]][0]
+			del Dictionnaire[list(Dictionnaire.keys())[0]][0]
+			if(Dictionnaire[list(Dictionnaire.keys())[0]]==[]):
+				del Dictionnaire[list(Dictionnaire.keys())[0]]
 			children = shouldBeExpanded.childs()
 			if isinstance(children,Taquin):
 				self.end = children
 				return children
 			else:
-				extend(pipe,children)
+				for childs in children :
+					if(childs.f in Dictionnaire):
+						Dictionnaire[childs.f].append(childs)
+					else:
+						Dictionnaire[childs.f] = [childs]
+				Dictionnaire = OrderedDict(sorted(Dictionnaire.items(), key=lambda t: t[0]))
+			
 
 	def play(self,move):
 		previous = self.start if len(self.moves) < 1 else self.moves[-1]
@@ -177,8 +191,14 @@ class Environment:
 		return self.current
 
 class __main__:
-	env = int(input("Taille du taquin ? "))
-	a = Environment(env)
+	env = int(input(">>> Taille du taquin ?\n>>> "))
+	choices = str(input(">>> Heuristiques ?\n>>> Entrez les numéros séparés par des espaces.\n>>> "))
+	if len(choices) == 1: choices = [int(choices)]
+	else:
+		choices = choices.split(' ')
+		for index,choice in enumerate(choices): choices[index] = int(choice)
+
+	a = Environment(env,choices)
 	printTaquin(a.start)
 	a.expand()
 	printTaquin(a.end)

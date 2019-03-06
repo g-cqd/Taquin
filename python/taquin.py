@@ -83,7 +83,7 @@ class Taquin:
 		inv = self.inv
 		row = abs(self.coordinates()[1] - width)
 		return True if (((width % 2 == 1) and (inv % 2 == 0)) or ((width % 2 == 0) and ((row % 2 == 1) == (inv % 2 == 0)))) else False
-	def childs(self):
+	def children(self):
 		childList = []
 		for move in self.moves:
 			child = Taquin(self.environment,self,move)
@@ -166,22 +166,27 @@ class Environment:
 		
 		Dictionnaire = dict()
 		Dictionnaire[self.current.f] = [self.current]
+
 		while (not self.end):
-			shouldBeExpanded = Dictionnaire[list(Dictionnaire.keys())[0]][0]
-			del Dictionnaire[list(Dictionnaire.keys())[0]][0]
-			if(Dictionnaire[list(Dictionnaire.keys())[0]]==[]):
-				del Dictionnaire[list(Dictionnaire.keys())[0]]
-			children = shouldBeExpanded.childs()
+
+			key = list(Dictionnaire.keys())[0]
+
+			shouldBeExpanded = Dictionnaire[ key ][0]
+
+			del Dictionnaire[ key ][0]
+			if Dictionnaire[ key ] == []: del Dictionnaire[ key ]
+			
+			children = shouldBeExpanded.children()
+
 			if isinstance(children,Taquin):
 				self.end = children
 				return children
 			else:
-				for childs in children :
-					if(childs.f in Dictionnaire):
-						Dictionnaire[childs.f].append(childs)
-					else:
-						Dictionnaire[childs.f] = [childs]
-				Dictionnaire = OrderedDict(sorted(Dictionnaire.items(), key=lambda t: t[0]))
+				for child in children :
+					if(child.f in Dictionnaire): Dictionnaire[child.f].append(child)
+					else: Dictionnaire[child.f] = [child]
+
+				Dictionnaire = OrderedDict( sorted( Dictionnaire.items(), key=lambda t: t[0]))
 			
 
 	def play(self,move):

@@ -51,16 +51,16 @@ class Taquin:
 					pos = self.coordinates(i)
 					x = i%width
 					coords = (((width - 1) if x == 0 else (x - 1)), ceil(i / width) - 1)
-					man += (abs(pos[0]-coords[0]) + abs(pos[1]-coords[1])) * weighting[0][k]
+					stepMan += (abs(pos[0]-coords[0]) + abs(pos[1]-coords[1])) * weighting[0][k]
 					k += 1
 			if (weighting[1] > 1):
-				man /= weighting[1]
-		man += stepMan
+				stepMan /= weighting[1]
+			man += stepMan
 		return (inv,man)
 	def findMoves(self,flex=False):
 		limit = self.environment.sizes[0] - 1
 		coords = self.coordinates()
-		last = self.path[-1]
+		last = self.path[self.g]
 		moves = []
 		if coords[0] != 0 	  and (last != 'L' or flex): moves.append('R')
 		if coords[0] != limit and (last != 'R' or flex): moves.append('L')
@@ -101,30 +101,33 @@ class Taquin:
 				shuffle(sequence)
 				self.sequence = sequence
 		return sequence
-
-def printTaquin(taquin):
-	print("\n")
-	print("Taquin :")
-	print(("\t- seq : {}\t	").format(taquin.sequence))
-	print(("\t- pat : {}\t	").format(taquin.path))
-	print(("\t- mov : {}\t	").format(taquin.moves))
-	print(("\t- inv : {}\t- g : {}").format(taquin.inv,taquin.g))
-	print(("\t- man : {}\t- h : {}").format(taquin.man,taquin.h))
-	print(("\t- f   : {}").format(taquin.f))
-	print("\n")
+	def __repr__(self):
+		printable = ""
+		printable += "\n"
+		printable += "Taquin :\n"
+		printable += ("|  seq. .. : {}\n").format(self.sequence)
+		printable += ("|  path .. : {}\n").format(self.path)
+		printable += ("|  inv. .. : {}\n").format(self.inv)
+		printable += ("|  man. .. : {}\n").format(self.man)
+		printable += "|\n"
+		printable += ("|  g ..... : {}\n").format(self.g)
+		printable += ("|  h ..... : {}\n").format(self.h)
+		printable += ("|  f ..... : {}").format(self.f)
+		printable += "\n"
+		return printable
 
 
 class Environment:
 	def __init__(self,width,choices=None):
 		self.sizes = (width,width*width)
+		self.choices = choices
 		self.weightings = self.getWeightings(choices)
 		self.start = Taquin(self)
 		self.moves = []
 		self.current = self.start
 		self.end = None
 	def getWeightings(self,choices):
-		if (choices == None):
-			choices = [i for i in range(1,7)]
+		if (choices == None): choices = [i for i in range(1,7)]
 		weightings = []
 		width = self.sizes[0]
 		length = self.sizes[1] - 1
@@ -160,35 +163,68 @@ class Environment:
 			if index == 6:
 					pi = [1] * length
 			if (len(pi)>0):
-				weightings.append((pi,rho))
+				weightings.append((pi,rho,index))
 		return weightings
-	def expand(self):
-		
-		Dictionnaire = dict()
-		Dictionnaire[self.current.f] = [self.current]
-
-		while (not self.end):
-
-			key = list(Dictionnaire.keys())[0]
-
-			shouldBeExpanded = Dictionnaire[ key ][0]
-
-			del Dictionnaire[ key ][0]
-			if Dictionnaire[ key ] == []: del Dictionnaire[ key ]
-			
+	def correct(self):
+		self.start.inv,self.start.man = self.start.details()
+		self.start.h = self.start.man
+		self.start.f = self.start.g + self.start.h
+		self.current.inv,self.current.man = self.current.details()
+		self.current.h = self.current.man
+		self.current.f = self.current.g + self.current.h
+	def aStar(self):
+		print(self.current)
+		queue = OrderedDict()
+		queue[self.current.f] = [self.current]
+		while (True):
+			# Retourne le premier élément dans liste des clés
+			k = list(queue.keys())[0]
+			# L'état à traiter est la premiere valeur contenu par la clé
+			shouldBeExpanded = queue[ k ][0]
+			# Suppression de cet état dans le dictionnaire
+			del queue[ k ][0]
+			# Si la clé est vide : la supprimer
+			if queue[ k ] == []: del queue[ k ]
+			# Découverte des enfants de l'état à expanser
 			children = shouldBeExpanded.children()
-
+			# Si l'état retourne un enfant et non une liste d'enfants
+			# alors c'est la solution donc l'enregistrer et le retourner
 			if isinstance(children,Taquin):
+				print(children)
 				self.end = children
-				return children
+				return self.end
+			# Sinon ajouter les enfants dans le dictionnaire
 			else:
 				for child in children :
-					if(child.f in Dictionnaire): Dictionnaire[child.f].append(child)
-					else: Dictionnaire[child.f] = [child]
-
-				Dictionnaire = OrderedDict( sorted( Dictionnaire.items(), key=lambda t: t[0]))
-			
-
+					if(child.f in queue):
+						# Si la clé existe déjà, ajouter l'enfant aux éléments que la clé contient déjà
+						queue[child.f].append(child)
+					else:
+						# Sinon initialiser la clé avec une liste contenant l'enfant
+						queue[child.f] = [child]
+				queue = OrderedDict( sorted( queue.items(), key=lambda t: t[0]))
+	def expand(self,function,decomposition=0):
+		if (decomposition==0):
+			print("\n\n")
+			start = time.time()
+			print(("Heuristiques utilisées : {}").format(self.choices))
+			result = function()
+			print(("Duration : {}").format(time.time() - start))
+			print("\n\n")
+			return result
+		else:
+			results = []
+			decomposition = self.weightings.copy()
+			for weighting in decomposition:
+				print("\n")
+				start = time.time()
+				print(("Heuristiques utilisées : {}").format(weighting[2]))
+				self.weightings = [weighting]
+				self.correct()
+				results.append(function())
+				print(("Duration : {}").format(time.time() - start))
+				print("\n\n.........................................\n")
+			return results
 	def play(self,move):
 		previous = self.start if len(self.moves) < 1 else self.moves[-1]
 		self.current = Taquin(self,previous,move)
@@ -198,12 +234,12 @@ class Environment:
 class __main__:
 	env = int(input(">>> Taille du taquin ?\n>>> "))
 	choices = str(input(">>> Heuristiques ?\n>>> Entrez les numéros séparés par des espaces.\n>>> "))
+	decomposition = 0
 	if len(choices) == 1: choices = [int(choices)]
 	else:
 		choices = choices.split(' ')
 		for index,choice in enumerate(choices): choices[index] = int(choice)
+		decomposition = int(input(">>> Voulez-vous associer les heuristiques ou dissocier les exécutions (n:0/y:1) ?\n>>> "))
 
 	a = Environment(env,choices)
-	printTaquin(a.start)
-	a.expand()
-	printTaquin(a.end)
+	a.expand(a.aStar,decomposition)

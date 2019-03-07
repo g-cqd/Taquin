@@ -1,5 +1,5 @@
 const newEnvironment = (value) => {
-    listEnvironment.push(new Environment(value));
+    listEnvironment.push(new Environment(value,[5]));
 };
 const max = (...elements) => {
 	let max = elements[0];
@@ -57,11 +57,11 @@ Taquin.prototype.translate = function (e) {
 	e.innerHTML = "";
 	e.appendChild(g);
 };
-Taquin.prototype.infos = function(g=val_coups,inv=val_inver,man=val_manha,dis=val_desor) {
+Taquin.prototype.infos = function(g=val_coups,inv=val_inver,dis=val_desor,man=val_manha) {
 	g.innerHTML = this.g;
 	man.innerHTML = parseInt(this.man).toString();
-	inv.innerHTML = parseInt(this.inv).toString();
 	dis.innerHTML = parseInt(this.dis).toString();
+	inv.innerHTML = parseInt(this.inv).toString();
 };
 
 
@@ -96,7 +96,7 @@ width_mm.addEventListener("click", function () {
 
 button_expand.addEventListener("click", function() {
 	if (listEnvironment.last().sizes[0] == 3) {
-		listEnvironment.last().expand();
+		listEnvironment.last().expand(listEnvironment.last().aStar);
 		console.log(listEnvironment.last().end);	
 	}
 });

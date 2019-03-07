@@ -140,6 +140,24 @@ main {
 	max-width: 300px;
 }
 
+#heuristiques,
+#search {
+	flex-flow: column nowrap;
+	align-items: flex-start;
+	font-feature-settings: "tnum";
+}
+
+#heuristiques .part-title,
+#search .part-title {
+	margin-bottom: .5em;
+}
+
+.sub {
+	margin-top: .5em;
+	font-size: .9em;
+	color: var(--ct-color);
+}
+
 .squared {
 	user-select: none;
 	display: flex;

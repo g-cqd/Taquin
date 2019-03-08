@@ -1,4 +1,4 @@
-var listEnvironment = [];
+let games = [];
 
 const played = document.createEvent("Event");
 played.initEvent("moved",true,true);

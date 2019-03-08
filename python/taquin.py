@@ -11,7 +11,9 @@ class Taquin:
 		self.environment = environment
 		self.previous = previous
 		self.inv = None
+		self.dis = None
 		self.man = None
+		self.h = None
 		if previous == None:
 			self.path = "_"
 			self.g = 0
@@ -21,9 +23,8 @@ class Taquin:
 			self.g = previous.g + 1
 			self.sequence = previous.sequence.copy()
 			self.moveTile(move)
-			self.inv,self.man = self.details()
+			self.inv,self.dis,self.man,self.h = self.details()
 		self.moves = self.findMoves()
-		self.h = self.man
 		self.f = self.h + self.g
 	def coordinates(self, content=0):
 		width = self.environment.sizes[0]
@@ -34,29 +35,38 @@ class Taquin:
 			y = ceil((index + 1) / width) - 1
 			x = index - (y * width)
 			return [x, y]
+
 	def details(self):
 		width, length = self.environment.sizes
 		weightings = self.environment.weightings
 		sequence = self.sequence
 		inv = 0
+		dis = 0
 		man = 0
+		h = 0
 		for weighting in weightings:
 			k = 0
-			stepMan = 0
-			for i, e in enumerate(sequence):
-				for j in range(i+1, length):
-					if (e!=0 and sequence[j] != 0 and e > sequence[j]):
-						inv += 1
-				if (i > 0):
+			stepH = 0
+			for i in range(0,length):
+				stepMan = 0
+				if weighting == weightings[0]:
+					for j in range(i+1,length):
+						if sequence[i] != 0 and sequence[j] != 0 and sequence[i] > sequence[j]: inv += 1
+					if sequence[i] != 0 and sequence[i] != (i+1):
+						dis += 1
+				if i > 0 and ( weighting[2] != 7 or weighting == weightings[0] ):
 					pos = self.coordinates(i)
-					x = i%width
+					x = i % width
 					coords = (((width - 1) if x == 0 else (x - 1)), ceil(i / width) - 1)
-					stepMan += (abs(pos[0]-coords[0]) + abs(pos[1]-coords[1])) * weighting[0][k]
+					stepMan += (abs(pos[0] - coords[0]) + abs(pos[1] - coords[1]))
+					if weighting == weightings[0]: man += stepMan
+					stepH += weighting[0][k] * stepMan
 					k += 1
-			if (weighting[1] > 1):
-				stepMan /= weighting[1]
-			man += stepMan
-		return (inv,man)
+			if weighting[1] > 1 and weighting[2] != 7: stepH /= weighting[1]
+			if weighting[2] == 7: h += dis
+			else: h += stepH
+		return [inv,dis,man,h]
+
 	def findMoves(self,flex=False):
 		limit = self.environment.sizes[0] - 1
 		coords = self.coordinates()
@@ -79,7 +89,7 @@ class Taquin:
 		sequence[y] = 0
 	def valid(self):
 		width = self.environment.sizes[0]
-		self.inv,self.man = self.details()
+		self.inv,self.dis,self.man,self.h = self.details()
 		inv = self.inv
 		row = abs(self.coordinates()[1] - width)
 		return True if (((width % 2 == 1) and (inv % 2 == 0)) or ((width % 2 == 0) and ((row % 2 == 1) == (inv % 2 == 0)))) else False
@@ -164,8 +174,7 @@ class Environment:
 		return weightings
 	def correct(self):
 		for move in self.moves:
-			move.inv,move.man = move.details()
-			move.h = move.man
+			move.inv,move.dis,move.man,move.h = move.details()
 			move.f = move.g + move.h
 	
 	

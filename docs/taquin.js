@@ -53,27 +53,17 @@ class Taquin {
 					}
 				}
 				if ( i > 0 && ( weighting[2] != 7 || weighting == weightings[0] ) ) {
-					// Coordonnées actuelles i dans le taquin
 					let pos = this.coordinates(i),
-					// Position attendu de i sur l'axe horizontal +1
 					x = i % width,
-					// Coordonnées attendues de i dans le taquin
 					coords = [((x == 0) ? (width - 1) : (x - 1)), (Math.ceil(i / width) - 1)];
-					// Distance de manhattan sans coefficients
 					stepMan += (Math.abs(pos[0] - coords[0]) + Math.abs(pos[1] - coords[1]));
-					// Code à exécuter à la première boucle seulement
 					if ( weighting == weightings[0 ]) { man += stepMan; }
-					// Application du coefficient de pondération
 					stepH += weighting[0][k] * stepMan;
-					// Incrémentation de k pour les pondérations
 					k++;
 				}
 			}
-			// Application du coefficient de normalisation s'il est superieur à 1 et que l'heuristique n'est pas désordre
 			if ( weighting[1] > 1 && weighting[2] != 7 ) { stepH /= weighting[1]; }
-			// Si l'heuristique est désordre, la sommer à h
 			if ( weighting[2] == 7 ) { h += dis; }
-			// Sinon sommer la distance de manhattan pondérée
 			else { h += stepH; }
 		}
 		return [inv,dis,man,h];
@@ -136,96 +126,8 @@ class Environment {
 		this._sizes = [width, width * width];
 		this.choices = choices;
 		this._weightings = this.getWeightings(choices);
-		this.start = new Taquin(this);
-		this.moves = [];
-		this.current = this.start;
+		this.moves = [new Taquin(this)];
 		this.end = [];
-		this.algorithms = {
-			rocky : function (env) { // A*
-				const startTime = Date.now();
-				let queue = new Map();
-				queue.set(env.current.f,[env.current]);
-				while (true) {
-					let k = Array.from(queue.keys())[0];
-					let kArray = queue.get(k);
-					let shouldBeExpanded = kArray.shift();
-					if (kArray.length == 0) {
-						queue.delete(k);
-					}
-					else {
-						queue.set(k,kArray);
-					}
-					const children = shouldBeExpanded.children();
-					if (children instanceof Taquin) {
-						const end = Date.now() - startTime;
-						env.end.push({Taquin:children,duration:end});
-						return env.end;
-					}
-					else {
-						for (let child of children) {
-							if (queue.has(child.f)) {
-								let cArray = queue.get(child.f);
-								cArray.push(child);
-								queue.set(child.f,cArray);
-							}
-							else {
-								queue.set(child.f,[child]);
-							}
-						}
-					}
-					let sortedArray = Array.from(queue.keys());
-					sortedArray.sort((a,b)=>a-b);
-					let secondaryQueue = new Map();
-					for (let key of sortedArray) {
-						secondaryQueue.set(key,queue.get(key));
-						queue.delete(key);
-					}
-					queue = secondaryQueue;
-				}
-			},
-			charlotte : function (env) { // IDA*
-				const startTime = Date.now();
-				let queue = new Map();
-				queue.set(env.current.f,[env.current]);
-				while (true) {
-					let k = Array.from(queue.keys())[0];
-					let kArray = queue.get(k);
-					let shouldBeExpanded = kArray.shift();
-					if (kArray.length == 0) {
-						queue.delete(k);
-					}
-					else {
-						queue.set(k,kArray);
-					}
-					const children = shouldBeExpanded.children();
-					if (children instanceof Taquin) {
-						const end = Date.now() - startTime;
-						env.end.push({Taquin:children,duration:end});
-						return env.end;
-					}
-					else {
-						for (let child of children) {
-							if (queue.has(child.f)) {
-								let cArray = queue.get(child.f);
-								cArray.push(child);
-								queue.set(child.f,cArray);
-							}
-							else {
-								queue.set(child.f,[child]);
-							}
-						}
-					}
-					let sortedArray = Array.from(queue.keys());
-					sortedArray.sort((a,b)=>a-b);
-					let secondaryQueue = new Map();
-					for (let key of sortedArray) {
-						secondaryQueue.set(key,queue.get(key));
-						queue.delete(key);
-					}
-					queue = secondaryQueue;
-				}
-			}
-		};
 	}
 	get sizes() {
 		return this._sizes;
@@ -294,23 +196,103 @@ class Environment {
 		this._weightings = this.getWeightings(choices);
 	}
 	correct() {
-		[this.start.inv,this.start.man] = this.start.details();
-		this.start.h = this.start.man;
-		this.start.f = this.start.g + this.start.h;
-		[this.current.inv,this.current.man] = this.current.details();
-		this.current.h = this.current.man;
-		this.current.f = this.current.g + this.current.h;
+		for (let move of this.moves) {
+			[move.inv,move.dis,move.man,move.h] = move.details();
+			move.f = move.g + move.h;
+		}
+	}
+	rocky(env) { // A*
+		const startTime = Date.now();
+		let queue = new Map();
+		queue.set(env.moves.last().f,[env.moves.last()]);
+		while (true) {
+			let k = Array.from(queue.keys())[0];
+			let kArray = queue.get(k);
+			let shouldBeExpanded = kArray.shift();
+			if (kArray.length == 0) {
+				queue.delete(k);
+			}
+			else {
+				queue.set(k,kArray);
+			}
+			const children = shouldBeExpanded.children();
+			if (children instanceof Taquin) {
+				const end = Date.now() - startTime;
+				env.end.push({Taquin:children,duration:end});
+				return env.end;
+			}
+			else {
+				for (let child of children) {
+					if (queue.has(child.f)) {
+						let cArray = queue.get(child.f);
+						cArray.push(child);
+						queue.set(child.f,cArray);
+					}
+					else {
+						queue.set(child.f,[child]);
+					}
+				}
+			}
+			let sortedArray = Array.from(queue.keys());
+			sortedArray.sort((a,b)=>a-b);
+			let secondaryQueue = new Map();
+			for (let key of sortedArray) {
+				secondaryQueue.set(key,queue.get(key));
+				queue.delete(key);
+			}
+			queue = secondaryQueue;
+		}
+	}
+	charlotte(env) { // IDA*
+		const startTime = Date.now();
+		let queue = new Map();
+		queue.set(env.moves.last().f,[env.moves.last()]);
+		while (true) {
+			let k = Array.from(queue.keys())[0];
+			let kArray = queue.get(k);
+			let shouldBeExpanded = kArray.shift();
+			if (kArray.length == 0) {
+				queue.delete(k);
+			}
+			else {
+				queue.set(k,kArray);
+			}
+			const children = shouldBeExpanded.children();
+			if (children instanceof Taquin) {
+				const end = Date.now() - startTime;
+				env.end.push({Taquin:children,duration:end});
+				return env.end;
+			}
+			else {
+				for (let child of children) {
+					if (queue.has(child.f)) {
+						let cArray = queue.get(child.f);
+						cArray.push(child);
+						queue.set(child.f,cArray);
+					}
+					else {
+						queue.set(child.f,[child]);
+					}
+				}
+			}
+			let sortedArray = Array.from(queue.keys());
+			sortedArray.sort((a,b)=>a-b);
+			let secondaryQueue = new Map();
+			for (let key of sortedArray) {
+				secondaryQueue.set(key,queue.get(key));
+				queue.delete(key);
+			}
+			queue = secondaryQueue;
+		}
 	}
 	expand(func) {
 		this.correct();
-		return this.algorithms[func](this);
+		return this[func](this);
 	}
 	play(move) {
-		let previous = this.moves.length < 1 ? this.start : this.current;
-		this.current = new Taquin(this,previous,move);
-		this.moves.push([move,this.current]);
-		taquinElement.dispatchEvent(played);
-		if (this.current.h==0) {
+		this.moves.push(new Taquin(this,this.moves.last(),move));
+		taquinElement.play();
+		if (this.moves.last().h==0) {
 			document.body.classList.toggle("win");
 		}
 	}

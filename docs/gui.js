@@ -1,6 +1,6 @@
 const createEnvironment = (width,heuristics) => {
 	if ( heuristics == undefined ) { heuristics = [5]; }
-    listEnvironment.push(new Environment(width,heuristics));
+    games.push(new Environment(width,heuristics));
 };
 Element.prototype.getStyle = function (...properties) {
 	let styles = {};
@@ -113,15 +113,15 @@ settings.decrement.addEventListener("click", function () {
 	taquinElement.play();
 }, false);
 expandButton.addEventListener("click", function() {
-	if (listEnvironment.last().sizes[0] <= 4) {
-		listEnvironment.last().weightings = getHeuristics();
-		listEnvironment.last().expand(getSearch());
-		console.log(listEnvironment.last().end);
+	if (games.last().sizes[0] <= 6) {
+		games.last().weightings = getHeuristics();
+		games.last().expand(getSearch());
+		console.log(games.last().end);
 	}
 });
 taquinElement.addEventListener("moved", function() {
-	listEnvironment.last().current.displayIn(taquinElement);
-	listEnvironment.last().current.informations();
+	games.last().moves.last().displayIn(taquinElement);
+	games.last().moves.last().informations();
 },false);
 
 swipedetect(taquinElement, function(direction) {
@@ -130,21 +130,21 @@ swipedetect(taquinElement, function(direction) {
 		switch (direction)
 		{
 			case "left":
-				move = listEnvironment.last().current.findMoves(true).includes("l") ? "l" : undefined;
+				move = games.last().moves.last().findMoves(true).includes("l") ? "l" : undefined;
 				break;
 			case "up":
-				move = listEnvironment.last().current.findMoves(true).includes("u") ? "u" : undefined;
+				move = games.last().moves.last().findMoves(true).includes("u") ? "u" : undefined;
 				break;
 			case "right":
-				move = listEnvironment.last().current.findMoves(true).includes("r") ? "r" : undefined;
+				move = games.last().moves.last().findMoves(true).includes("r") ? "r" : undefined;
 				break;
 			case "down":
-				move = listEnvironment.last().current.findMoves(true).includes("d") ? "d" : undefined;
+				move = games.last().moves.last().findMoves(true).includes("d") ? "d" : undefined;
 				break;
 			default:
 				return;
 		}
-		if (move) { listEnvironment.last().play(move); }
+		if (move) { games.last().play(move); }
 	}
 });
 document.onkeydown = function handlekeydown(e) {
@@ -157,24 +157,24 @@ document.onkeydown = function handlekeydown(e) {
 				break;
 			case 37: // left
 				e.preventDefault();
-				move = listEnvironment.last().current.findMoves(true).includes("l") ? "l" : undefined;
+				move = games.last().moves.last().findMoves(true).includes("l") ? "l" : undefined;
 				break;
 			case 38: // up
 				e.preventDefault();
-				move = listEnvironment.last().current.findMoves(true).includes("u") ? "u" : undefined;
+				move = games.last().moves.last().findMoves(true).includes("u") ? "u" : undefined;
 				break;
 			case 39: // right
 				e.preventDefault();
-				move = listEnvironment.last().current.findMoves(true).includes("r") ? "r" : undefined;
+				move = games.last().moves.last().findMoves(true).includes("r") ? "r" : undefined;
 				break;
 			case 40: // down
 				e.preventDefault();
-				move = listEnvironment.last().current.findMoves(true).includes("d") ? "d" : undefined;
+				move = games.last().moves.last().findMoves(true).includes("d") ? "d" : undefined;
 				break;
 			default:
 				return;
 		}
-		if (move) { listEnvironment.last().play(move); }
+		if (move) { games.last().play(move); }
 	}
 };
 

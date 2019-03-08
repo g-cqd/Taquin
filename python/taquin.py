@@ -168,37 +168,31 @@ class Environment:
 			move.inv,move.man = move.details()
 			move.h = move.man
 			move.f = move.g + move.h
+	
+	
+	
 	def aStar(self):
 		print(self.moves[-1])
 		queue = OrderedDict()
 		queue[self.moves[-1].f] = [self.moves[-1]]
 		while (True):
-			# Retourne le premier élément dans liste des clés
 			k = list(queue.keys())[0]
-			# L'état à traiter est la premiere valeur contenu par la clé
-			shouldBeExpanded = queue[ k ][0]
-			# Suppression de cet état dans le dictionnaire
-			del queue[ k ][0]
-			# Si la clé est vide : la supprimer
-			if queue[ k ] == []: del queue[ k ]
-			# Découverte des enfants de l'état à expanser
+			shouldBeExpanded = queue[k][0]
+			del queue[k][0]
+			if queue[k] == []: del queue[k]
 			children = shouldBeExpanded.children()
-			# Si l'état retourne un enfant et non une liste d'enfants
-			# alors c'est la solution donc l'enregistrer et le retourner
 			if isinstance(children,Taquin):
 				print(children)
 				self.end.append(children)
 				return self.end[-1]
-			# Sinon ajouter les enfants dans le dictionnaire
 			else:
 				for child in children :
-					if(child.f in queue):
-						# Si la clé existe déjà, ajouter l'enfant aux éléments que la clé contient déjà
-						queue[child.f].append(child)
-					else:
-						# Sinon initialiser la clé avec une liste contenant l'enfant
-						queue[child.f] = [child]
+					if(child.f in queue): queue[child.f].append(child)
+					else: queue[child.f] = [child]
 				queue = OrderedDict( sorted( queue.items(), key=lambda t: t[0]))
+	
+
+	
 	def expand(self,function,decomposition=0):
 		if (decomposition==0):
 			print("\n\n")
@@ -221,12 +215,17 @@ class Environment:
 				print(("Duration : {}").format(time.time() - start))
 				print("\n\n.........................................\n")
 			return results
+	
+	
+	
 	def play(self,move):
 		self.moves.append(Taquin(self,self.moves[-1],move))
 		return self.moves[-1]
 
+
+
 class __main__:
-	env = int(input(">>> Taille du taquin ?\n>>> "))
+	width = int(input(">>> Taille du taquin ?\n>>> "))
 	choices = str(input(">>> Heuristiques ?\n>>> Entrez les numéros séparés par des espaces.\n>>> "))
 	decomposition = 0
 	if len(choices) == 1: choices = [int(choices)]
@@ -234,7 +233,11 @@ class __main__:
 		choices = choices.split(' ')
 		for index,choice in enumerate(choices): choices[index] = int(choice)
 		decomposition = int(input(">>> Voulez-vous associer les heuristiques ou dissocier les exécutions (n:0/y:1) ?\n>>> "))
-	a = Environment(env,choices)
+
+
+
+
+	a = Environment(width,choices)
 	while(a.moves[-1].h != 0):
 		print(a.moves[-1])
 		move = "_"

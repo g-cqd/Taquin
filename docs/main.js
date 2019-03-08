@@ -1,20 +1,25 @@
 var listEnvironment = [];
 
-var played = document.createEvent("Event");
+const played = document.createEvent("Event");
 played.initEvent("moved",true,true);
 
-t = "\t";
+const t = "\t";
 
-var display_taquin = document.getElementById("taquin");
-var input_width = document.getElementById("input-width");
-var width_pp = document.getElementById("button-width-pp");
-var width_mm = document.getElementById("button-width-mm");
-var button_generate = document.getElementById("button-new");
-var button_expand = document.getElementById("ex-pand");
-var val_coups = document.getElementById("coups");
-var val_manha = document.getElementById("manhattan");
-var val_desor = document.getElementById("desordre");
-var val_inver = document.getElementById("inversions");
+const settings = {
+	width		: document.getElementById("input-width"),
+	increment	: document.getElementById("button-width-pp"),
+	decrement	: document.getElementById("button-width-mm"),
+	coups		: document.getElementById("coups"),
+	manhattan	: document.getElementById("manhattan"),
+	desordre	: document.getElementById("desordre"),
+	inversions	: document.getElementById("inversions"),
+	heuristics	: Array.from(document.querySelectorAll("[data-domain=heuristic]")),
+	searches	: Array.from(document.querySelectorAll("[data-domain=search]"))
+},
+taquinElement = document.getElementById("taquin"),
+createButton = document.getElementById("button-new"),
+expandButton = document.getElementById("ex-pand");
+
 
 
 function random(min, max = undefined) {

@@ -140,6 +140,92 @@ class Environment {
 		this.moves = [];
 		this.current = this.start;
 		this.end = [];
+		this.algorithms = {
+			rocky : function (env) { // A*
+				const startTime = Date.now();
+				let queue = new Map();
+				queue.set(env.current.f,[env.current]);
+				while (true) {
+					let k = Array.from(queue.keys())[0];
+					let kArray = queue.get(k);
+					let shouldBeExpanded = kArray.shift();
+					if (kArray.length == 0) {
+						queue.delete(k);
+					}
+					else {
+						queue.set(k,kArray);
+					}
+					const children = shouldBeExpanded.children();
+					if (children instanceof Taquin) {
+						const end = Date.now() - startTime;
+						env.end.push({Taquin:children,duration:end});
+						return env.end;
+					}
+					else {
+						for (let child of children) {
+							if (queue.has(child.f)) {
+								let cArray = queue.get(child.f);
+								cArray.push(child);
+								queue.set(child.f,cArray);
+							}
+							else {
+								queue.set(child.f,[child]);
+							}
+						}
+					}
+					let sortedArray = Array.from(queue.keys());
+					sortedArray.sort((a,b)=>a-b);
+					let secondaryQueue = new Map();
+					for (let key of sortedArray) {
+						secondaryQueue.set(key,queue.get(key));
+						queue.delete(key);
+					}
+					queue = secondaryQueue;
+				}
+			},
+			charlotte : function (env) { // IDA*
+				const startTime = Date.now();
+				let queue = new Map();
+				queue.set(env.current.f,[env.current]);
+				while (true) {
+					let k = Array.from(queue.keys())[0];
+					let kArray = queue.get(k);
+					let shouldBeExpanded = kArray.shift();
+					if (kArray.length == 0) {
+						queue.delete(k);
+					}
+					else {
+						queue.set(k,kArray);
+					}
+					const children = shouldBeExpanded.children();
+					if (children instanceof Taquin) {
+						const end = Date.now() - startTime;
+						env.end.push({Taquin:children,duration:end});
+						return env.end;
+					}
+					else {
+						for (let child of children) {
+							if (queue.has(child.f)) {
+								let cArray = queue.get(child.f);
+								cArray.push(child);
+								queue.set(child.f,cArray);
+							}
+							else {
+								queue.set(child.f,[child]);
+							}
+						}
+					}
+					let sortedArray = Array.from(queue.keys());
+					sortedArray.sort((a,b)=>a-b);
+					let secondaryQueue = new Map();
+					for (let key of sortedArray) {
+						secondaryQueue.set(key,queue.get(key));
+						queue.delete(key);
+					}
+					queue = secondaryQueue;
+				}
+			}
+		};
 	}
 	get sizes() {
 		return this._sizes;
@@ -204,6 +290,9 @@ class Environment {
 	get weightings() {
 		return this._weightings;
 	}
+	set weightings(choices) {
+		this._weightings = this.getWeightings(choices);
+	}
 	correct() {
 		[this.start.inv,this.start.man] = this.start.details();
 		this.start.h = this.start.man;
@@ -212,99 +301,15 @@ class Environment {
 		this.current.h = this.current.man;
 		this.current.f = this.current.g + this.current.h;
 	}
-	rocky(env) { // A*
-		const startTime = Date.now();
-		let queue = new Map();
-		queue.set(env.current.f,[env.current]);
-		while (true) {
-			let k = Array.from(queue.keys())[0];
-			let kArray = queue.get(k);
-			let shouldBeExpanded = kArray.shift();
-			if (kArray.length == 0) {
-				queue.delete(k);
-			}
-			else {
-				queue.set(k,kArray);
-			}
-			const children = shouldBeExpanded.children();
-			if (children instanceof Taquin) {
-				const end = Date.now() - startTime;
-				env.end.push({Taquin:children,duration:end});
-				return env.end;
-			}
-			else {
-				for (let child of children) {
-					if (queue.has(child.f)) {
-						let cArray = queue.get(child.f);
-						cArray.push(child);
-						queue.set(child.f,cArray);
-					}
-					else {
-						queue.set(child.f,[child]);
-					}
-				}
-			}
-			let sortedArray = Array.from(queue.keys());
-			sortedArray.sort((a,b)=>a-b);
-			let secondaryQueue = new Map();
-			for (let key of sortedArray) {
-				secondaryQueue.set(key,queue.get(key));
-				queue.delete(key);
-			}
-			queue = secondaryQueue;
-		}
-	}
-	charlotte(env) { // IDA*
-		const startTime = Date.now();
-		let queue = new Map();
-		queue.set(env.current.f,[env.current]);
-		while (true) {
-			let k = Array.from(queue.keys())[0];
-			let kArray = queue.get(k);
-			let shouldBeExpanded = kArray.shift();
-			if (kArray.length == 0) {
-				queue.delete(k);
-			}
-			else {
-				queue.set(k,kArray);
-			}
-			const children = shouldBeExpanded.children();
-			if (children instanceof Taquin) {
-				const end = Date.now() - startTime;
-				env.end.push({Taquin:children,duration:end});
-				return env.end;
-			}
-			else {
-				for (let child of children) {
-					if (queue.has(child.f)) {
-						let cArray = queue.get(child.f);
-						cArray.push(child);
-						queue.set(child.f,cArray);
-					}
-					else {
-						queue.set(child.f,[child]);
-					}
-				}
-			}
-			let sortedArray = Array.from(queue.keys());
-			sortedArray.sort((a,b)=>a-b);
-			let secondaryQueue = new Map();
-			for (let key of sortedArray) {
-				secondaryQueue.set(key,queue.get(key));
-				queue.delete(key);
-			}
-			queue = secondaryQueue;
-		}
-	}
 	expand(func) {
 		this.correct();
-		return func(this);
+		return this.algorithms[func](this);
 	}
 	play(move) {
 		let previous = this.moves.length < 1 ? this.start : this.current;
 		this.current = new Taquin(this,previous,move);
 		this.moves.push([move,this.current]);
-		display_taquin.dispatchEvent(played);
+		taquinElement.dispatchEvent(played);
 		if (this.current.h==0) {
 			document.body.classList.toggle("win");
 		}

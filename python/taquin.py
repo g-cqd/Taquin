@@ -112,8 +112,7 @@ class Taquin:
 		printable += ("|  moves . : {}\n").format(self.moves)
 		printable += ("|  g ..... : {}\n").format(self.g)
 		printable += ("|  h ..... : {}\n").format(self.h)
-		printable += ("|  f ..... : {}").format(self.f)
-		printable += "\n"
+		printable += ("|  f ..... : {}\n").format(self.f)
 		return printable
 
 

@@ -1,10 +1,6 @@
-const newEnvironment = (value) => {
-    listEnvironment.push(new Environment(value,[5]));
-};
-const max = (...elements) => {
-	let max = elements[0];
-	for (const element of elements) { if (element >= max) {max = element;} }
-	return max;
+const createEnvironment = (width,heuristics) => {
+	if ( heuristics == undefined ) { heuristics = [5]; }
+    listEnvironment.push(new Environment(width,heuristics));
 };
 Element.prototype.getStyle = function (...properties) {
 	let styles = {};
@@ -20,8 +16,10 @@ Element.prototype.getStyle = function (...properties) {
 	}
 	return styles;
 };
-
-Taquin.prototype.translate = function (e) {
+Element.prototype.play = function () {
+	this.dispatchEvent(played);
+};
+Taquin.prototype.displayIn = function (e) {
 	const environmentSizes = {
 		width:this.environment.sizes[0],
 		length:this.environment.sizes[1]
@@ -40,7 +38,6 @@ Taquin.prototype.translate = function (e) {
 		height:(paddings[0]+paddings[2]),
 		width:(paddings[1]+paddings[3])
 	};
-
 	g.classList.add("game");
 	for (let value of this.sequence) {
 		let c = document.createElement("div");
@@ -49,7 +46,7 @@ Taquin.prototype.translate = function (e) {
 		const factor = 1.6,
 		height = Math.floor((computedSizes.height - (padding.height + gap)) / environmentSizes.width),
 		width = Math.floor((computedSizes.width - (padding.width + gap)) / environmentSizes.width),
-		fontSize = max(Math.ceil((height / (environmentSizes.width/factor))),12);
+		fontSize = Math.max(Math.ceil((height / (environmentSizes.width/factor))),12);
 		c.setAttribute('style',`height:${height}px;width:${width}px;font-size:${fontSize}px;`);
 		c.innerHTML = value != 0 ? value : "";
 		g.appendChild(c);
@@ -57,58 +54,77 @@ Taquin.prototype.translate = function (e) {
 	e.innerHTML = "";
 	e.appendChild(g);
 };
-Taquin.prototype.infos = function(g=val_coups,inv=val_inver,dis=val_desor,man=val_manha) {
+Taquin.prototype.informations = function( g=undefined, i=undefined, d=undefined, m=undefined ) {
+	if ( !g ) { g = settings.coups; }
+	if ( !i ) { i = settings.inversions; }
+	if ( !m ) { m = settings.manhattan; }
+	if ( !d ) { d = settings.desordre; }
 	g.innerHTML = this.g;
-	man.innerHTML = parseInt(this.man).toString();
-	dis.innerHTML = parseInt(this.dis).toString();
-	inv.innerHTML = parseInt(this.inv).toString();
+	i.innerHTML = parseInt( this.inv ).toString();
+	m.innerHTML = parseInt( this.man ).toString();
+	d.innerHTML = parseInt( this.dis ).toString();
 };
 
 
-let togglers = Array.from(document.getElementsByClassName("toggler"));
-togglers.forEach( (toggler) => {
-	toggler.addEventListener("click", () => {
-		toggler.classList.toggle("active");
-	}, false);
+Array.from( document.getElementsByClassName("toggler") ).forEach( ( el ) => {
+	el.addEventListener( "click", () => {
+		el.classList.toggle( "active" );
+	}, false );
 });
 
 
+const getWidth = () => {
+	let width = parseInt(settings.width.value);
+	width = (width < 3) ? 3 : ( (width > 10) ? 10 : width );
+	settings.width.value = width;
+	return width;
+},
+getHeuristics = () => {
+	let heuristics = [];
+	for (let element of settings.heuristics) {
+		if (element.checked) {
+			heuristics.push(parseInt(element.value));
+		}
+	}
+	return heuristics;
+},
+getSearch = () => {
+	for (let element of settings.searches) {
+		if (element.checked) {
+			return element.value;
+		}
+	}
+};
 
 
-button_generate.addEventListener("click", function () {
-	if (input_width.value < 3) { input_width.value = 3; }
-	else if (input_width.value > 10) { input_width.value = 10; }
-	newEnvironment(parseInt(input_width.value));
-	display_taquin.dispatchEvent(played);
+createButton.addEventListener("click", function () {
+	createEnvironment( getWidth(), getHeuristics() );
+	taquinElement.play();
 	document.body.classList.remove("win");
 }, false);
-
-width_pp.addEventListener("click", function () {
-	if (input_width.value < 10) { input_width.value++; }
-	button_generate.click();
-	display_taquin.dispatchEvent(played);
+settings.increment.addEventListener("click", function () {
+	if (settings.width.value < 10) { settings.width.value++; }
+	createButton.click();
+	taquinElement.play();
 }, false);
-width_mm.addEventListener("click", function () {
-	if (input_width.value > 3) { input_width.value--; }
-	button_generate.click();
-	display_taquin.dispatchEvent(played);
+settings.decrement.addEventListener("click", function () {
+	if (settings.width.value > 3) { settings.width.value--; }
+	createButton.click();
+	taquinElement.play();
 }, false);
-
-button_expand.addEventListener("click", function() {
-	if (listEnvironment.last().sizes[0] == 3) {
-		listEnvironment.last().expand(listEnvironment.last().aStar);
-		console.log(listEnvironment.last().end);	
+expandButton.addEventListener("click", function() {
+	if (listEnvironment.last().sizes[0] <= 4) {
+		listEnvironment.last().weightings = getHeuristics();
+		listEnvironment.last().expand(getSearch());
+		console.log(listEnvironment.last().end);
 	}
 });
-display_taquin.addEventListener("moved", function() {
-	let currentTaquin = listEnvironment.last().current;
-	currentTaquin.translate(display_taquin);
-	currentTaquin.infos();
+taquinElement.addEventListener("moved", function() {
+	listEnvironment.last().current.displayIn(taquinElement);
+	listEnvironment.last().current.informations();
 },false);
 
-
-
-swipedetect(display_taquin, function(direction) {
+swipedetect(taquinElement, function(direction) {
 	if (!(document.body.classList.contains("win"))) {
 		let move;
 		switch (direction)
@@ -137,7 +153,7 @@ document.onkeydown = function handlekeydown(e) {
 		switch (e.keyCode) {
 			case 13:
 				e.preventDefault();
-				button_generate.click();
+				createButton.click();
 				break;
 			case 37: // left
 				e.preventDefault();
@@ -163,5 +179,5 @@ document.onkeydown = function handlekeydown(e) {
 };
 
 window.onload = function () {
-	button_generate.click();
+	createButton.click();
 };

@@ -332,7 +332,7 @@ class Fenetre(QWidget):
 
 	def ok(self):
 		numeros = []
-		cp = self.a.moves[-1].moves
+		cp = self.a.moves[-1].findMoves(True)
 		print(cp)
 		positionO = self.positionDansListe(self.a.moves[-1].sequence,0)
 		

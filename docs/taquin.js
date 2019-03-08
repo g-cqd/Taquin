@@ -52,17 +52,17 @@ class Taquin {
 						dis++;
 					}
 				}
-				if ( i > 0 && ( weighting[2] != 7 || weighting == weightings[0] ) ) {
+				if ( i > 0 ) {
 					let pos = this.coordinates(i),
 					x = i % width,
 					coords = [((x == 0) ? (width - 1) : (x - 1)), (Math.ceil(i / width) - 1)];
 					stepMan += (Math.abs(pos[0] - coords[0]) + Math.abs(pos[1] - coords[1]));
-					if ( weighting == weightings[0 ]) { man += stepMan; }
+					if ( weighting == weightings[0]) { man += stepMan; }
 					stepH += weighting[0][k] * stepMan;
 					k++;
 				}
 			}
-			if ( weighting[1] > 1 && weighting[2] != 7 ) { stepH /= weighting[1]; }
+			if ( weighting[1] > 1 ) { stepH /= weighting[1]; }
 			if ( weighting[2] == 7 ) { h += dis; }
 			else { h += stepH; }
 		}
@@ -178,7 +178,7 @@ class Environment {
 					pi = Array(length).fill(1);
 					break;
 				case 7:
-				pi = new Array(length).fill(0);
+					pi = new Array(length).fill(0);
 					break;
 				default:
 					break;
@@ -251,12 +251,8 @@ class Environment {
 			let k = Array.from(queue.keys())[0];
 			let kArray = queue.get(k);
 			let shouldBeExpanded = kArray.shift();
-			if (kArray.length == 0) {
-				queue.delete(k);
-			}
-			else {
-				queue.set(k,kArray);
-			}
+			if (kArray.length == 0) { queue.delete(k); }
+			else { queue.set(k,kArray); }
 			const children = shouldBeExpanded.children();
 			if (children instanceof Taquin) {
 				const end = Date.now() - startTime;
@@ -270,9 +266,7 @@ class Environment {
 						cArray.push(child);
 						queue.set(child.f,cArray);
 					}
-					else {
-						queue.set(child.f,[child]);
-					}
+					else { queue.set(child.f,[child]); }
 				}
 			}
 			let sortedArray = Array.from(queue.keys());

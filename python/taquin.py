@@ -54,7 +54,7 @@ class Taquin:
 						if sequence[i] != 0 and sequence[j] != 0 and sequence[i] > sequence[j]: inv += 1
 					if sequence[i] != 0 and sequence[i] != (i+1):
 						dis += 1
-				if i > 0 and ( weighting[2] != 7 or weighting == weightings[0] ):
+				if i > 0:
 					pos = self.coordinates(i)
 					x = i % width
 					coords = (((width - 1) if x == 0 else (x - 1)), ceil(i / width) - 1)
@@ -62,7 +62,7 @@ class Taquin:
 					if weighting == weightings[0]: man += stepMan
 					stepH += weighting[0][k] * stepMan
 					k += 1
-			if weighting[1] > 1 and weighting[2] != 7: stepH /= weighting[1]
+			if weighting[1] > 1: stepH /= weighting[1]
 			if weighting[2] == 7: h += dis
 			else: h += stepH
 		return [inv,dis,man,h]
@@ -168,7 +168,9 @@ class Environment:
 						weight -= 1
 						j += width
 			if index == 6:
-					pi = [1] * length
+				pi = [1] * length
+			if index == 7:
+				pi = [0] * length
 			if (len(pi)>0):
 				weightings.append((pi,rho,index))
 		return weightings

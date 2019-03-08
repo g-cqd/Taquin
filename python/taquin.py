@@ -109,7 +109,7 @@ class Taquin:
 		printable += ("|  path .. : {}\n").format(self.path)
 		printable += ("|  inv. .. : {}\n").format(self.inv)
 		printable += ("|  man. .. : {}\n").format(self.man)
-		printable += "|\n"
+		printable += ("|  moves . : {}\n").format(self.moves)
 		printable += ("|  g ..... : {}\n").format(self.g)
 		printable += ("|  h ..... : {}\n").format(self.h)
 		printable += ("|  f ..... : {}").format(self.f)
@@ -122,10 +122,8 @@ class Environment:
 		self.sizes = (width,width*width)
 		self.choices = choices
 		self.weightings = self.getWeightings(choices)
-		self.start = Taquin(self)
-		self.moves = []
-		self.current = self.start
-		self.end = None
+		self.moves = [Taquin(self)]
+		self.end = []
 	def getWeightings(self,choices):
 		if (choices == None): choices = [i for i in range(1,7)]
 		weightings = []
@@ -166,16 +164,14 @@ class Environment:
 				weightings.append((pi,rho,index))
 		return weightings
 	def correct(self):
-		self.start.inv,self.start.man = self.start.details()
-		self.start.h = self.start.man
-		self.start.f = self.start.g + self.start.h
-		self.current.inv,self.current.man = self.current.details()
-		self.current.h = self.current.man
-		self.current.f = self.current.g + self.current.h
+		for move in self.moves:
+			move.inv,move.man = move.details()
+			move.h = move.man
+			move.f = move.g + move.h
 	def aStar(self):
-		print(self.current)
+		print(self.moves[-1])
 		queue = OrderedDict()
-		queue[self.current.f] = [self.current]
+		queue[self.moves[-1].f] = [self.moves[-1]]
 		while (True):
 			# Retourne le premier élément dans liste des clés
 			k = list(queue.keys())[0]
@@ -191,8 +187,8 @@ class Environment:
 			# alors c'est la solution donc l'enregistrer et le retourner
 			if isinstance(children,Taquin):
 				print(children)
-				self.end = children
-				return self.end
+				self.end.append(children)
+				return self.end[-1]
 			# Sinon ajouter les enfants dans le dictionnaire
 			else:
 				for child in children :
@@ -226,10 +222,8 @@ class Environment:
 				print("\n\n.........................................\n")
 			return results
 	def play(self,move):
-		previous = self.start if len(self.moves) < 1 else self.moves[-1]
-		self.current = Taquin(self,previous,move)
-		self.moves.append((move,self.current))
-		return self.current
+		self.moves.append(Taquin(self,self.moves[-1],move))
+		return self.moves[-1]
 
 class __main__:
 	env = int(input(">>> Taille du taquin ?\n>>> "))
@@ -240,6 +234,14 @@ class __main__:
 		choices = choices.split(' ')
 		for index,choice in enumerate(choices): choices[index] = int(choice)
 		decomposition = int(input(">>> Voulez-vous associer les heuristiques ou dissocier les exécutions (n:0/y:1) ?\n>>> "))
-
 	a = Environment(env,choices)
-	a.expand(a.aStar,decomposition)
+	while(a.moves[-1].h != 0):
+		print(a.moves[-1])
+		move = "_"
+		while not move in ["R","L","D","U","E"]:
+			move = str(input((">>> Dans quel direction voulez vous aller ? {}\n>>> Ou alors peut-être voulez-vous explorer ? ['E']\n>>> ").format(a.moves[-1].moves)))
+		if move in a.moves[-1].moves:
+			a.play(move)
+		elif move == "E":
+			a.expand(a.aStar,decomposition)
+			exit(0)

@@ -143,7 +143,17 @@ Array.from( document.getElementsByClassName("toggler") ).forEach( ( e ) => {
 
 const getWidth = () => {
 	let width = parseInt( controls.width.value );
-	width = ( width < 3 ) ? 3 : ( ( width > 10 ) ? 10 : width );
+	if ( width < 3 ) {
+		width = 3;
+	}
+	if ( width > 5 ) {
+		controls.expand.disabled = true;
+	} else {
+		controls.expand.disabled = false;
+	}
+	if ( width > 10 ) {
+		width = 10;
+	}
 	controls.width.value = width;
 	return width;
 },
@@ -205,14 +215,14 @@ controls.decrement.addEventListener("click", function ()
 // Expand Button EventListener
 controls.expand.addEventListener("click", function()
 {
-	if ( games.last().sizes[0] <= 6 )
+	if ( games.last().sizes[0] <= 5 )
 	{
 		let env = games.last();
 		env.weightings = getHeuristics();
 		env.expand( getSearch() );
 		expandIn( display.solutions );
 		display.moves = document.querySelectorAll("moveBlock");
-		["touchstart"].forEach( event => {
+		["touchstart","touchend"].forEach( event => {
 			Array.from(display.moves).forEach(e => {
 				e.addEventListener(event, function() {
 					e.classList.toggle("hoverMobile");

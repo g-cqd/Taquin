@@ -432,7 +432,7 @@ class Fenetre(QWidget):
 		
 
 	def appuiBoutonGenerate(self):
-		if(len(self.heuristiques)!=0):
+		if((len(self.heuristiques)!=0)and((self.mode=='pilot' and int(self.texte) == 3)or(self.mode=='manual'))):
 			self.nbCoupsJoues = 0
 		#On supprime l'ancienne génération de taquin :
 			if(self.label3Present!=False):
@@ -489,9 +489,11 @@ class Fenetre(QWidget):
 				item.show()
 			if(self.mode =='pilot'):
 				self.operationColoration()
-		else :
-			print('on non')
-			msg = QMessageBox.warning(self, 'ERROR', "Please enter heuristic(s)", QMessageBox.Ok)
+		elif(len(self.heuristiques)==0) :
+			msg = QMessageBox.warning(self, 'ERROR', "Please enter heuristic(s).", QMessageBox.Ok)
+		elif(self.mode=='pilot' and int(self.texte) != 3):
+			msgPilot = QMessageBox.warning(self, 'ERROR', "Mode 'pilot' unvailable for side length higher than 3.", QMessageBox.Ok)
+
 			
  
 			#msg.setText("Test")

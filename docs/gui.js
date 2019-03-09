@@ -212,7 +212,7 @@ controls.expand.addEventListener("click", function()
 		env.expand( getSearch() );
 		expandIn( display.solutions );
 		display.moves = document.querySelectorAll("moveBlock");
-		["touchstart","touchend"].forEach(event => {
+		["touchstart"].forEach( event => {
 			Array.from(display.moves).forEach(e => {
 				e.addEventListener(event, function() {
 					e.classList.toggle("hoverMobile");

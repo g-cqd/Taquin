@@ -18,7 +18,8 @@ display = {
 	manhattan	: document.getElementById("manhattan"),
 	desordre	: document.getElementById("desordre"),
 	inversions	: document.getElementById("inversions"),
-	solutions	: document.getElementById("moves")
+	solutions	: document.getElementById("moves"),
+	moves		: undefined
 };
 
 

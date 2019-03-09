@@ -63,6 +63,8 @@ Taquin.prototype.displayIn = function( e )
 	e.appendChild( g );
 };
 
+
+
 // Display Taquin informations
 Taquin.prototype.informations = function( g=undefined, i=undefined, d=undefined, m=undefined )
 {
@@ -209,6 +211,14 @@ controls.expand.addEventListener("click", function()
 		env.weightings = getHeuristics();
 		env.expand( getSearch() );
 		expandIn( display.solutions );
+		display.moves = document.querySelectorAll("moveBlock");
+		["touchstart","touchend"].forEach(event => {
+			Array.from(display.moves).forEach(e => {
+				e.addEventListener(event, function() {
+					e.classList.toggle("hoverMobile");
+				});
+			});
+		});
 	}
 }, false );
 

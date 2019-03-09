@@ -329,7 +329,8 @@ body.win .game .case:not(.vide) {
 	align-items: center;
 	border-radius: var(--br-radius);
 }
-.moveBlock:hover {
+.moveBlock:hover,
+.moveBlock.hoverMobile {
 	background-color: var(--ct-color);
 }
 .moveBlock > *:not(:last-child) {
@@ -345,7 +346,8 @@ body.win .game .case:not(.vide) {
 	text-align: right;
 	color: var(--ct-color);
 }
-.moveBlock:hover .idBlock {
+.moveBlock:hover .idBlock,
+.moveBlock.hoverMobile .idBlock {
 	color: var(--cb-color);
 }
 .nameBlock {
@@ -386,7 +388,7 @@ body.win .game .case:not(.vide) {
 	display: none;
 	position: absolute;
 }
-.moveBlock:not(:hover) .taquinBlock {
+.moveBlock:not(:hover):not(.hoverMobile) .taquinBlock {
 	display: none;
 	background-color: transparent;
 }

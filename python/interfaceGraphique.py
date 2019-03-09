@@ -433,6 +433,7 @@ class Fenetre(QWidget):
 
 	def appuiBoutonGenerate(self):
 		if((len(self.heuristiques)!=0)and((self.mode=='pilot' and int(self.texte) == 3)or(self.mode=='manual'))):
+			
 			self.nbCoupsJoues = 0
 		#On supprime l'ancienne génération de taquin :
 			if(self.label3Present!=False):
@@ -678,6 +679,18 @@ class Fenetre(QWidget):
 			
 			for boutons in self.box:
 				boutons.setStyleSheet('color: rgb(255,255,255);background-color: rgb(0,128,0);border: none; border-radius: 4px;')"""
+	def traductionEnFleches(self):
+		trad = ""
+		for item in self.solution:
+			if(item == 'R'):
+				trad += '→'
+			if(item == 'L'):
+				trad+= '←'
+			if(item =='U'):
+				trad+='↑'
+			if(item =='D'):
+				trad+='↓'
+		return trad
 
 	def Solution(self):
 		if(self.label3Present!=False):
@@ -686,7 +699,8 @@ class Fenetre(QWidget):
 
 		self.a.expand(self.a.aStar,0)
 		self.solution = self.a.end[-1].path[self.nbCoupsJoues+1:len(self.a.end[-1].path)]
-		self.label3 = QLabel("Solution : _ %s"%(self.solution),self)
+		self.solution = self.traductionEnFleches()
+		self.label3 = QLabel("Solution : %s"%(self.solution),self)
 		self.label3.setFont(self.font)
 		self.label3.setStyleSheet('background-color: rgb(238,238,238); border-radius: 4px;')
 		self.label3.setFixedSize(565,50)

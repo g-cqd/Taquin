@@ -1,183 +1,299 @@
-const createEnvironment = (width,heuristics) => {
-	if ( heuristics == undefined ) { heuristics = [5]; }
-    games.push(new Environment(width,heuristics));
-};
-Element.prototype.getStyle = function (...properties) {
+// push a new environment in games List
+function createEnvironment()
+{
+    games.push( new Environment( getWidth(), getHeuristics() ) );
+}
+
+
+// Get Computed Style of an Element
+Element.prototype.getStyle = function( ...properties )
+{
 	let styles = {};
-	if (properties.length) {
-		for (let property of properties) {
-			styles[property] = window.getComputedStyle(this).getPropertyValue(property);
+	if ( properties.length )
+	{
+		for ( let property of properties )
+		{
+			styles[property] = window.getComputedStyle( this ).getPropertyValue( property );
 		}
 	} else {
-		for (let property in window.getComputedStyle(this)) {
-			const value = window.getComputedStyle(this).getPropertyValue(property);
-			if (value) { styles[property] = value; }
+		for ( let property in window.getComputedStyle( this ) )
+		{
+			const value = window.getComputedStyle( this ).getPropertyValue( property );
+			if ( value )
+			{
+				styles[property] = value;
+			}
 		}
 	}
 	return styles;
 };
-Element.prototype.play = function () {
-	this.dispatchEvent(played);
+
+
+// Dispatch Play Event to an Element
+Element.prototype.play = function()
+{
+	this.dispatchEvent( played );
 };
-Taquin.prototype.displayIn = function (e) {
-	const environmentSizes = {
-		width:this.environment.sizes[0],
-		length:this.environment.sizes[1]
-	},
-	computedSizes = {
-		width:e.offsetWidth,
-		height:e.offsetHeight
-	},
-	g = document.createElement("div"),
-	gap = 10,
-	rawPadding = e.getStyle("padding-top","padding-right","padding-bottom","padding-left"),
-	paddings = [];
-	for (let property in rawPadding) { paddings.push(rawPadding[property]); }
-	paddings.map( (element,index) => { paddings[index] = parseInt(element.replace(/px/g,'')); });
-	const padding = {
-		height:(paddings[0]+paddings[2]),
-		width:(paddings[1]+paddings[3])
-	};
-	g.classList.add("game");
-	for (let value of this.sequence) {
-		let c = document.createElement("div");
-		if (value==0) { c.classList.add("case","vide"); }
-		else { c.classList.add("case"); }
-		const factor = 1.6,
-		height = Math.floor((computedSizes.height - (padding.height + gap)) / environmentSizes.width),
-		width = Math.floor((computedSizes.width - (padding.width + gap)) / environmentSizes.width),
-		fontSize = Math.max(Math.ceil((height / (environmentSizes.width/factor))),12);
-		c.setAttribute('style',`height:${height}px;width:${width}px;font-size:${fontSize}px;`);
+
+
+// Display Taquin in e parameter/Element
+Taquin.prototype.displayIn = function( e )
+{
+	const width = this.environment.sizes[0],
+	g = document.createElement( "div" );
+	g.classList.add( "game", `w-${width}` );
+	for ( let value of this.sequence )
+	{
+		let c = document.createElement( "div" );
+		if ( value == 0 )
+		{
+			c.classList.add( "case", "vide" );
+		}
+		else
+		{
+			c.classList.add( "case" );
+		}
+		c.setAttribute( 'style',`font-size:${
+			( e.offsetWidth - parseInt( e.getStyle( "padding-left" )['padding-left'] ) * 2 ) / ( width * 2 )
+			}px;` );
 		c.innerHTML = value != 0 ? value : "";
-		g.appendChild(c);
+		g.appendChild( c );
 	}
 	e.innerHTML = "";
-	e.appendChild(g);
+	e.appendChild( g );
 };
-Taquin.prototype.informations = function( g=undefined, i=undefined, d=undefined, m=undefined ) {
-	if ( !g ) { g = settings.coups; }
-	if ( !i ) { i = settings.inversions; }
-	if ( !m ) { m = settings.manhattan; }
-	if ( !d ) { d = settings.desordre; }
+
+// Display Taquin informations
+Taquin.prototype.informations = function( g=undefined, i=undefined, d=undefined, m=undefined )
+{
+	if ( !g ) { g = display.coups; }
+	if ( !i ) { i = display.inversions; }
+	if ( !m ) { m = display.manhattan; }
+	if ( !d ) { d = display.desordre; }
 	g.innerHTML = this.g;
 	i.innerHTML = parseInt( this.inv ).toString();
 	m.innerHTML = parseInt( this.man ).toString();
 	d.innerHTML = parseInt( this.dis ).toString();
 };
 
+// Display solutions moves
+function expandIn( e ) {
+	e.innerHTML = "";
+	let solutions = games.last().end.last().traceroute();
+	solutions = solutions.slice(games.last().moves.last().g);
+	Array.from(solutions).forEach( (solution,index) => {
+		let block = document.createElement("div"),
+		idBlock = document.createElement("div"),
+		nameBlock = document.createElement("div"),
+		infoBlock = document.createElement("div"),
+		taquinBlock = document.createElement("div");
+		block.classList.add("moveBlock");
+		idBlock.classList.add("idBlock");
+		nameBlock.classList.add("nameBlock");
+		infoBlock.classList.add("infoBlock");
+		taquinBlock.classList.add("taquinBlock");
+		let identifiant = index.toString(),
+		moveName,
+		manhattan = solution.man.toString(),
+		desordre = solution.dis.toString(),
+		inversions = solution.inv.toString();
+		if (solution.g > 0) {
+		switch (solution.path.slice(-1)) {
+			case "L":
+				moveName = "Gauche";
+				break;
+			case "R":
+				moveName = "Droite";
+				break;
+			case "U":
+				moveName = "Haut";
+				break;
+			case "D":
+				moveName = "Bas";
+				break;
+			default:
+				break;
+		}
+		} else {
+			moveName = "Racine";
+		}
+		idBlock.innerHTML = identifiant;
+		nameBlock.innerHTML = moveName;
+		infoBlock.innerHTML += `<div class="dataBlock"><span class="datas">${manhattan}</span><span class="title">manhattan</span></div>`;
+		infoBlock.innerHTML += `<div class="dataBlock"><span class="datas">${desordre}</span><span class="title">désordre</span></div>`;
+		infoBlock.innerHTML += `<div class="dataBlock"><span class="datas">${inversions}</span><span class="title">inversions</span></div>`;
+		solution.displayIn(taquinBlock);
+		block.appendChild(idBlock);
+		block.appendChild(nameBlock);
+		block.appendChild(infoBlock);
+		block.appendChild(taquinBlock);
+		e.appendChild(block);
+	} );
+}
 
-Array.from( document.getElementsByClassName("toggler") ).forEach( ( el ) => {
-	el.addEventListener( "click", () => {
-		el.classList.toggle( "active" );
+
+Array.from( document.getElementsByClassName("toggler") ).forEach( ( e ) => {
+	e.addEventListener( "click", () => {
+		e.classList.toggle( "active" );
 	}, false );
-});
+} );
 
 
 const getWidth = () => {
-	let width = parseInt(settings.width.value);
-	width = (width < 3) ? 3 : ( (width > 10) ? 10 : width );
-	settings.width.value = width;
+	let width = parseInt( controls.width.value );
+	width = ( width < 3 ) ? 3 : ( ( width > 10 ) ? 10 : width );
+	controls.width.value = width;
 	return width;
 },
 getHeuristics = () => {
 	let heuristics = [];
-	for (let element of settings.heuristics) {
-		if (element.checked) {
-			heuristics.push(parseInt(element.value));
+	for ( let element of controls.heuristics )
+	{
+		if ( element.checked )
+		{
+			heuristics.push( parseInt( element.value ) );
 		}
 	}
 	return heuristics;
 },
 getSearch = () => {
-	for (let element of settings.searches) {
-		if (element.checked) {
+	for ( let element of controls.searches )
+	{
+		if ( element.checked )
+		{
 			return element.value;
 		}
 	}
 };
 
 
-createButton.addEventListener("click", function () {
+// Create Width Button EventListener
+controls.create.addEventListener( "click", function ()
+{
+	document.body.classList.remove( "win" );
 	createEnvironment( getWidth(), getHeuristics() );
-	taquinElement.play();
-	document.body.classList.remove("win");
-}, false);
-settings.increment.addEventListener("click", function () {
-	if (settings.width.value < 10) { settings.width.value++; }
-	createButton.click();
-	taquinElement.play();
-}, false);
-settings.decrement.addEventListener("click", function () {
-	if (settings.width.value > 3) { settings.width.value--; }
-	createButton.click();
-	taquinElement.play();
-}, false);
-expandButton.addEventListener("click", function() {
-	if (games.last().sizes[0] <= 6) {
-		games.last().weightings = getHeuristics();
-		games.last().expand(getSearch());
-		console.log(games.last().end);
-	}
-});
-taquinElement.addEventListener("moved", function() {
-	games.last().moves.last().displayIn(taquinElement);
-	games.last().moves.last().informations();
-},false);
+	display.taquin.play();
+}, false );
 
-swipedetect(taquinElement, function(direction) {
-	if (!(document.body.classList.contains("win"))) {
+
+// Increment Width Button EventListener
+controls.increment.addEventListener("click", function ()
+{
+	if ( controls.width.value < 10 )
+	{
+		controls.width.value++;
+	}
+	controls.create.click();
+	display.taquin.play();
+}, false );
+
+
+// Decrement Width Button EventListener
+controls.decrement.addEventListener("click", function ()
+{
+	if ( controls.width.value > 3 )
+	{
+		controls.width.value--;
+	}
+	controls.create.click();
+	display.taquin.play();
+}, false );
+
+
+// Expand Button EventListener
+controls.expand.addEventListener("click", function()
+{
+	if ( games.last().sizes[0] <= 6 )
+	{
+		let env = games.last();
+		env.weightings = getHeuristics();
+		env.expand( getSearch() );
+		expandIn( display.solutions );
+	}
+}, false );
+
+
+// Update Taquin EventListener
+display.taquin.addEventListener( "moved", function()
+{
+	let taquin = games.last().moves.last()
+	taquin.displayIn( display.taquin );
+	taquin.informations();
+}, false );
+
+
+// Swipe Listening Function
+swipedetect( display.taquin, function( direction )
+{
+	if ( !( document.body.classList.contains( "win" ) ) )
+	{
 		let move;
-		switch (direction)
+		switch ( direction )
 		{
 			case "left":
-				move = games.last().moves.last().findMoves(true).includes("l") ? "l" : undefined;
+				move = games.last().moves.last().findMoves( true ).includes( "L" ) ? "L" : undefined;
 				break;
 			case "up":
-				move = games.last().moves.last().findMoves(true).includes("u") ? "u" : undefined;
+				move = games.last().moves.last().findMoves( true ).includes( "U" ) ? "U" : undefined;
 				break;
 			case "right":
-				move = games.last().moves.last().findMoves(true).includes("r") ? "r" : undefined;
+				move = games.last().moves.last().findMoves( true ).includes( "R" ) ? "R" : undefined;
 				break;
 			case "down":
-				move = games.last().moves.last().findMoves(true).includes("d") ? "d" : undefined;
+				move = games.last().moves.last().findMoves( true ).includes( "D" ) ? "D" : undefined;
 				break;
 			default:
 				return;
 		}
-		if (move) { games.last().play(move); }
+		if ( move )
+		{
+			games.last().play( move );
+		}
 	}
-});
-document.onkeydown = function handlekeydown(e) {
-	if (!(document.body.classList.contains("win"))) {
+} );
+
+
+// Keydown EventListener
+document.onkeydown = function handlekeydown( e )
+{
+	if ( !( document.body.classList.contains( "win" ) ) )
+	{
 		let move;
-		switch (e.keyCode) {
-			case 13:
+		switch ( e.keyCode )
+		{
+			case 13: // Enter
 				e.preventDefault();
-				createButton.click();
+				controls.create.click();
 				break;
-			case 37: // left
+			case 37: // Left
 				e.preventDefault();
-				move = games.last().moves.last().findMoves(true).includes("l") ? "l" : undefined;
+				move = games.last().moves.last().findMoves( true ).includes( "L" ) ? "L" : undefined;
 				break;
-			case 38: // up
+			case 38: // Up
 				e.preventDefault();
-				move = games.last().moves.last().findMoves(true).includes("u") ? "u" : undefined;
+				move = games.last().moves.last().findMoves( true ).includes( "U" ) ? "U" : undefined;
 				break;
-			case 39: // right
+			case 39: // Right
 				e.preventDefault();
-				move = games.last().moves.last().findMoves(true).includes("r") ? "r" : undefined;
+				move = games.last().moves.last().findMoves( true ).includes( "R" ) ? "R" : undefined;
 				break;
-			case 40: // down
+			case 40: // Down
 				e.preventDefault();
-				move = games.last().moves.last().findMoves(true).includes("d") ? "d" : undefined;
+				move = games.last().moves.last().findMoves( true ).includes( "D" ) ? "D" : undefined;
 				break;
 			default:
 				return;
 		}
-		if (move) { games.last().play(move); }
+		if ( move )
+		{
+			games.last().play( move );
+		}
 	}
 };
 
-window.onload = function () {
-	createButton.click();
+
+// Window Onload Taquin Generation
+window.onload = function ()
+{
+	controls.create.click();
 };

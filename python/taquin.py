@@ -245,8 +245,6 @@ class __main__:
 		decomposition = int(input(">>> Voulez-vous associer les heuristiques ou dissocier les exécutions (n:0/y:1) ?\n>>> "))
 
 
-
-
 	a = Environment(width,choices)
 	while(a.moves[-1].h != 0):
 		print(a.moves[-1])

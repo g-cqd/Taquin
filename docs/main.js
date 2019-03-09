@@ -3,26 +3,27 @@ let games = [];
 const played = document.createEvent("Event");
 played.initEvent("moved",true,true);
 
-const t = "\t";
-
-const settings = {
+const controls = {
 	width		: document.getElementById("input-width"),
+	create		: document.getElementById("button-new"),
+	expand		: document.getElementById("ex-pand"),
 	increment	: document.getElementById("button-width-pp"),
 	decrement	: document.getElementById("button-width-mm"),
+	heuristics	: Array.from(document.querySelectorAll("[data-domain=heuristic]")),
+	searches	: Array.from(document.querySelectorAll("[data-domain=search]"))
+},
+display = {
+	taquin		: document.getElementById("taquin"),
 	coups		: document.getElementById("coups"),
 	manhattan	: document.getElementById("manhattan"),
 	desordre	: document.getElementById("desordre"),
 	inversions	: document.getElementById("inversions"),
-	heuristics	: Array.from(document.querySelectorAll("[data-domain=heuristic]")),
-	searches	: Array.from(document.querySelectorAll("[data-domain=search]"))
-},
-taquinElement = document.getElementById("taquin"),
-createButton = document.getElementById("button-new"),
-expandButton = document.getElementById("ex-pand");
+	solutions	: document.getElementById("moves")
+};
 
 
 
-function random(min, max = undefined) {
+function random( min, max = undefined ) {
 	return Math.floor(Math.random() * ((max == undefined ? min : max) - (max == undefined ? 0 : min)) + (max == undefined ? 0 : min));
 }
 Array.prototype.shuffle = function () {

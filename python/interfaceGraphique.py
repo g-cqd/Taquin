@@ -242,9 +242,7 @@ class Fenetre(QWidget):
 	def __init__(self,texte,mode):
 		QWidget.__init__(self)
 		self.texte = texte
-		self.sequence = []
 		self.box = []
-		self.t = []
 		self.mode = mode
 		self.label3Present = False
 		self.labelCoupsPresent = False
@@ -290,7 +288,7 @@ class Fenetre(QWidget):
 		heuristiques.move(50,210)
 
 
-		# ComboBox
+		# ComboBox side length
 		ComboBox = QComboBox(self)
 		ComboBox.addItem("3 ")
 		ComboBox.addItem("4 ")
@@ -300,7 +298,7 @@ class Fenetre(QWidget):
 		ComboBox.setFixedSize(QSize(85,20))
 		ComboBox.move(150,110)
 		ComboBox.activated[str].connect(self.selectionDimensions)
-		#Mode : 
+		#combo box choix Mode : 
 		ComboBoxM = QComboBox(self)
 		ComboBoxM.addItem("manual")
 		ComboBoxM.addItem("pilot")
@@ -308,24 +306,26 @@ class Fenetre(QWidget):
 		ComboBoxM.setFixedSize(QSize(85,20))
 		ComboBoxM.move(150,160)
 		ComboBoxM.activated[str].connect(self.selectionMode)
+
+
 		#Generate Button
 		generate = QPushButton('Generate',self)
 		generate.setFont(QFont(fontstr, 15))
 		generate.setFixedSize(QSize(90,30))
 		generate.setStyleSheet('color: rgb(179,179,179);background-color: rgb(232,232,232);border: none; border-radius: 4px;')
-		generate.move(700,320)
-		
+		generate.move(700,320)	
 		generate.clicked.connect(self.appuiBoutonGenerate)
-		#generate.clicked.connect(self.animation)
 
-		#Clear console
-		clear = QPushButton('Solution',self)
-		clear.setFont(QFont(fontstr, 15))
-		clear.setFixedSize(QSize(115,30))
-		clear.setStyleSheet('color: rgb(179,179,179);background-color: rgb(232,232,232);border: none; border-radius: 4px;')
-		clear.move(805,320) 
-		clear.clicked.connect(self.Solution)
 
+		#Bouton solution
+		BoutonSolution = QPushButton('Solution',self)
+		BoutonSolution.setFont(QFont(fontstr, 15))
+		BoutonSolution.setFixedSize(QSize(115,30))
+		BoutonSolution.setStyleSheet('color: rgb(179,179,179);background-color: rgb(232,232,232);border: none; border-radius: 4px;')
+		BoutonSolution.move(805,320) 
+		BoutonSolution.clicked.connect(self.Solution)
+
+		#Check box des heuristiques : 
 		h1 = QCheckBox('H.1',self)
 		h1.setFont(QFont(fontstr,12))
 		h1.move(150,210)
@@ -358,23 +358,8 @@ class Fenetre(QWidget):
 
 		self.show()
 
-	def positionTuileRepereOrthonorme(self,numeroTuile, taquinL):
-		#renvoie la position d'une tuile sous forme de liste [x,y]
-		coordonneees = []
-		for i,e in enumerate(taquinL):
-			if e == numeroTuile:
-				indice = i
-				break
-		largeur = int(self.texte)
-		colonne = (indice+1)%largeur
-		if( colonne == 0 ):
-			coordonneees.append(int(largeur))
-		else:
-			coordonneees.append(int(colonne))
-		ligne = int(ceil(float(indice+1)/float(largeur)))
-		coordonneees.append(int(ligne))
-		return coordonneees
 	def positionDansListe(self,liste,numero):
+		"""Renvoie la position d'un élément dans une liste donnée si l'élément est présent dans la liste"""
 		pos = 0
 		for item in liste:
 			if (item == numero):
@@ -383,6 +368,7 @@ class Fenetre(QWidget):
 		return None
 
 	def ok(self):
+		"""Renvoie les différents coups possibles (Right,Left,Down,Up) associés à la tuile à bouger sous forme de liste de liste [numéro de la tuile, coup]"""
 		numeros = []
 		cp = self.a.moves[-1].findMoves(True)
 		print(cp)
@@ -401,6 +387,10 @@ class Fenetre(QWidget):
 	
 
 	def isItTheEnd(self):
+		""" 
+		Vérifie si on est dans un état final
+		Cette fonction renvoie un booléen
+		"""
 		i = 0
 		ok = True
 		while(i<len(self.a.moves[-1].sequence)-1):
@@ -410,6 +400,8 @@ class Fenetre(QWidget):
 		return ok
 
 	def operationColoration(self):
+		"""Cette fonction colore la case associée au meilleur prochain coup dans le mode 'pilot'"""
+
 		if(self.boutonEnCouleur!=None):
 			self.boutonEnCouleur.setStyleSheet('color: rgb(170,170,170);background-color: rgb(238,238,238);border: none; border-radius: 4px;')
 			self.boutonEnCouleur = None
@@ -422,18 +414,46 @@ class Fenetre(QWidget):
 				numeroAColorer = verif[i][0]				
 			i+=1
 		for item in self.box:
-			print('item : ',item.text())
-			print('numero : ',numeroAColorer)
 			if(int(item.text())==numeroAColorer):						
 				self.boutonEnCouleur = item
 				self.boutonEnCouleur.setStyleSheet('color: rgb(255,255,255);background-color: rgb(135,206,250);border: none; border-radius: 4px;')
 
 		
-		
+	def traductionEnFleches(self,codeATraduire):
+		"""
+		Traduit une solution en flèches : 
+		- U (up) devient ↑
+		- D (down) devient ↓
+		- R (right) devient →
+		- L (left) devient ←
+		"""
+		trad = ""
+		for item in codeATraduire:
+			if(item == 'R'):
+				trad += '→'
+			if(item == 'L'):
+				trad+= '←'
+			if(item =='U'):
+				trad+='↑'
+			if(item =='D'):
+				trad+='↓'
+		return trad
+
+	def couic(self,chaineADecouper,nbCaracteres):
+		""" Place des retour à la ligne dans une chaîne de caractères (chaineADecouper) tous les nbCaractères"""
+		nouvelleChaine = ""
+		k = 0
+		while(k<len(chaineADecouper)):
+			if(k<(len(chaineADecouper)-nbCaracteres)):
+				nouvelleChaine += chaineADecouper[k:(k+nbCaracteres)]+"\n"
+			else:
+				nouvelleChaine += chaineADecouper[k:len(chaineADecouper)]
+			k+=nbCaracteres
+		return nouvelleChaine
 
 	def appuiBoutonGenerate(self):
 		if((len(self.heuristiques)!=0)and((self.mode=='pilot' and int(self.texte) == 3)or(self.mode=='manual'))):
-			
+			self.coupsJoues = ""
 			self.nbCoupsJoues = 0
 		#On supprime l'ancienne génération de taquin :
 			if(self.label3Present!=False):
@@ -441,7 +461,7 @@ class Fenetre(QWidget):
 				self.label3Present = False
 		#On regarde si le label de coups est présent, si oui on le delete
 			if(self.labelCoupsPresent!=False):
-				self.labelNbCoupsJoues.clear()			
+				self.labelNbCoupsJoues.clear()		
 				self.labelCoupsPresent = False
 		#On regarde si le label Manhattan est présent, si oui on le delete
 			if(self.LabelManhattanPresent!=False):
@@ -451,12 +471,10 @@ class Fenetre(QWidget):
 			if(self.LabelInvPresent!=False):
 				self.LabelInv.clear()			
 				self.LabelInvPresent = False
-		
+		#On regarde si le label Dis est présent, si oui on le delete
 			if(self.LabelDisPresent!=False):
 				self.LabelDis.clear()			
 				self.LabelDisPresent = False
-
-
 		
 		#On delete les boutons précédents du taquin : 		
 			for k in self.box:
@@ -476,48 +494,39 @@ class Fenetre(QWidget):
 					x = 0
 					y+=42
 				if(self.a.moves[-1].sequence[i]!=0):
-					kk = QPushButton(str(self.a.moves[-1].sequence[i]),self)
-					kk.setFont(self.font)
-					kk.setFixedSize(QSize(40,40))
-					kk.setStyleSheet('color: rgb(170,170,170);background-color: rgb(238,238,238);border: none; border-radius: 4px;')
-					kk.move(700+x*42,1*y)
-					self.box.append(kk)
+					BoutonGrille = QPushButton(str(self.a.moves[-1].sequence[i]),self)
+					BoutonGrille.setFont(self.font)
+					BoutonGrille.setFixedSize(QSize(40,40))
+					BoutonGrille.setStyleSheet('color: rgb(170,170,170);background-color: rgb(238,238,238);border: none; border-radius: 4px;')
+					BoutonGrille.move(700+x*42,1*y)
+					self.box.append(BoutonGrille)
 				x+=1
 				i+=1
 
 			for item in self.box:
 				item.clicked.connect(self.appuiBoutonsTaquin)
 				item.show()
+			
+			self.start_time = time.time()
+
 			if(self.mode =='pilot'):
 				self.operationColoration()
-		elif(len(self.heuristiques)==0) :
-			msg = QMessageBox.warning(self, 'ERROR', "Please enter heuristic(s).", QMessageBox.Ok)
-		elif(self.mode=='pilot' and int(self.texte) != 3):
-			msgPilot = QMessageBox.warning(self, 'ERROR', "Mode 'pilot' unvailable for side length higher than 3.", QMessageBox.Ok)
 
-			
- 
-			#msg.setText("Test")
-			
-			#error_dialog = QtWidgets.QErrorMessage()
-			#error_dialog.showMessage('Oh no!')
+			if(int(self.texte)==3):
+				self.a.expand(self.a.aStar,0)
+				self.nbCoupsOpti = self.a.end[-1].g
+				self.listeCoupsOpti = self.couic(self.traductionEnFleches(self.a.end[-1].path),20)
+
+		elif(len(self.heuristiques)==0) :
+			msg = QMessageBox.critical(self, 'ERROR', "Please enter heuristic(s).", QMessageBox.Ok)
+		elif(self.mode=='pilot' and int(self.texte) != 3):
+			msgPilot = QMessageBox.critical(self, 'ERROR', "Mode 'pilot' unvailable for side length higher than 3.", QMessageBox.Ok)
 		
+
+
 	
 		
-		"""if(self.mode == 'auto'):
-			a.expand()
-			self.solution = a.end.path
-			label3 = QLabel("Path : %s"%(self.solution),self)
-			label3.setFont(self.font)
-			label3.move(50,400)
-			label3.show()
-			
-			#self.animation()"""
-
-			
-		
 	def appuiBoutonsTaquin(self):
-		#print("on rentre")
 		if(self.fin!=True):
 			#Nombre de coups effectues : 			
 			ok = False
@@ -554,22 +563,17 @@ class Fenetre(QWidget):
 					BoutonClique.move(x,y+42)
 					move ="D" 
 				self.a.play(move)
+				self.coupsJoues+=move
 				self.nbCoupsJoues +=1
-				#On vérifie si on est dans l'état final :
-				if(self.isItTheEnd()==True):
-					self.fin = True
-					for boutons in self.box:
-						boutons.setStyleSheet('color: rgb(255,255,255);background-color: rgb(60,179,113);border: none; border-radius: 4px;')
-				else:
-					if(self.mode == 'pilot'):
-						self.operationColoration()
+
+
 			#Label nombre de coups joués
 			self.labelNbCoupsJoues = QLabel("Coups:\n %d"%(self.a.moves[-1].g),self)
 			self.labelNbCoupsJoues.setFont(self.font)
 			self.labelNbCoupsJoues.setStyleSheet('background-color: rgb(238,238,238); border-radius: 4px;')
 			self.labelNbCoupsJoues.setAlignment(Qt.AlignCenter)
 			self.labelNbCoupsJoues.setFixedSize(QSize(110,50))
-			self.labelNbCoupsJoues.move(50,350)
+			self.labelNbCoupsJoues.move(50,320)
 			self.labelNbCoupsJoues.show()
 			self.labelCoupsPresent = True
 
@@ -579,7 +583,7 @@ class Fenetre(QWidget):
 			self.LabelManhattan.setStyleSheet('background-color: rgb(238,238,238); border-radius: 4px;')
 			self.LabelManhattan.setAlignment(Qt.AlignCenter)
 			self.LabelManhattan.setFixedSize(QSize(110,50))
-			self.LabelManhattan.move(320,350)
+			self.LabelManhattan.move(320,320)
 			self.LabelManhattan.show()
 			self.LabelManhattanPresent = True
 
@@ -589,129 +593,62 @@ class Fenetre(QWidget):
 			self.LabelInv.setStyleSheet('background-color: rgb(238,238,238); border-radius: 4px;')
 			self.LabelInv.setAlignment(Qt.AlignCenter)
 			self.LabelInv.setFixedSize(QSize(110,50))
-			self.LabelInv.move(455,350)
+			self.LabelInv.move(455,320)
 			self.LabelInv.show()
 			self.LabelInvPresent = True
 
 			#Label Dis : 
-			self.LabelDis = QLabel("Desordre:\n %d"%(self.a.moves[-1].inv),self)
+			self.LabelDis = QLabel("Desordre:\n %d"%(self.a.moves[-1].dis),self)
 			self.LabelDis.setFont(self.font)
 			self.LabelDis.setStyleSheet('background-color: rgb(238,238,238); border-radius: 4px;')
 			self.LabelDis.setAlignment(Qt.AlignCenter)
 			self.LabelDis.setFixedSize(QSize(110,50))
-			self.LabelDis.move(185,350)
+			self.LabelDis.move(185,320)
 			self.LabelDis.show()
 			self.LabelDisPresent = True
-
-
-
-
-
+			
+			#On vérifie si on est dans l'état final :
+			if(self.isItTheEnd()==True):
+				self.fin = True
+				for boutons in self.box:
+					boutons.setStyleSheet('color: rgb(255,255,255);background-color: rgb(60,179,113);border: none; border-radius: 4px;')
+					#perfs pour résoudre un taquin par le joueur:
+				nbCoupsJoueur = self.nbCoupsJoues
+				tempsMinute = int((time.time() - self.start_time)/60)
+				tempsSecondes = int(time.time() - self.start_time)-tempsMinute*60
+				coups = self.couic(self.traductionEnFleches(self.coupsJoues),20)
+				if(int(self.texte)>3):
+					msgResolition = QMessageBox.information(self, 'FELICITATION', "CONGRATULATIONS \n\nYou have solved the taquin in : \n- %d moves\n- %d minutes and %d seconds\n- this is your moves : %s"%(int(nbCoupsJoueur),int(tempsMinute),int(tempsSecondes),coups), QMessageBox.Ok)
+				else:
+					msgResolition2 = QMessageBox.information(self, 'FELICITATION', "CONGRATULATIONS \n\nYou have solved the taquin in : \n- %d moves\n- %d minutes and %d seconds\n- this is your moves : %s\n\n The minimal path is: \n- %d moves\n- path : \n%s"%(int(nbCoupsJoueur),int(tempsMinute),int(tempsSecondes),coups,int(self.nbCoupsOpti),self.listeCoupsOpti), QMessageBox.Ok)
 		
-	"""def animation(self):
-		if(self.mode =='pilot'):
-			self.a.expand()
-			self.solution = self.a.end.path
-			label3 = QLabel("Path : %s"%(self.solution),self)
-			label3.setFont(self.font)
-			label3.move(50,400)
-			label3.show()
-			i = 0
-			self.solution = self.solution.replace('_','')
-			print('solution = ',self.solution)
-			print('taquin init = ',self.t)
-			while(i<len(self.solution)):
-				liste = self.ok()
-			
-				c = self.solution[i]
-		   
-				j = 0
-				variableInter = 0
-				while(j<len(liste)):
-					if(liste[j][1]==c):
-						variableInter = j 
-					
-						break
-					j+=1
-			
-				for item in self.box:
-					if(item.text()==str(liste[variableInter][0])):
-						BoutonCliqueA = item
-						x = BoutonCliqueA.x()
-						y = BoutonCliqueA.y()
-						#width = BoutonCliqueA.width()
-						#height = BoutonCliqueA.height()
-						break
-				self.anim = QPropertyAnimation(BoutonCliqueA)
-				self.anim.setDuration(214)
-				self.anim.setTargetObject(BoutonCliqueA)
-				if(liste[variableInter][1]=='r'):
-					self.anim.setStartValue(BoutonCliqueA)
-					#BoutonCliqueA.move(x+42,y)
-					
-					self.anim.setEndValue(QPoint(x+42,y))
-					#BoutonCliqueA.move(x+42,y)
-				if(liste[variableInter][1]=='l'):
-					self.anim.setStartValue(BoutonCliqueA)
-					#BoutonCliqueA.move(x-42,y)
-					self.anim.setEndValue(QPoint(x-42,y))
-					#BoutonCliqueA.move(x-42,y)
-				if(liste[variableInter][1]=='u'):
-					self.anim.setStartValue(BoutonCliqueA)
-					#BoutonCliqueA.move(x,y-42)
-					self.anim.setEndValue(QPoint(x,y-42))
-					#BoutonCliqueA.move(x,y-42)
-				if(liste[variableInter][1]=='d'):
-					self.anim.setStartValue(BoutonCliqueA)
-					#BoutonCliqueA.move(x,y+42)
-					self.anim.setEndValue(QPoint(x,y+42))
-					#BoutonCliqueA.move(x,y+42)
-				self.anim.start()
-				tuile = self.positionDansListe(self.t,int(liste[variableInter][0]))
-				blanc = self.positionDansListe(self.t,0)
-				inter = 0
-				inter = self.t[tuile]
-				self.t[tuile] = self.t[blanc]
-				self.t[blanc] = inter
-				
-				
-				i+=1
-			
-			for boutons in self.box:
-				boutons.setStyleSheet('color: rgb(255,255,255);background-color: rgb(0,128,0);border: none; border-radius: 4px;')"""
-	def traductionEnFleches(self):
-		trad = ""
-		for item in self.solution:
-			if(item == 'R'):
-				trad += '→'
-			if(item == 'L'):
-				trad+= '←'
-			if(item =='U'):
-				trad+='↑'
-			if(item =='D'):
-				trad+='↓'
-		return trad
+			else:
+				if(self.mode == 'pilot'):
+					self.operationColoration()
+
 
 	def Solution(self):
-		if(self.label3Present!=False):
-			self.label3.deleteLater()
-			self.label3Present=False
+		if(len(self.box)!=0):
+			if(self.label3Present!=False):
+				self.label3.deleteLater()
+				self.label3Present=False
 
-		self.a.expand(self.a.aStar,0)
-		self.solution = self.a.end[-1].path[self.nbCoupsJoues+1:len(self.a.end[-1].path)]
-		self.solution = self.traductionEnFleches()
-		self.label3 = QLabel("Solution : %s"%(self.solution),self)
-		self.label3.setFont(self.font)
-		self.label3.setStyleSheet('background-color: rgb(238,238,238); border-radius: 4px;')
-		self.label3.setFixedSize(565,50)
-		self.label3.move(50,425)
-		self.label3.show()
+			self.a.expand(self.a.aStar,0)
+			self.solution = self.a.end[-1].path[self.nbCoupsJoues+1:len(self.a.end[-1].path)]
+			self.solution = self.traductionEnFleches(self.solution)
+			if(len(self.solution)>45):
+				self.solution = self.couic(self.solution,45)
 
-		self.label3Present = True
-		#print(a.end.path)
-		print(self.nbCoupsJoues)
-		print(self.a.end[-1].path[self.nbCoupsJoues+1:len(self.a.end[-1].path)])
+			self.label3 = QLabel("Solution : %s"%(self.solution),self)
+			self.label3.setFont(self.font)
+			self.label3.setStyleSheet('background-color: rgb(238,238,238); padding: 1em; border-radius: 4px;')
+			self.label3.move(50,395)
+			self.label3.show()
 
+			self.label3Present = True
+
+		else:
+			msgSolution = QMessageBox.critical(self, 'ERROR', "Please generate a Taquin.", QMessageBox.Ok)
 			
 
 	def selectionDimensions(self,texte):

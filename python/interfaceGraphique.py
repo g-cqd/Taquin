@@ -1,10 +1,9 @@
 #!/usr/local/bin/python3
 # -*-coding:utf-8 -*
 import sys
-from PyQt5 import QtGui, QtWidgets,QtCore
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton,QLabel,QComboBox,QCheckBox,QMessageBox
 from PyQt5.QtGui import QFontDatabase,QFont
-from PyQt5.QtCore import QSize,Qt,QPropertyAnimation
+from PyQt5.QtCore import QSize,Qt
 from random import shuffle
 from math import sqrt,ceil
 from collections import OrderedDict
@@ -293,7 +292,6 @@ class Fenetre(QWidget):
 		ComboBox.addItem("3 ")
 		ComboBox.addItem("4 ")
 		ComboBox.addItem("5 ")
-		ComboBox.addItem("6 ")
 		ComboBox.setStyleSheet('color: black;background-color: rgb(232,232,232);selection-background-color: rgb(255,255,255);')
 		ComboBox.setFixedSize(QSize(85,20))
 		ComboBox.move(150,110)

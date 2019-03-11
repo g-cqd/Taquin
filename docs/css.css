@@ -90,11 +90,10 @@ summary::-webkit-details-marker {
 }
 summary::before {
 	display: block;
-	content: "+";
+	content: "\2193";
 	margin: 0 .5em 0 .25em;
-	font-size: 1.4em;
+	font-size: .75em;
 	font-weight: bold;
-	line-height: .75em;
 }
 summary:hover {
 	background-color: var(--cb-color);
@@ -107,7 +106,7 @@ summary:hover {
 	border: 2px solid var(--cb-color);
 }
 [open] summary::before {
-	content: "-";
+	content: "\2191";
 }
 #menu-toggler {
 	display: flex;
@@ -413,10 +412,11 @@ body.win .game .case:not(.vide) {
 	padding: 5px;
 	flex-flow: row wrap;
 	align-items: center;
+	align-content: center;
 	justify-content: flex-start;
 	border-radius: var(--br-radius);
 	cursor: pointer;
-	transition: .3s ease all;
+	transition: .3s ease-in-out all;
 }
 .moveBlock:not(:last-child) {
 	margin-bottom: 5px;
@@ -427,12 +427,12 @@ body.win .game .case:not(.vide) {
 	align-content: center;
 	align-items: center;
 	border-radius: var(--br-radius);
-	transition: .150s ease all;
+	transition: .150s ease-in-out all;
 }
 .moveBlock:hover,
 .moveBlock.active {
 	background-color: var(--cb-color);
-	transition: .150s ease all;
+	transition: .150s ease-in-out all;
 }
 .moveBlock > *:not(:last-child) {
 	margin-right: 5px;

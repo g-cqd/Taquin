@@ -87,15 +87,18 @@ function expandIn( e ) {
 		let block = document.createElement("div"),
 		idBlock = document.createElement("div"),
 		nameBlock = document.createElement("div"),
+		wayBlock = document.createElement("div"),
 		infoBlock = document.createElement("div"),
 		taquinBlock = document.createElement("div");
 		block.classList.add("moveBlock");
 		idBlock.classList.add("idBlock");
 		nameBlock.classList.add("nameBlock");
+		wayBlock.classList.add("wayBlock");
 		infoBlock.classList.add("infoBlock");
 		taquinBlock.classList.add("taquinBlock");
 		let identifiant = index.toString(),
 		moveName,
+		waySymbol,
 		manhattan = solution.man.toString(),
 		desordre = solution.dis.toString(),
 		inversions = solution.inv.toString();
@@ -103,30 +106,37 @@ function expandIn( e ) {
 		switch (solution.path.slice(-1)) {
 			case "L":
 				moveName = "Gauche";
+				waySymbol = "&larr;";
 				break;
 			case "R":
 				moveName = "Droite";
+				waySymbol = "&rarr;";
 				break;
 			case "U":
 				moveName = "Haut";
+				waySymbol = "&uarr;";
 				break;
 			case "D":
 				moveName = "Bas";
+				waySymbol = "&darr;";
 				break;
 			default:
 				break;
 		}
 		} else {
 			moveName = "Racine";
+			waySymbol = "";
 		}
 		idBlock.innerHTML = identifiant;
 		nameBlock.innerHTML = moveName;
+		wayBlock.innerHTML = waySymbol;
 		infoBlock.innerHTML += `<div class="dataBlock"><span class="datas">${manhattan}</span><span class="title">manhattan</span></div>`;
 		infoBlock.innerHTML += `<div class="dataBlock"><span class="datas">${desordre}</span><span class="title">désordre</span></div>`;
 		infoBlock.innerHTML += `<div class="dataBlock"><span class="datas">${inversions}</span><span class="title">inversions</span></div>`;
 		solution.displayIn(taquinBlock);
 		block.appendChild(idBlock);
 		block.appendChild(nameBlock);
+		block.appendChild(wayBlock);
 		block.appendChild(infoBlock);
 		block.appendChild(taquinBlock);
 		e.appendChild(block);
@@ -139,6 +149,10 @@ Array.from( document.getElementsByClassName("toggler") ).forEach( ( e ) => {
 		e.classList.toggle( "active" );
 	}, false );
 } );
+
+document.getElementById("menu-toggler").addEventListener("click", function () {
+	document.body.classList.toggle("blurred");
+}, false);
 
 
 const getWidth = () => {
@@ -221,14 +235,12 @@ controls.expand.addEventListener("click", function()
 		env.weightings = getHeuristics();
 		env.expand( getSearch() );
 		expandIn( display.solutions );
-		display.moves = document.querySelectorAll("moveBlock");
-		["touchstart","touchend"].forEach( event => {
+		display.moves = document.getElementsByClassName("moveBlock");
 			Array.from(display.moves).forEach(e => {
-				e.addEventListener(event, function() {
-					e.classList.toggle("hoverMobile");
-				});
+				e.addEventListener("click", function() {
+					e.classList.toggle("active");
+				},false);
 			});
-		});
 	}
 }, false );
 
@@ -236,7 +248,7 @@ controls.expand.addEventListener("click", function()
 // Update Taquin EventListener
 display.taquin.addEventListener( "moved", function()
 {
-	let taquin = games.last().moves.last()
+	let taquin = games.last().moves.last();
 	taquin.displayIn( display.taquin );
 	taquin.informations();
 }, false );

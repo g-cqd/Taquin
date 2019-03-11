@@ -22,6 +22,17 @@ body,
 *, * > * {
 	box-sizing: border-box;
 }
+body:not(.blurred) main {
+	transition-property: filter;
+	transition-duration: 300ms;
+	transition-timing-function: ease-in-out;
+}
+body.blurred main {
+	filter: blur(10px);
+	transition-property: filter;
+	transition-duration: 300ms;
+	transition-timing-function: ease-in-out;
+}
 h1,h2,h3,h4,h5,h6 {
 	margin: 0;
 	letter-spacing: -.025em;
@@ -37,6 +48,7 @@ header {
 	height: auto;
 	width: auto;
 	text-align: center;
+	z-index: 1000000;
 }
 #title {
 	text-transform: uppercase;
@@ -53,28 +65,102 @@ header {
 	line-height: 0px;
 	vertical-align: bottom;
 }
-
-#menu-toggler {
+details { /* var to ie */
+	margin: 0;
+	padding: 0;
+}
+details > *:not(:first-child) {
+	margin: 0;
+	padding: 0;
+}
+#details-content {
+	padding: 0;
+	margin: 0;
+}
+summary {
+	margin: 0;
+	padding: 0;
+	outline: none;
+}
+summary::-webkit-details-marker {
 	display: none;
+}
+summary::before {
+	display: inline-block;
+	content: "\2B";
+	margin-right: .5em;
+	padding: 0 0 .1em .25em;
+	font-size: 1.2em;
+	font-weight: 700;
+	line-height: .833em;
+}
+[open] summary::before {
+	content: "\2212";
+}
+#menu-toggler {
 	position: fixed;
+	display: flex;
+	flex-flow: row nowrap;
+	align-content: center;
+	align-items: center;
+	justify-content: center;
 	top: 20px;
 	left: 20px;
-	font-size: 1.1em;
-	font-weight: 600;
-	letter-spacing: .05em;
-	text-transform: uppercase;
-	z-index: 2;
+	border: 0;
+	border-radius: 100%;
+	line-height: 0;
+	transform: rotate(0deg);
+	transition-property: fill, transform;
+	transition-duration: 150ms;
+	transition-timing-function: ease-in-out;
+	filter: blur(0) !important;
+	z-index: 3;
 }
-
-#menu {
+#menu-toggler svg {
+	border: 0;
+	height: auto;
+	width: 30px;
+	fill: var(--ct-color);
+	transition-property: fill, transform;
+	transition-duration: 150ms;
+	transition-timing-function: ease-in-out;
+}
+#menu-toggler.active {
+	transform: rotate(60deg);
+	transition-property: fill, transform;
+	transition-duration: 300ms;
+	transition-timing-function: ease-in-out;
+}
+#menu-toggler:hover svg,
+#menu-toggler.active svg {
+	fill: var(--tx-color);
+	transition-property: fill, transform;
+	transition-duration: 300ms;
+	transition-timing-function: ease-in-out;
+}
+#settings {
 	position: fixed;
-	top: 0;
-	left: 0;
 	display: flex;
-	flex-flow: column;
+	flex-flow: row wrap;
+	align-content: center;
+	align-items: center;
+	justify-content: center;
+	bottom: 0;
+	left: 0;
+	padding: 0 15vw;
 	height: 100%;
 	width: 100%;
-	background-color: var(--bg-color);
+	z-index: 2;
+	transition-property: bottom;
+	transition-duration: 300ms;
+	transition-timing-function: ease-in-out;
+	
+}
+a:not(.active) + #settings {
+	bottom: -100%;
+	transition-property: bottom;
+	transition-duration: 300ms;
+	transition-timing-function: ease-in-out;
 }
 
 p {
@@ -298,21 +384,17 @@ body.win .game .case:not(.vide) {
 #div-gen > * {
 	margin-bottom: 0;
 }
-#moves {
-	flex: 0 0 100%;
-	margin: 10px;
-	min-width: 300px;
-	width: auto;
-	max-width: 620px;
+#opti-moves {
+	margin-top: .75em;
 	user-select: none;
 }
-#moves:empty { display: none; }
+#opti-moves:empty { display: none; }
 .moveBlock {
 	--br-radius: 2pt;
 	display: flex;
 	position: relative;
 	padding: 5px;
-	flex-flow: row nowrap;
+	flex-flow: row wrap;
 	align-items: center;
 	justify-content: flex-start;
 	border-radius: var(--br-radius);
@@ -331,8 +413,8 @@ body.win .game .case:not(.vide) {
 	transition: .150s ease all;
 }
 .moveBlock:hover,
-.moveBlock.hoverMobile {
-	background-color: var(--ct-color);
+.moveBlock.active {
+	background-color: var(--cb-color);
 	transition: .150s ease all;
 }
 .moveBlock > *:not(:last-child) {
@@ -348,10 +430,6 @@ body.win .game .case:not(.vide) {
 	text-align: right;
 	color: var(--ct-color);
 }
-.moveBlock:hover .idBlock,
-.moveBlock.hoverMobile .idBlock {
-	color: var(--cb-color);
-}
 .nameBlock {
 	display: flex;
 	flex-flow: row;
@@ -362,14 +440,30 @@ body.win .game .case:not(.vide) {
 	margin-right: auto;
 	font-weight: bold;
 	color:var(--tx-color);
-
+}
+.moveBlock:not(.active) .wayBlock {
+	flex: 0 0 auto;
+	opacity: 0;
+	margin: 0;
+	width: 0;
+	transition-property: flex,opacity,margin,width;
+	transition-duration: 300ms;
+	transition-timing-function: ease-in-out;
+}
+.moveBlock .wayBlock {
+	display: block;
+	flex: 1 0 50%;
+	margin-left: auto;
+	margin-right: 5px;
+	font-size: 1.2em;
+	font-weight: 700;
+	text-align: right;
 }
 .infoBlock {
+	flex: 0 0 auto;
 	display: flex;
-	align-self: center;
-	justify-content: space-between;
 	margin-left: auto;
-	color: var(--ct-color);
+	width: auto;
 }
 .infoBlock > *:not(:last-child) {
 	margin-right: 5px;
@@ -377,39 +471,60 @@ body.win .game .case:not(.vide) {
 .dataBlock {
 	display: flex;
 	position: relative;
-	flex-flow:column;
+	flex-flow: row wrap;
 	align-content: center;
 	align-items: center;
 	justify-content: center;
 	width: 40px;
 	font-weight: bold;
 	background-color: var(--cb-color);
+	color: var(--ct-color);
 	border-radius: var(--br-radius);
+}
+.moveBlock:hover .dataBlock,
+.moveBlock.active .dataBlock {
+	background-color: var(--bg-color);
+	color: var(--ct-color);
 }
 .dataBlock .title {
 	display: none;
-	position: absolute;
 }
-.moveBlock:not(:hover):not(.hoverMobile) .taquinBlock {
-	visibility: hidden;
+.moveBlock.active .infoBlock {
+	flex: 1 0 30%;
+	flex-flow: column;
+	margin-left: 0;
+	margin-right: auto;
+}
+.moveBlock.active .dataBlock {
+	display: block;
+	margin: .3em auto .3em 5px;
 	background-color: transparent;
+}
+.moveBlock.active .dataBlock .datas {
+	color: var(--tx-color);
+}
+.moveBlock.active .dataBlock .title {
+	display: block;
+	font-style: italic;
+	font-size: .8em;
+	font-weight: lighter;
+}
+.moveBlock:not(.active) .taquinBlock {
+	height: 0;
+	margin: 0 2px 0 auto;
+	opacity: 0;
 }
 .moveBlock .taquinBlock {
 	display: block;
-	position: absolute;
-	background-color: var(--ct-color);
-	padding: 2px;
-	height: 140px;
-	width: 140px;
+	margin: .5em 2px .25em auto;
+	height: 135px;
+	width: 135px;
 	z-index: 2;
 	top: -140px;
 	right: 5px;
-	border-radius: 2pt 2pt 0 0;
-	box-shadow: 0px 0px 0px 2px var(--ct-color);
 }
 body.win .taquinBlock .case,
 .taquinBlock .case {
-	border-width: 0;
 	background-color: var(--bg-color) !important;
 	color: var(--ct-color) !important;
 }

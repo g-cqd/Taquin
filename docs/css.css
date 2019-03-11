@@ -52,6 +52,7 @@ header {
 }
 #title {
 	text-transform: uppercase;
+	padding-top: 1.5px;
 	font-style: italic;
 	font-size: 1.5em;
 	font-weight: 900;
@@ -108,42 +109,71 @@ summary:hover {
 }
 #menu-toggler {
 	display: flex;
+	position: relative;
 	flex-flow: row nowrap;
 	align-content: center;
 	align-items: center;
-	justify-content: center;
-	top: 20px;
-	left: 20px;
-	margin-right: 20px;
-	border: 0;
-	border-radius: 100%;
-	line-height: 0;
-	transform: rotate(0deg);
-	transition-property: fill, transform;
+	justify-content: flex-start;
+	margin-right: 10px;
+	padding: 10px;
+	text-decoration: none;
+	color: var(--tx-color);
+	border-radius: 40px;
+	background-color: var(--bg-color);
+	box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.1);
+	transition-property: padding,color,border-radius;
 	transition-duration: 150ms;
 	transition-timing-function: ease-in-out;
-	filter: blur(0) !important;
 	z-index: 3;
 }
-#menu-toggler svg {
-	border: 0;
-	height: auto;
+#menu-toggler::before {
+	flex: 0 0 auto;
+	content: "\2B";
+	height: 30px;
 	width: 30px;
-	fill: var(--ct-color);
-	transition-property: fill, transform;
-	transition-duration: 150ms;
-	transition-timing-function: ease-in-out;
-}
-#menu-toggler.active {
-	transform: rotate(60deg);
-	transition-property: fill, transform;
+	font-size: 2em;
+	line-height: 1;
+	font-feature-settings: "case";
+	font-weight: bold;
+	transform-origin: center;
+	transition-property: transform;
 	transition-duration: 300ms;
 	transition-timing-function: ease-in-out;
 }
-#menu-toggler:hover svg,
-#menu-toggler.active svg {
-	fill: var(--tx-color);
-	transition-property: fill, transform;
+#menu-toggler::after {
+	content: "Réglages";
+	font-weight: bold;
+	margin-left: 0;
+	width: 0;
+	opacity: 0;
+	visibility: hidden;
+	letter-spacing: 0;
+	transition-property: width, padding, opacity, letter-spacing;
+	transition-duration: 300ms;
+	transition-timing-function: ease-in-out;
+}
+#menu-toggler.active::before {
+	transform: rotate(45deg);
+	transition-property: transform;
+	transition-duration: 300ms;
+	transition-timing-function: ease-in-out;
+}
+#menu-toggler.active::after {
+	margin-left: 10px;
+	width: 85px;
+	visibility: visible;
+	opacity: 1;
+	transition-property: width, padding, opacity, letter-spacing;
+	transition-duration: 300ms;
+	transition-timing-function: ease-in-out;
+}
+
+#menu-toggler.active {
+	margin-right: 20px;
+	padding: 10px 15px;
+	border-radius: var(--br-radius);
+	box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.1);
+	transition-property: padding,border-radius;
 	transition-duration: 300ms;
 	transition-timing-function: ease-in-out;
 }

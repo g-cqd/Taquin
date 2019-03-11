@@ -219,41 +219,38 @@ class Environment {
 			queue = secondaryQueue;
 		}
 	}
+
 	charlotte() {
 		const startTime = Date.now();
-		let queue = new Map();
-		queue.set(this.moves.last().f,[this.moves.last()]);
-		while (true) {
-			let k = Array.from(queue.keys())[0];
-			let kArray = queue.get(k);
-			let shouldBeExpanded = kArray.shift();
-			if (kArray.length == 0) { queue.delete(k); }
-			else { queue.set(k,kArray); }
-			const children = shouldBeExpanded.children();
+		function ida(s,g,t) {
+			let h = s.h;
+			if (h==0) { return s; }
+			let f = g + h;
+			if (f > t) { return false; }
+			s.moves = s.findMoves();
+			let children = s.children();
 			if (children instanceof Taquin) {
-				const end = Date.now() - startTime;
-				this.end.push(children);
 				return children;
 			}
-			else {
-				for (let child of children) {
-					if (queue.has(child.f)) {
-						let cArray = queue.get(child.f);
-						cArray.push(child);
-						queue.set(child.f,cArray);
-					}
-					else { queue.set(child.f,[child]); }
-				}
+			for (let child of children) {
+				let done = ida(child,g+child.g,t);
+				if (done != false) { return done; }
 			}
-			let sortedArray = Array.from(queue.keys());
-			sortedArray.sort((a,b)=>a-b);
-			let secondaryQueue = new Map();
-			for (let key of sortedArray) {
-				secondaryQueue.set(key,queue.get(key));
-				queue.delete(key);
-			}
-			queue = secondaryQueue;
+			return false;
 		}
+		let taquin = {
+			s : this.moves.last(),
+			g : this.moves.last().g,
+			t : this.moves.last().h
+		}
+		let done = false;
+		do {
+			done = ida(taquin.s, taquin.g, taquin.t);
+			if (!done) { taquin.t++; }
+		} while (!done);
+		const end = Date.now() - startTime;
+		this.end.push(done);
+		return done;
 	}
 	expand( func ) {
 		this.correct();

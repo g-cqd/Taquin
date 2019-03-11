@@ -235,6 +235,19 @@ class Environment:
 		self.moves.append(Taquin(self,self.moves[-1],move))
 		return self.moves[-1]
 
+def InterFont(weight,size):
+	if weight == "Light":
+		weight = 25
+	elif weight == "Regular":
+		weight = 50
+	elif weight == "Medium":
+		weight = 63
+	elif weight == "Bold":
+		weight = 75
+	elif weight == "Black":
+		weight = 87
+	return QFont("Inter",weight=weight,pointSize=size)
+
 
 class Fenetre(QWidget):
 
@@ -254,14 +267,10 @@ class Fenetre(QWidget):
 		self.h4state = False
 		self.h5state = False
 		self.h6state = False
-		self.heuristiques = []
+		self.heuristiques = [5]
 		self.boutonEnCouleur = None
 
-		#Chargement de la police inter bold
-		id = QFontDatabase.addApplicationFont("/Users/melaniemarques/Downloads/Inter-3/Inter (TTF)/Inter-Bold.ttf")
-		fontstr = QFontDatabase.applicationFontFamilies(id)[0]
-		self.font = QFont(fontstr, 18)
-		
+
 
 		self.setWindowTitle("Taquin")
 		self.resize(1000,500)
@@ -269,21 +278,21 @@ class Fenetre(QWidget):
 
 
 		# Label
-		label = QLabel('Settings : ', self)
-		label.setFont(self.font)
+		label = QLabel('Réglages ', self)
+		label.setFont(InterFont("Bold",24))
 		label.move(50,50)
 
-		label2 = QLabel('Side Length : ',self)
-		label2.setFont(QFont(fontstr, 14))
+		label2 = QLabel('Largeur ',self)
+		label2.setFont(InterFont("Medium", 14))
 		label2.move(50,110)
 
 
-		mode = QLabel('Mode : ',self)
-		mode.setFont(QFont(fontstr, 14))
+		mode = QLabel('Mode ',self)
+		mode.setFont(InterFont("Medium", 14))
 		mode.move(50,160)
 
-		heuristiques = QLabel('Heuristics : ',self)
-		heuristiques.setFont(QFont(fontstr,14))
+		heuristiques = QLabel('Heuristiques ',self)
+		heuristiques.setFont(InterFont("Medium", 14))
 		heuristiques.move(50,210)
 
 
@@ -292,23 +301,24 @@ class Fenetre(QWidget):
 		ComboBox.addItem("3 ")
 		ComboBox.addItem("4 ")
 		ComboBox.addItem("5 ")
-		ComboBox.setStyleSheet('color: black;background-color: rgb(232,232,232);selection-background-color: rgb(255,255,255);')
+		ComboBox.setStyleSheet('color: rgb(0,0,0);background-color: rgb(232,232,232);selection-background-color: rgb(255,255,255);')
+		ComboBox.setFont(InterFont("Medium", 14))
 		ComboBox.setFixedSize(QSize(85,20))
 		ComboBox.move(150,110)
 		ComboBox.activated[str].connect(self.selectionDimensions)
 		#combo box choix Mode : 
 		ComboBoxM = QComboBox(self)
-		ComboBoxM.addItem("manual")
-		ComboBoxM.addItem("pilot")
-		ComboBoxM.setStyleSheet('color: black;background-color: rgb(232,232,232);selection-background-color: rgb(255,255,255)')
+		ComboBoxM.addItem("Manuel")
+		ComboBoxM.addItem("Pilote")
+		ComboBoxM.setStyleSheet('color: rgb(0,0,0);background-color: rgb(232,232,232);selection-background-color: rgb(255,255,255)')
 		ComboBoxM.setFixedSize(QSize(85,20))
 		ComboBoxM.move(150,160)
 		ComboBoxM.activated[str].connect(self.selectionMode)
 
 
 		#Generate Button
-		generate = QPushButton('Generate',self)
-		generate.setFont(QFont(fontstr, 15))
+		generate = QPushButton('Nouveau',self)
+		generate.setFont(InterFont("Medium", 14))
 		generate.setFixedSize(QSize(90,30))
 		generate.setStyleSheet('color: rgb(179,179,179);background-color: rgb(232,232,232);border: none; border-radius: 4px;')
 		generate.move(700,320)	
@@ -317,7 +327,7 @@ class Fenetre(QWidget):
 
 		#Bouton solution
 		BoutonSolution = QPushButton('Solution',self)
-		BoutonSolution.setFont(QFont(fontstr, 15))
+		BoutonSolution.setFont(InterFont("Medium", 15))
 		BoutonSolution.setFixedSize(QSize(115,30))
 		BoutonSolution.setStyleSheet('color: rgb(179,179,179);background-color: rgb(232,232,232);border: none; border-radius: 4px;')
 		BoutonSolution.move(805,320) 
@@ -325,32 +335,33 @@ class Fenetre(QWidget):
 
 		#Check box des heuristiques : 
 		h1 = QCheckBox('H.1',self)
-		h1.setFont(QFont(fontstr,12))
+		h1.setFont(InterFont("Bold", 14))
 		h1.move(150,210)
 		h1.stateChanged.connect(self.selectionH1)
 
 		h2 = QCheckBox('H.2',self)
-		h2.setFont(QFont(fontstr,12))
+		h2.setFont(InterFont("Bold", 14))
 		h2.move(150,235)
 		h2.stateChanged.connect(self.selectionH2)
 
 		h3 = QCheckBox('H.3',self)
-		h3.setFont(QFont(fontstr,12))
+		h3.setFont(InterFont("Bold", 14))
 		h3.move(150,260)
 		h3.stateChanged.connect(self.selectionH3)
 
 		h4 = QCheckBox('H.4',self)
-		h4.setFont(QFont(fontstr,12))
+		h4.setFont(InterFont("Bold", 14))
 		h4.move(195,210)
 		h4.stateChanged.connect(self.selectionH4)
 
 		h5 = QCheckBox('H.5',self)
-		h5.setFont(QFont(fontstr,12))
+		h5.setFont(InterFont("Bold", 14))
 		h5.move(195,235)
+		h5.setChecked(True);
 		h5.stateChanged.connect(self.selectionH5)
 
 		h6 = QCheckBox('H.6',self)
-		h6.setFont(QFont(fontstr,12))
+		h6.setFont(InterFont("Bold", 14))
 		h6.move(195,260)
 		h6.stateChanged.connect(self.selectionH6)
 
@@ -408,7 +419,7 @@ class Fenetre(QWidget):
 		verif = self.ok()
 		i = 0
 		while(i<len(verif)):
-			if((self.mode == 'pilot')and(caseAColorer==verif[i][1])):
+			if((self.mode == 'Pilote')and(caseAColorer==verif[i][1])):
 				numeroAColorer = verif[i][0]				
 			i+=1
 		for item in self.box:
@@ -450,7 +461,7 @@ class Fenetre(QWidget):
 		return nouvelleChaine
 
 	def appuiBoutonGenerate(self):
-		if((len(self.heuristiques)!=0)and((self.mode=='pilot' and int(self.texte) == 3)or(self.mode=='manual'))):
+		if((len(self.heuristiques)!=0)and((self.mode=='Pilote' and int(self.texte) == 3)or(self.mode=='Manuel'))):
 			self.coupsJoues = ""
 			self.nbCoupsJoues = 0
 		#On supprime l'ancienne génération de taquin :
@@ -493,7 +504,7 @@ class Fenetre(QWidget):
 					y+=42
 				if(self.a.moves[-1].sequence[i]!=0):
 					BoutonGrille = QPushButton(str(self.a.moves[-1].sequence[i]),self)
-					BoutonGrille.setFont(self.font)
+					BoutonGrille.setFont(InterFont("Bold", 18))
 					BoutonGrille.setFixedSize(QSize(40,40))
 					BoutonGrille.setStyleSheet('color: rgb(170,170,170);background-color: rgb(238,238,238);border: none; border-radius: 4px;')
 					BoutonGrille.move(700+x*42,1*y)
@@ -507,7 +518,7 @@ class Fenetre(QWidget):
 			
 			self.start_time = time.time()
 
-			if(self.mode =='pilot'):
+			if(self.mode =='Pilote'):
 				self.operationColoration()
 
 			if(int(self.texte)==3):
@@ -516,9 +527,9 @@ class Fenetre(QWidget):
 				self.listeCoupsOpti = self.couic(self.traductionEnFleches(self.a.end[-1].path),20)
 
 		elif(len(self.heuristiques)==0) :
-			msg = QMessageBox.critical(self, 'ERROR', "Please enter heuristic(s).", QMessageBox.Ok)
-		elif(self.mode=='pilot' and int(self.texte) != 3):
-			msgPilot = QMessageBox.critical(self, 'ERROR', "Mode 'pilot' unvailable for side length higher than 3.", QMessageBox.Ok)
+			msg = QMessageBox.critical(self, 'Erreur', "Choisissez une heuristique", QMessageBox.Ok)
+		elif(self.mode=='Pilote' and int(self.texte) != 3):
+			msgPilot = QMessageBox.critical(self, 'Erreur', "Mode 'Pilote' n'est pas compatible avec une taille de Taquin supérieure à 3.", QMessageBox.Ok)
 		
 
 
@@ -566,8 +577,8 @@ class Fenetre(QWidget):
 
 
 			#Label nombre de coups joués
-			self.labelNbCoupsJoues = QLabel("Coups:\n %d"%(self.a.moves[-1].g),self)
-			self.labelNbCoupsJoues.setFont(self.font)
+			self.labelNbCoupsJoues = QLabel("Coups\n %d"%(self.a.moves[-1].g),self)
+			self.labelNbCoupsJoues.setFont(InterFont("Bold",14))
 			self.labelNbCoupsJoues.setStyleSheet('background-color: rgb(238,238,238); border-radius: 4px;')
 			self.labelNbCoupsJoues.setAlignment(Qt.AlignCenter)
 			self.labelNbCoupsJoues.setFixedSize(QSize(110,50))
@@ -576,9 +587,9 @@ class Fenetre(QWidget):
 			self.labelCoupsPresent = True
 
 			#Label Manhattan : 
-			self.LabelManhattan = QLabel("Manhattan:\n%d"%(self.a.moves[-1].man),self)
-			self.LabelManhattan.setFont(self.font)
-			self.LabelManhattan.setStyleSheet('background-color: rgb(238,238,238); border-radius: 4px;')
+			self.LabelManhattan = QLabel("Manhattan\n%d"%(self.a.moves[-1].man),self)
+			self.LabelManhattan.setFont(InterFont("Bold",14))
+			self.LabelManhattan.setStyleSheet('color:rgb(0,0,0);background-color: rgb(238,238,238); border-radius:4px;')
 			self.LabelManhattan.setAlignment(Qt.AlignCenter)
 			self.LabelManhattan.setFixedSize(QSize(110,50))
 			self.LabelManhattan.move(320,320)
@@ -586,9 +597,9 @@ class Fenetre(QWidget):
 			self.LabelManhattanPresent = True
 
 			#Label Inv : 
-			self.LabelInv = QLabel("Inversions:\n %d"%(self.a.moves[-1].inv),self)
-			self.LabelInv.setFont(self.font)
-			self.LabelInv.setStyleSheet('background-color: rgb(238,238,238); border-radius: 4px;')
+			self.LabelInv = QLabel("Inversions\n %d"%(self.a.moves[-1].inv),self)
+			self.LabelInv.setFont(InterFont("Medium",14))
+			self.LabelInv.setStyleSheet('color:rgb(0,0,0);background-color:rgb(238,238,238); border-radius: 4px;')
 			self.LabelInv.setAlignment(Qt.AlignCenter)
 			self.LabelInv.setFixedSize(QSize(110,50))
 			self.LabelInv.move(455,320)
@@ -596,9 +607,9 @@ class Fenetre(QWidget):
 			self.LabelInvPresent = True
 
 			#Label Dis : 
-			self.LabelDis = QLabel("Desordre:\n %d"%(self.a.moves[-1].dis),self)
-			self.LabelDis.setFont(self.font)
-			self.LabelDis.setStyleSheet('background-color: rgb(238,238,238); border-radius: 4px;')
+			self.LabelDis = QLabel("Désordre\n %d"%(self.a.moves[-1].dis),self)
+			self.LabelDis.setFont(InterFont("Medium",14))
+			self.LabelDis.setStyleSheet('color:rgb(0,0,0);background-color: rgb(238,238,238); border-radius: 4px;')
 			self.LabelDis.setAlignment(Qt.AlignCenter)
 			self.LabelDis.setFixedSize(QSize(110,50))
 			self.LabelDis.move(185,320)
@@ -616,12 +627,12 @@ class Fenetre(QWidget):
 				tempsSecondes = int(time.time() - self.start_time)-tempsMinute*60
 				coups = self.couic(self.traductionEnFleches(self.coupsJoues),20)
 				if(int(self.texte)>3):
-					msgResolition = QMessageBox.information(self, 'FELICITATION', "CONGRATULATIONS \n\nYou have solved the taquin in : \n- %d moves\n- %d minutes and %d seconds\n- this is your moves : %s"%(int(nbCoupsJoueur),int(tempsMinute),int(tempsSecondes),coups), QMessageBox.Ok)
+					msgResolition = QMessageBox.information(self, 'FELICITATION', "CONGRATULATIONS \n\Vous avez résolu le taquin en : \n- %d mouvements\n- %d minutes et %d secondes\n- mouvements : %s"%(int(nbCoupsJoueur),int(tempsMinute),int(tempsSecondes),coups), QMessageBox.Ok)
 				else:
-					msgResolition2 = QMessageBox.information(self, 'FELICITATION', "CONGRATULATIONS \n\nYou have solved the taquin in : \n- %d moves\n- %d minutes and %d seconds\n- this is your moves : %s\n\n The minimal path is: \n- %d moves\n- path : \n%s"%(int(nbCoupsJoueur),int(tempsMinute),int(tempsSecondes),coups,int(self.nbCoupsOpti),self.listeCoupsOpti), QMessageBox.Ok)
+					msgResolition2 = QMessageBox.information(self, 'FELICITATION', "CONGRATULATIONS \n\Vous avez résolu le taquin en : \n- %d mouvements\n- %d minutes et %d secondes\n- mouvements : %s\n\n Chemin minimal : \n- %d mouvements\n- chemin : \n%s"%(int(nbCoupsJoueur),int(tempsMinute),int(tempsSecondes),coups,int(self.nbCoupsOpti),self.listeCoupsOpti), QMessageBox.Ok)
 		
 			else:
-				if(self.mode == 'pilot'):
+				if(self.mode == 'Pilote'):
 					self.operationColoration()
 
 
@@ -638,15 +649,15 @@ class Fenetre(QWidget):
 				self.solution = self.couic(self.solution,45)
 
 			self.label3 = QLabel("Solution : %s"%(self.solution),self)
-			self.label3.setFont(self.font)
-			self.label3.setStyleSheet('background-color: rgb(238,238,238); padding: 1em; border-radius: 4px;')
+			self.label3.setFont(InterFont("Medium",14))
+			self.label3.setStyleSheet('color:rgb(0,0,0);background-color: rgb(238,238,238); padding: 1em; border-radius: 4px;')
 			self.label3.move(50,395)
 			self.label3.show()
 
 			self.label3Present = True
 
 		else:
-			msgSolution = QMessageBox.critical(self, 'ERROR', "Please generate a Taquin.", QMessageBox.Ok)
+			msgSolution = QMessageBox.critical(self, 'Erreur', "Générez un taquin", QMessageBox.Ok)
 			
 
 	def selectionDimensions(self,texte):
@@ -697,7 +708,7 @@ class __main__:
 		app = QApplication(sys.argv)
 
   
-	fen = Fenetre('3','manual')
+	fen = Fenetre('3','Manuel')
 	fen.show()
 
 	app.exec_()

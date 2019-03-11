@@ -38,17 +38,17 @@ h1,h2,h3,h4,h5,h6 {
 	letter-spacing: -.025em;
 }
 header {
+	position: fixed;
 	display: flex;
 	flex-flow: row nowrap;
 	align-content: center;
 	align-items: center;
-	justify-content: center;
-	margin: 20px 0;
-	padding: calc(3em - 20px) 0 calc(3em - 30px);
+	justify-content: flex-start;
+	padding: 20px;
 	height: auto;
-	width: auto;
+	width: 100%;
 	text-align: center;
-	z-index: 1000000;
+	z-index: 10;
 }
 #title {
 	text-transform: uppercase;
@@ -65,7 +65,7 @@ header {
 	line-height: 0px;
 	vertical-align: bottom;
 }
-details { /* var to ie */
+details {
 	margin: 0;
 	padding: 0;
 }
@@ -73,32 +73,43 @@ details > *:not(:first-child) {
 	margin: 0;
 	padding: 0;
 }
-#details-content {
-	padding: 0;
-	margin: 0;
-}
 summary {
+	display: flex;
+	flex-flow: row nowrap;
+	align-items: center;
+	align-content: center;
+	justify-content: flex-start;
 	margin: 0;
-	padding: 0;
+	padding: 5px;
+	border-radius: 4pt;
 	outline: none;
+	cursor: pointer;
 }
 summary::-webkit-details-marker {
 	display: none;
 }
 summary::before {
-	display: inline-block;
-	content: "\2B";
-	margin-right: .5em;
-	padding: 0 0 .1em .25em;
-	font-size: 1.2em;
-	font-weight: 700;
-	line-height: .833em;
+	display: block;
+	content: "+";
+	margin: 0 .5em 0 .25em;
+	font-size: 1.4em;
+	font-weight: bold;
+	line-height: .75em;
+}
+summary:hover {
+	background-color: var(--cb-color);
+	transition-property: background-color;
+	transition-duration: 150ms;
+	transition-timing-function: ease-in-out;
+}
+[open] summary {
+	padding: 3px;
+	border: 2px solid var(--cb-color);
 }
 [open] summary::before {
-	content: "\2212";
+	content: "-";
 }
 #menu-toggler {
-	position: fixed;
 	display: flex;
 	flex-flow: row nowrap;
 	align-content: center;
@@ -106,6 +117,7 @@ summary::before {
 	justify-content: center;
 	top: 20px;
 	left: 20px;
+	margin-right: 20px;
 	border: 0;
 	border-radius: 100%;
 	line-height: 0;
@@ -150,7 +162,7 @@ summary::before {
 	padding: 0 15vw;
 	height: 100%;
 	width: 100%;
-	z-index: 2;
+	z-index: -1;
 	transition-property: bottom;
 	transition-duration: 300ms;
 	transition-timing-function: ease-in-out;
@@ -179,6 +191,9 @@ p {
 	border-radius: var(--br-radius);
 	box-shadow: 0px 10px 30px 0px rgba(0, 0, 0, 0.1);
 	background-color: var(--bg-color);
+}
+main {
+	padding-top: 70px;
 }
 #content {
 	margin-left: auto;
@@ -384,13 +399,15 @@ body.win .game .case:not(.vide) {
 #div-gen > * {
 	margin-bottom: 0;
 }
+#self-moves,
 #opti-moves {
 	margin-top: .75em;
 	user-select: none;
 }
+#self-moves:empty,
 #opti-moves:empty { display: none; }
 .moveBlock {
-	--br-radius: 2pt;
+	--br-radius: 4pt;
 	display: flex;
 	position: relative;
 	padding: 5px;
@@ -442,7 +459,7 @@ body.win .game .case:not(.vide) {
 	color:var(--tx-color);
 }
 .moveBlock:not(.active) .wayBlock {
-	flex: 0 0 auto;
+	flex: 0 0 0;
 	opacity: 0;
 	margin: 0;
 	width: 0;
@@ -460,6 +477,7 @@ body.win .game .case:not(.vide) {
 	text-align: right;
 }
 .infoBlock {
+	--br-radius: 2pt;
 	flex: 0 0 auto;
 	display: flex;
 	margin-left: auto;

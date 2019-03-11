@@ -18,6 +18,7 @@ display = {
 	manhattan	: document.getElementById("manhattan"),
 	desordre	: document.getElementById("desordre"),
 	inversions	: document.getElementById("inversions"),
+	personals	: document.getElementById("self-moves"),
 	solutions	: document.getElementById("opti-moves"),
 	moves		: undefined
 };

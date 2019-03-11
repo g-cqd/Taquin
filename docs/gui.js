@@ -2,6 +2,13 @@
 function createEnvironment()
 {
     games.push( new Environment( getWidth(), getHeuristics() ) );
+    display.personals.clear();
+    display.solutions.clear();
+}
+
+// Clear HTML Element Content
+Element.prototype.clear = function() {
+	this.innerHTML = "";
 }
 
 
@@ -78,32 +85,27 @@ Taquin.prototype.informations = function( g=undefined, i=undefined, d=undefined,
 	d.innerHTML = parseInt( this.dis ).toString();
 };
 
-// Display solutions moves
-function expandIn( e ) {
-	e.innerHTML = "";
-	let solutions = games.last().end.last().traceroute();
-	solutions = solutions.slice(games.last().moves.last().g);
-	Array.from(solutions).forEach( (solution,index) => {
-		let block = document.createElement("div"),
+function moveBlock( taquin, index ) {
+	let block = document.createElement("div"),
 		idBlock = document.createElement("div"),
 		nameBlock = document.createElement("div"),
 		wayBlock = document.createElement("div"),
 		infoBlock = document.createElement("div"),
 		taquinBlock = document.createElement("div");
-		block.classList.add("moveBlock");
-		idBlock.classList.add("idBlock");
-		nameBlock.classList.add("nameBlock");
-		wayBlock.classList.add("wayBlock");
-		infoBlock.classList.add("infoBlock");
-		taquinBlock.classList.add("taquinBlock");
-		let identifiant = index.toString(),
+	block.classList.add("moveBlock");
+	idBlock.classList.add("idBlock");
+	nameBlock.classList.add("nameBlock");
+	wayBlock.classList.add("wayBlock");
+	infoBlock.classList.add("infoBlock");
+	taquinBlock.classList.add("taquinBlock");
+	let identifiant = index.toString(),
 		moveName,
 		waySymbol,
-		manhattan = solution.man.toString(),
-		desordre = solution.dis.toString(),
-		inversions = solution.inv.toString();
-		if (solution.g > 0) {
-		switch (solution.path.slice(-1)) {
+		manhattan = taquin.man.toString(),
+		desordre = taquin.dis.toString(),
+		inversions = taquin.inv.toString();
+	if (taquin.g > 0) {
+		switch (taquin.path.slice(-1)) {
 			case "L":
 				moveName = "Gauche";
 				waySymbol = "&larr;";
@@ -123,23 +125,39 @@ function expandIn( e ) {
 			default:
 				break;
 		}
-		} else {
-			moveName = "Racine";
-			waySymbol = "";
-		}
-		idBlock.innerHTML = identifiant;
-		nameBlock.innerHTML = moveName;
-		wayBlock.innerHTML = waySymbol;
-		infoBlock.innerHTML += `<div class="dataBlock"><span class="datas">${manhattan}</span><span class="title">manhattan</span></div>`;
-		infoBlock.innerHTML += `<div class="dataBlock"><span class="datas">${desordre}</span><span class="title">désordre</span></div>`;
-		infoBlock.innerHTML += `<div class="dataBlock"><span class="datas">${inversions}</span><span class="title">inversions</span></div>`;
-		solution.displayIn(taquinBlock);
-		block.appendChild(idBlock);
-		block.appendChild(nameBlock);
-		block.appendChild(wayBlock);
-		block.appendChild(infoBlock);
-		block.appendChild(taquinBlock);
-		e.appendChild(block);
+	} else {
+		moveName = "Racine";
+		waySymbol = "";
+	}
+	idBlock.innerHTML = identifiant;
+	nameBlock.innerHTML = moveName;
+	wayBlock.innerHTML = waySymbol;
+	infoBlock.innerHTML += `<div class="dataBlock"><span class="datas">${manhattan}</span><span class="title">manhattan</span></div>`;
+	infoBlock.innerHTML += `<div class="dataBlock"><span class="datas">${desordre}</span><span class="title">désordre</span></div>`;
+	infoBlock.innerHTML += `<div class="dataBlock"><span class="datas">${inversions}</span><span class="title">inversions</span></div>`;
+	taquin.displayIn(taquinBlock);
+	block.appendChild(idBlock);
+	block.appendChild(nameBlock);
+	block.appendChild(wayBlock);
+	block.appendChild(infoBlock);
+	block.appendChild(taquinBlock);
+	block.addEventListener("click", function activate() {
+		block.classList.toggle("active");
+	}, false);
+	return block;
+}
+
+function saveIn( e, taquin ) {
+	e.appendChild(moveBlock(taquin,taquin.environment.moves.length-1));
+}
+
+// Display solutions moves
+function expandIn( e ) {
+	e.innerHTML = "";
+	let solutions = games.last().end.last().traceroute();
+	solutions = solutions.slice(games.last().moves.last().g);
+	Array.from(solutions).forEach( (solution,index) => {
+		e.appendChild(moveBlock(solution,index));
 	} );
 }
 
@@ -235,12 +253,6 @@ controls.expand.addEventListener("click", function()
 		env.weightings = getHeuristics();
 		env.expand( getSearch() );
 		expandIn( display.solutions );
-		display.moves = document.getElementsByClassName("moveBlock");
-			Array.from(display.moves).forEach(e => {
-				e.addEventListener("click", function() {
-					e.classList.toggle("active");
-				},false);
-			});
 	}
 }, false );
 
@@ -251,6 +263,7 @@ display.taquin.addEventListener( "moved", function()
 	let taquin = games.last().moves.last();
 	taquin.displayIn( display.taquin );
 	taquin.informations();
+	saveIn(display.personals,taquin);
 }, false );
 
 

@@ -74,11 +74,7 @@ details > *:not(:first-child) {
 	padding: 0;
 }
 summary {
-	display: flex;
-	flex-flow: row nowrap;
-	align-items: center;
-	align-content: center;
-	justify-content: flex-start;
+	display: inline;
 	margin: 0;
 	padding: 5px;
 	border-radius: 4pt;
@@ -89,12 +85,13 @@ summary::-webkit-details-marker {
 	display: none;
 }
 summary::before {
-	display: block;
+	display: inline-block;
 	flex: 0 1 auto;
 	content: "\2193";
 	margin: 0 .5em 0 .25em;
-	font-size: .75em;
-	font-weight: bold;
+	font-size: .95em;
+	vertical-align: baseline;
+	font-weight: 900;
 }
 summary:hover {
 	background-color: var(--cb-color);

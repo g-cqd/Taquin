@@ -99,7 +99,13 @@ class Taquin {
 		for ( let move of this.moves ) {
 			let child = new Taquin( this.environment, this, move );
 			if ( child.h == 0 ) { return child; }
-			childList.push( child );
+			let i = 0;
+			for (i; i < childList.length; i++) {
+				if (child.f < childList[i].f) {
+					break;
+				}
+			}
+			childList.splice(i,0,child);
 		}
 		return childList;
 	}
@@ -181,6 +187,14 @@ class Environment {
 			move.moves = move.findMoves( true );
 		}
 	}
+	inArray(taquin,array) {
+		for (let element of array) {
+			if (element.sequence == taquin.sequence) {
+				return true;
+			}
+		}
+		return false;
+	}
 	rocky() {
 		const startTime = Date.now();
 		let queue = new Map();
@@ -222,43 +236,82 @@ class Environment {
 
 	charlotte() {
 		const startTime = Date.now();
-		function ida(s,g,t) {
-			let h = s.h;
-			if (h==0) { return s; }
-			let f = g + h;
-			if (f > t) { return false; }
-			s.moves = s.findMoves();
-			let children = s.children();
+		let root = this.moves.last();
+		let bound = root.h;
+		let path = [root];
+		while (1) {
+			let t = search(path,0,bound);
+			if (t instanceof Taquin) {
+				this.end.push(t);
+				return t;
+			}
+			if (t == Infinity) {return false;}
+			bound = t;
+		}
+		function search(path,g,bound) {
+			let node = path.last();
+			let f = g + node.h;
+			if (f > bound) { return f; }
+			let min = Infinity;
+			let children = node.children();
 			if (children instanceof Taquin) {
+				path.push(children);
+				return children;
+			} else {
+				for (let child of node.children()) {
+					if (!child.environment.inArray(child,path)) {
+						path.push(child);
+						let t = search(path,g+1,bound);
+						if (t instanceof Taquin) {return t;}
+						if (t < min) { min = t;}
+						path.pop();
+					}
+				}
+			}
+			return min;
+		}
+	}
+
+	hal() {
+		let root = this.moves.last(),
+		list = [root],
+		explored = [];
+		for (let n of list) {
+			let children = n.children();
+			if (children instanceof Taquin) {
+				this.end.push(children);
 				return children;
 			}
-			for (let child of children) {
-				let done = ida(child,g+child.g,t);
-				if (done != false) { return done; }
+			else {
+				for (let i = children.length-1; i >= 0; i--) {
+					if (!this.inArray(children[i],explored)) {
+						list.unshift(children.pop());
+					} else {
+						children.pop();
+					}
+				}
 			}
-			return false;
+			let i = 0;
+			for (i; i < explored.length; i++) {
+				if (n.f < explored[i].f) {
+					break;
+				}
+			}
+			explored.splice(i,0,n);
+			list.splice(list.indexOf(n),1);
 		}
-		let taquin = {
-			s : this.moves.last(),
-			g : this.moves.last().g,
-			t : this.moves.last().h
-		}
-		let done = false;
-		do {
-			done = ida(taquin.s, taquin.g, taquin.t);
-			if (!done) { taquin.t++; }
-		} while (!done);
-		const end = Date.now() - startTime;
-		this.end.push(done);
-		return done;
+		return false;
 	}
+
 	expand( func ) {
 		this.correct();
 		return this[func]();
 	}
 	play(move) {
-		let lastTaquin = this.moves.last();
-		this.moves.push(new Taquin(this,lastTaquin,move));
+		const lastTaquin = this.moves.last(),
+		newTaquin = new Taquin(this,lastTaquin,move);
+		newTaquin.moves = newTaquin.findMoves(true);
+		this.moves.push(newTaquin);
 		display.taquin.play();
 		if (this.moves.last().h==0) {
 			document.body.classList.toggle("win");

@@ -1,9 +1,9 @@
 // push a new environment in games List
 function createEnvironment()
 {
-    games.push( new Environment( getWidth(), getHeuristics() ) );
-    display.personals.clear();
+	display.personals.clear();
     display.solutions.clear();
+    games.push( new Environment( getWidth(), getHeuristics() ) );
 }
 
 // Clear HTML Element Content
@@ -148,7 +148,8 @@ function moveBlock( taquin, index ) {
 }
 
 function saveIn( e, taquin ) {
-	e.appendChild(moveBlock(taquin,taquin.environment.moves.length-1));
+	let next = moveBlock(taquin,taquin.environment.moves.length-1);
+	e.appendChild(next);	
 }
 
 // Display solutions moves
@@ -178,8 +179,13 @@ const getWidth = () => {
 	if ( width < 3 ) {
 		width = 3;
 	}
-	if ( width > 5 ) {
-		controls.expand.disabled = true;
+	if ( width > 4 ) {
+		if (getSearch() != "charlotte") {
+			controls.expand.disabled = true;
+		}
+		else if (width > 5) {
+			controls.expand.disabled = true;
+		}
 	} else {
 		controls.expand.disabled = false;
 	}
@@ -251,15 +257,19 @@ controls.expand.addEventListener("click", function()
 	{
 		let env = games.last();
 		env.weightings = getHeuristics();
-		env.expand( getSearch() );
-		expandIn( display.solutions );
+		let result = env.expand( getSearch() );
+		if (result) {expandIn( display.solutions );}
 	}
 }, false );
 
 
 // Update Taquin EventListener
 display.taquin.addEventListener( "moved", function()
-{
+{	
+	if (games.last().moves.length==1) {
+		display.personals.clear();
+    	display.solutions.clear();
+	}
 	let taquin = games.last().moves.last();
 	taquin.displayIn( display.taquin );
 	taquin.informations();

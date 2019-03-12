@@ -6,3 +6,4 @@
 - [Rosetta Code - A*](https://rosettacode.org/wiki/A*_search_algorithm#JavaScript)
 - [Les Amatheurs - Taquin](http://maths.amatheurs.fr/index.php?page=taquin)
 - [Les Amatheurs - Taquin | Invariants](http://maths.amatheurs.fr/index.php?page=taquin&quoi=invariants)
+- [Nicolas Mine](http://www.nicolasmine.com/scripts/solution/Taquin.html)

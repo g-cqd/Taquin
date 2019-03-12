@@ -107,6 +107,9 @@ summary:hover {
 [open] summary::before {
 	content: "\2191";
 }
+label.disabled {
+	color: var(--ct-color) !important;
+}
 #menu-toggler {
 	display: flex;
 	position: relative;
@@ -574,7 +577,7 @@ body.win .taquinBlock .case,
 	background-color: var(--bg-color) !important;
 	color: var(--ct-color) !important;
 }
-body.win .taquinBlock .case,
+body.win .taquinBlock .case.vide,
 .taquinBlock .case.vide {
 	background-color: transparent !important;
 }

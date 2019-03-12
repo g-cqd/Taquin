@@ -6,6 +6,8 @@ from math import ceil
 from collections import OrderedDict
 import time
 
+Infinity = 10000000000
+
 class Taquin:
 	def __init__(self, environment, previous=None, move=None):
 		self.environment = environment
@@ -28,8 +30,7 @@ class Taquin:
 		self.f = self.h + self.g
 	def coordinates(self, content=0):
 		width = self.environment.sizes[0]
-		if isinstance(content, list):
-			return (width * content[1]) + content[0]
+		if isinstance(content, list): return (width * content[1]) + content[0]
 		else:
 			index = self.sequence.index(content)
 			y = ceil((index + 1) / width) - 1
@@ -62,7 +63,7 @@ class Taquin:
 					if weighting == weightings[0]: man += stepMan
 					stepH += weighting[0][k] * stepMan
 					k += 1
-			if weighting[1] > 1: stepH /= weighting[1]
+			stepH /= weighting[1]
 			if weighting[2] == 7: h += dis
 			else: h += stepH
 		return [inv,dis,man,h]
@@ -90,15 +91,18 @@ class Taquin:
 	def valid(self):
 		width = self.environment.sizes[0]
 		self.inv,self.dis,self.man,self.h = self.details()
-		inv = self.inv
 		row = abs(self.coordinates()[1] - width)
-		return True if (((width % 2 == 1) and (inv % 2 == 0)) or ((width % 2 == 0) and ((row % 2 == 1) == (inv % 2 == 0)))) else False
+		return True if (((width % 2 == 1) and (self.inv % 2 == 0)) or ((width % 2 == 0) and ((row % 2 == 1) == (self.inv % 2 == 0)))) else False
 	def children(self):
 		childList = []
 		for move in self.moves:
 			child = Taquin(self.environment,self,move)
 			if child.h == 0: return child
-			childList.append(child)
+			i = 0
+			while (i < len(childList)):
+				if (child.f < childList[i].f): break
+				i += 1
+			childList.insert(i,child)
 		return childList
 	def magic(self, rand=0):
 		length = self.environment.sizes[1]
@@ -111,6 +115,10 @@ class Taquin:
 				shuffle(sequence)
 				self.sequence = sequence
 		return sequence
+	def traceroute(self):
+		path = [self]
+		while (isinstance(path[0].previous,Taquin)): path.insert(0,path[0].previous)
+		return path
 	def __repr__(self):
 		printable = ""
 		printable += "\n"
@@ -134,16 +142,16 @@ class Environment:
 		self.moves = [Taquin(self)]
 		self.end = []
 	def getWeightings(self,choices):
-		if (choices == None): choices = [i for i in range(1,7)]
-		weightings = []
 		width = self.sizes[0]
 		length = self.sizes[1] - 1
-		pi = []
+		if (choices == None): choices = [5]
+		weightings = []
+		weight = length
 		for index in choices:
 			rho = (4 if index % 2 != 0 else 1)
+			pi = [0] * length
 			if index == 1:
-				if width == 3:
-					pi = [36, 12, 12, 4, 1, 1, 4, 1]
+				if width == 3: pi = [36, 12, 12, 4, 1, 1, 4, 1]
 			if index == 2 or index == 3:
 				pi = [(length+1) - i for i in range(1,length+1)]
 			if index == 4 or index == 5:
@@ -169,16 +177,21 @@ class Environment:
 						j += width
 			if index == 6:
 				pi = [1] * length
-			if index == 7:
-				pi = [0] * length
-			if (len(pi)>0):
-				weightings.append((pi,rho,index))
+			if not index in [1,2,3,4,5,6]:
+				pass
+			weightings.append((pi,rho,index))
 		return weightings
 	def correct(self):
 		for move in self.moves:
 			move.inv,move.dis,move.man,move.h = move.details()
 			move.f = move.g + move.h
+			move.moves = move.findMoves( True )
 	
+	@staticmethod
+	def inArray(taquin,array):
+		for element in array:
+			if element.sequence == taquin.sequence: return True
+		return False
 	
 	
 	def aStar(self):
@@ -201,6 +214,38 @@ class Environment:
 					else: queue[child.f] = [child]
 				queue = OrderedDict( sorted( queue.items(), key=lambda t: t[0]))
 	
+	def charlotte(self):
+		root = self.moves[-1]
+		bound = root.h
+		path = [root]
+
+		def search(path,g,bound):
+			node = path[-1]
+			f = g + node.h
+			if f > bound: return f
+			minimum = Infinity
+			children = node.children()
+			if isinstance(children,Taquin):
+				path.append(children)
+				return children
+			else:
+				for child in children:
+					if not child.environment.inArray(child,path):
+						path.append(child)
+						t = search(path,g+1,bound)
+						if isinstance(t,Taquin): return t
+						if t < minimum: minimum = t
+						path.pop()
+			return minimum
+
+		while (True):
+			t = search(path,0,bound)
+			if isinstance(t,Taquin):
+				print(t)
+				self.end.append(t)
+				return t
+			if t == Infinity: return False
+			bound = t
 
 	
 	def expand(self,function,decomposition=0):
@@ -242,7 +287,7 @@ class __main__:
 	else:
 		choices = choices.split(' ')
 		for index,choice in enumerate(choices): choices[index] = int(choice)
-		decomposition = int(input(">>> Voulez-vous associer les heuristiques ou dissocier les exécutions (n:0/y:1) ?\n>>> "))
+		decomposition = int(input(">>> Voulez-vous associer les heuristiques [0] ou dissocier les exécutions [1] ?\n>>> "))
 
 
 	a = Environment(width,choices)
@@ -254,5 +299,5 @@ class __main__:
 		if move in a.moves[-1].moves:
 			a.play(move)
 		elif move == "E":
-			a.expand(a.aStar,decomposition)
+			a.expand(a.charlotte,decomposition)
 			exit(0)

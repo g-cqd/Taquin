@@ -68,7 +68,7 @@ class Taquin {
 	findMoves( flex = false ) {
 		let limit = this.environment.sizes[0] - 1;
 		let coords = this.coordinates();
-		let last = this.path[this.path.length - 1];
+		let last = this.path[this.g];
 		let moves = [];
 		if ( coords[0] != 0 && ( last != 'L' || flex ) ) { moves.push( 'R' ); }
 		if ( coords[0] != limit && ( last != 'R' || flex ) ) { moves.push( 'L' ); }
@@ -77,10 +77,10 @@ class Taquin {
 		return moves;
 	}
 	moveTile( move ) {
-		let sequence = this.sequence;
-		let width = this.environment.sizes[0];
-		let x = this.coordinates( this.coordinates() );
-		let y;
+		let sequence = this.sequence,
+		width = this.environment.sizes[0],
+		x = this.coordinates( this.coordinates() ),
+		y;
 		if ( move == 'R' ) { y = x - 1; }
 		if ( move == 'L' ) { y = x + 1; }
 		if ( move == 'D' ) { y = x - width; }
@@ -239,7 +239,7 @@ class Environment {
 		let root = this.moves.last();
 		let bound = root.h;
 		let path = [root];
-		while (1) {
+		while (true) {
 			let t = search(path,0,bound);
 			if (t instanceof Taquin) {
 				this.end.push(t);

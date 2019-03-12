@@ -278,6 +278,9 @@ class Environment:
 		return self.moves[-1]
 
 
+
+
+
 #class __main__:
 #	width = int(input(">>> Taille du taquin ?\n>>> "))
 #	choices = str(input(">>> Heuristiques ?\n>>> Entrez les numéros séparés par des espaces.\n>>> "))

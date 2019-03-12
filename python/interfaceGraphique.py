@@ -326,9 +326,9 @@ class Fenetre(QWidget):
 				self.listeCoupsOpti = self.couic(self.traductionEnFleches(self.a.end[-1].path),20)
 
 		elif(len(self.heuristiques)==0) :
-			msg = QMessageBox.critical(self, 'Erreur', "Choisissez une heuristique", QMessageBox.Ok)
+			QMessageBox.critical(self, 'Erreur', "Choisissez une heuristique", QMessageBox.Ok)
 		elif(self.mode=='Pilote' and int(self.texte) != 3):
-			msgPilot = QMessageBox.critical(self, 'Erreur', "Mode 'Pilote' n'est pas compatible avec une taille de Taquin supérieure à 3.", QMessageBox.Ok)
+			QMessageBox.critical(self, 'Erreur', "Mode 'Pilote' n'est pas compatible avec une taille de Taquin supérieure à 3.", QMessageBox.Ok)
 		
 
 
@@ -426,9 +426,9 @@ class Fenetre(QWidget):
 				tempsSecondes = int(time.time() - self.start_time)-tempsMinute*60
 				coups = self.couic(self.traductionEnFleches(self.coupsJoues),20)
 				if(int(self.texte)>3):
-					msgResolition = QMessageBox.information(self, 'FELICITATION', "CONGRATULATIONS \n\Vous avez résolu le taquin en : \n- %d mouvements\n- %d minutes et %d secondes\n- mouvements : %s"%(int(nbCoupsJoueur),int(tempsMinute),int(tempsSecondes),coups), QMessageBox.Ok)
+					QMessageBox.information(self, 'FELICITATION', "CONGRATULATIONS \nVous avez résolu le taquin en : \n- %d mouvements\n- %d minutes et %d secondes\n- mouvements : %s"%(int(nbCoupsJoueur),int(tempsMinute),int(tempsSecondes),coups), QMessageBox.Ok)
 				else:
-					msgResolition2 = QMessageBox.information(self, 'FELICITATION', "CONGRATULATIONS \n\Vous avez résolu le taquin en : \n- %d mouvements\n- %d minutes et %d secondes\n- mouvements : %s\n\n Chemin minimal : \n- %d mouvements\n- chemin : \n%s"%(int(nbCoupsJoueur),int(tempsMinute),int(tempsSecondes),coups,int(self.nbCoupsOpti),self.listeCoupsOpti), QMessageBox.Ok)
+					QMessageBox.information(self, 'FELICITATION', "CONGRATULATIONS \nVous avez résolu le taquin en : \n- %d mouvements\n- %d minutes et %d secondes\n- mouvements : %s\n\n Chemin minimal : \n- %d mouvements\n- chemin : \n%s"%(int(nbCoupsJoueur),int(tempsMinute),int(tempsSecondes),coups,int(self.nbCoupsOpti),self.listeCoupsOpti), QMessageBox.Ok)
 		
 			else:
 				if(self.mode == 'Pilote'):
@@ -458,7 +458,7 @@ class Fenetre(QWidget):
 			self.label3Present = True
 
 		else:
-			msgSolution = QMessageBox.critical(self, 'Erreur', "Générez un taquin", QMessageBox.Ok)
+			QMessageBox.critical(self, 'Erreur', "Générez un taquin", QMessageBox.Ok)
 			
 
 	def selectionDimensions(self,texte):

@@ -1,13 +1,15 @@
 #!/usr/local/bin/python3
 # -*-coding:utf-8 -*
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton,QLabel,QComboBox,QCheckBox,QMessageBox
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton,QLabel,QComboBox,QCheckBox,QMessageBox,QRadioButton,QButtonGroup
 from PyQt5.QtGui import QFontDatabase,QFont
 from PyQt5.QtCore import QSize,Qt
 from random import shuffle
 from math import sqrt,ceil
 from collections import OrderedDict
 import time
+
+Infinity = 10000000000
 
 class Taquin:
 	def __init__(self, environment, previous=None, move=None):
@@ -31,8 +33,7 @@ class Taquin:
 		self.f = self.h + self.g
 	def coordinates(self, content=0):
 		width = self.environment.sizes[0]
-		if isinstance(content, list):
-			return (width * content[1]) + content[0]
+		if isinstance(content, list): return (width * content[1]) + content[0]
 		else:
 			index = self.sequence.index(content)
 			y = ceil((index + 1) / width) - 1
@@ -65,7 +66,7 @@ class Taquin:
 					if weighting == weightings[0]: man += stepMan
 					stepH += weighting[0][k] * stepMan
 					k += 1
-			if weighting[1] > 1: stepH /= weighting[1]
+			stepH /= weighting[1]
 			if weighting[2] == 7: h += dis
 			else: h += stepH
 		return [inv,dis,man,h]
@@ -93,15 +94,18 @@ class Taquin:
 	def valid(self):
 		width = self.environment.sizes[0]
 		self.inv,self.dis,self.man,self.h = self.details()
-		inv = self.inv
 		row = abs(self.coordinates()[1] - width)
-		return True if (((width % 2 == 1) and (inv % 2 == 0)) or ((width % 2 == 0) and ((row % 2 == 1) == (inv % 2 == 0)))) else False
+		return True if (((width % 2 == 1) and (self.inv % 2 == 0)) or ((width % 2 == 0) and ((row % 2 == 1) == (self.inv % 2 == 0)))) else False
 	def children(self):
 		childList = []
 		for move in self.moves:
 			child = Taquin(self.environment,self,move)
 			if child.h == 0: return child
-			childList.append(child)
+			i = 0
+			while (i < len(childList)):
+				if (child.f < childList[i].f): break
+				i += 1
+			childList.insert(i,child)
 		return childList
 	def magic(self, rand=0):
 		length = self.environment.sizes[1]
@@ -114,6 +118,10 @@ class Taquin:
 				shuffle(sequence)
 				self.sequence = sequence
 		return sequence
+	def traceroute(self):
+		path = [self]
+		while (isinstance(path[0].previous,Taquin)): path.insert(0,path[0].previous)
+		return path
 	def __repr__(self):
 		printable = ""
 		printable += "\n"
@@ -137,16 +145,16 @@ class Environment:
 		self.moves = [Taquin(self)]
 		self.end = []
 	def getWeightings(self,choices):
-		if (choices == None): choices = [i for i in range(1,7)]
-		weightings = []
 		width = self.sizes[0]
 		length = self.sizes[1] - 1
-		pi = []
+		if (choices == None): choices = [5]
+		weightings = []
+		weight = length
 		for index in choices:
 			rho = (4 if index % 2 != 0 else 1)
+			pi = [0] * length
 			if index == 1:
-				if width == 3:
-					pi = [36, 12, 12, 4, 1, 1, 4, 1]
+				if width == 3: pi = [36, 12, 12, 4, 1, 1, 4, 1]
 			if index == 2 or index == 3:
 				pi = [(length+1) - i for i in range(1,length+1)]
 			if index == 4 or index == 5:
@@ -172,16 +180,21 @@ class Environment:
 						j += width
 			if index == 6:
 				pi = [1] * length
-			if index == 7:
-				pi = [0] * length
-			if (len(pi)>0):
-				weightings.append((pi,rho,index))
+			if not index in [1,2,3,4,5,6]:
+				pass
+			weightings.append((pi,rho,index))
 		return weightings
 	def correct(self):
 		for move in self.moves:
 			move.inv,move.dis,move.man,move.h = move.details()
 			move.f = move.g + move.h
+			move.moves = move.findMoves( True )
 	
+	@staticmethod
+	def inArray(taquin,array):
+		for element in array:
+			if element.sequence == taquin.sequence: return True
+		return False
 	
 	
 	def aStar(self):
@@ -204,6 +217,38 @@ class Environment:
 					else: queue[child.f] = [child]
 				queue = OrderedDict( sorted( queue.items(), key=lambda t: t[0]))
 	
+	def charlotte(self):
+		root = self.moves[-1]
+		bound = root.h
+		path = [root]
+
+		def search(path,g,bound):
+			node = path[-1]
+			f = g + node.h
+			if f > bound: return f
+			minimum = Infinity
+			children = node.children()
+			if isinstance(children,Taquin):
+				path.append(children)
+				return children
+			else:
+				for child in children:
+					if not child.environment.inArray(child,path):
+						path.append(child)
+						t = search(path,g+1,bound)
+						if isinstance(t,Taquin): return t
+						if t < minimum: minimum = t
+						path.pop()
+			return minimum
+
+		while (True):
+			t = search(path,0,bound)
+			if isinstance(t,Taquin):
+				print(t)
+				self.end.append(t)
+				return t
+			if t == Infinity: return False
+			bound = t
 
 	
 	def expand(self,function,decomposition=0):
@@ -261,14 +306,10 @@ class Fenetre(QWidget):
 		self.LabelManhattanPresent = False
 		self.LabelInvPresent = False
 		self.LabelDisPresent = False
-		self.h1state = False
-		self.h2state = False
-		self.h3state = False
-		self.h4state = False
-		self.h5state = False
-		self.h6state = False
 		self.heuristiques = [5]
 		self.boutonEnCouleur = None
+		self.algoUtilise = "Rocky"
+
 
 
 
@@ -278,22 +319,26 @@ class Fenetre(QWidget):
 
 
 		# Label
-		label = QLabel('Réglages ', self)
-		label.setFont(InterFont("Bold",24))
-		label.move(50,50)
+		reglage = QLabel('Réglages ', self)
+		reglage.setFont(InterFont("Bold",24))
+		reglage.move(50,42)
 
-		label2 = QLabel('Largeur ',self)
-		label2.setFont(InterFont("Medium", 14))
-		label2.move(50,110)
+		largeur = QLabel('Largeur ',self)
+		largeur.setFont(InterFont("Medium", 14))
+		largeur.move(50,102)
 
 
 		mode = QLabel('Mode ',self)
 		mode.setFont(InterFont("Medium", 14))
-		mode.move(50,160)
+		mode.move(50,142)
 
 		heuristiques = QLabel('Heuristiques ',self)
 		heuristiques.setFont(InterFont("Medium", 14))
-		heuristiques.move(50,210)
+		heuristiques.move(50,182)
+
+		algoDeRecherche = QLabel('Algorithme',self)
+		algoDeRecherche.setFont(InterFont("Medium", 14))
+		algoDeRecherche.move(50,290)
 
 
 		# ComboBox side length
@@ -304,7 +349,7 @@ class Fenetre(QWidget):
 		ComboBox.setStyleSheet('color: rgb(0,0,0);background-color: rgb(232,232,232);selection-background-color: rgb(255,255,255);')
 		ComboBox.setFont(InterFont("Medium", 14))
 		ComboBox.setFixedSize(QSize(85,20))
-		ComboBox.move(150,110)
+		ComboBox.move(150,102)
 		ComboBox.activated[str].connect(self.selectionDimensions)
 		#combo box choix Mode : 
 		ComboBoxM = QComboBox(self)
@@ -312,7 +357,7 @@ class Fenetre(QWidget):
 		ComboBoxM.addItem("Pilote")
 		ComboBoxM.setStyleSheet('color: rgb(0,0,0);background-color: rgb(232,232,232);selection-background-color: rgb(255,255,255)')
 		ComboBoxM.setFixedSize(QSize(85,20))
-		ComboBoxM.move(150,160)
+		ComboBoxM.move(150,142)
 		ComboBoxM.activated[str].connect(self.selectionMode)
 
 
@@ -336,34 +381,51 @@ class Fenetre(QWidget):
 		#Check box des heuristiques : 
 		h1 = QCheckBox('H.1',self)
 		h1.setFont(InterFont("Bold", 14))
-		h1.move(150,210)
+		h1.move(150,182)
 		h1.stateChanged.connect(self.selectionH1)
 
 		h2 = QCheckBox('H.2',self)
 		h2.setFont(InterFont("Bold", 14))
-		h2.move(150,235)
+		h2.move(150,207)
 		h2.stateChanged.connect(self.selectionH2)
 
 		h3 = QCheckBox('H.3',self)
 		h3.setFont(InterFont("Bold", 14))
-		h3.move(150,260)
+		h3.move(150,232)
 		h3.stateChanged.connect(self.selectionH3)
 
 		h4 = QCheckBox('H.4',self)
 		h4.setFont(InterFont("Bold", 14))
-		h4.move(195,210)
+		h4.move(195,182)
 		h4.stateChanged.connect(self.selectionH4)
 
 		h5 = QCheckBox('H.5',self)
 		h5.setFont(InterFont("Bold", 14))
-		h5.move(195,235)
-		h5.setChecked(True);
+		h5.move(195,207)
+		h5.setChecked(True)
 		h5.stateChanged.connect(self.selectionH5)
 
 		h6 = QCheckBox('H.6',self)
 		h6.setFont(InterFont("Bold", 14))
-		h6.move(195,260)
+		h6.move(195,232)
 		h6.stateChanged.connect(self.selectionH6)
+
+		desordre = QCheckBox('Désordre',self)
+		desordre.setFont(InterFont("Bold", 14))
+		desordre.move(150,257)
+		desordre.stateChanged.connect(self.selectionDesordre)
+
+		#Radio boutons : 
+
+		AStar = QRadioButton('Rocky - A*',self)
+		AStar.setFont(InterFont("Bold", 14))
+		AStar.move(150,290)
+		AStar.setChecked(True)
+		AStar.toggled.connect(lambda:self.RadioBouttonState(AStar))
+	
+		IdA = QRadioButton('Charlotte - IDA*',self)
+		IdA.setFont(InterFont("Bold", 14))
+		IdA.move(150,315)
 
 		self.show()
 
@@ -414,7 +476,10 @@ class Fenetre(QWidget):
 		if(self.boutonEnCouleur!=None):
 			self.boutonEnCouleur.setStyleSheet('color: rgb(170,170,170);background-color: rgb(238,238,238);border: none; border-radius: 4px;')
 			self.boutonEnCouleur = None
-		self.a.expand(self.a.aStar,0)
+		if(self.algoUtilise == "Rocky"):
+			self.a.expand(self.a.aStar,0)
+		else: 
+			self.a.expand(self.a.charlotte,0)
 		caseAColorer = self.a.end[-1].path[self.nbCoupsJoues+1]
 		verif = self.ok()
 		i = 0
@@ -522,7 +587,10 @@ class Fenetre(QWidget):
 				self.operationColoration()
 
 			if(int(self.texte)==3):
-				self.a.expand(self.a.aStar,0)
+				if(self.algoUtilise == "Rocky"):
+					self.a.expand(self.a.aStar,0)
+				if(self.algoUtilise == "Charlotte"):
+					self.a.expand(self.a.charlotte,0)
 				self.nbCoupsOpti = self.a.end[-1].g
 				self.listeCoupsOpti = self.couic(self.traductionEnFleches(self.a.end[-1].path),20)
 
@@ -578,21 +646,21 @@ class Fenetre(QWidget):
 
 			#Label nombre de coups joués
 			self.labelNbCoupsJoues = QLabel("Coups\n %d"%(self.a.moves[-1].g),self)
-			self.labelNbCoupsJoues.setFont(InterFont("Bold",14))
+			self.labelNbCoupsJoues.setFont(InterFont("Medium",14))
 			self.labelNbCoupsJoues.setStyleSheet('background-color: rgb(238,238,238); border-radius: 4px;')
 			self.labelNbCoupsJoues.setAlignment(Qt.AlignCenter)
 			self.labelNbCoupsJoues.setFixedSize(QSize(110,50))
-			self.labelNbCoupsJoues.move(50,320)
+			self.labelNbCoupsJoues.move(50,355)
 			self.labelNbCoupsJoues.show()
 			self.labelCoupsPresent = True
 
 			#Label Manhattan : 
 			self.LabelManhattan = QLabel("Manhattan\n%d"%(self.a.moves[-1].man),self)
-			self.LabelManhattan.setFont(InterFont("Bold",14))
+			self.LabelManhattan.setFont(InterFont("Medium",14))
 			self.LabelManhattan.setStyleSheet('color:rgb(0,0,0);background-color: rgb(238,238,238); border-radius:4px;')
 			self.LabelManhattan.setAlignment(Qt.AlignCenter)
 			self.LabelManhattan.setFixedSize(QSize(110,50))
-			self.LabelManhattan.move(320,320)
+			self.LabelManhattan.move(320,355)
 			self.LabelManhattan.show()
 			self.LabelManhattanPresent = True
 
@@ -602,7 +670,7 @@ class Fenetre(QWidget):
 			self.LabelInv.setStyleSheet('color:rgb(0,0,0);background-color:rgb(238,238,238); border-radius: 4px;')
 			self.LabelInv.setAlignment(Qt.AlignCenter)
 			self.LabelInv.setFixedSize(QSize(110,50))
-			self.LabelInv.move(455,320)
+			self.LabelInv.move(455,355)
 			self.LabelInv.show()
 			self.LabelInvPresent = True
 
@@ -612,7 +680,7 @@ class Fenetre(QWidget):
 			self.LabelDis.setStyleSheet('color:rgb(0,0,0);background-color: rgb(238,238,238); border-radius: 4px;')
 			self.LabelDis.setAlignment(Qt.AlignCenter)
 			self.LabelDis.setFixedSize(QSize(110,50))
-			self.LabelDis.move(185,320)
+			self.LabelDis.move(185,355)
 			self.LabelDis.show()
 			self.LabelDisPresent = True
 			
@@ -641,17 +709,19 @@ class Fenetre(QWidget):
 			if(self.label3Present!=False):
 				self.label3.deleteLater()
 				self.label3Present=False
-
-			self.a.expand(self.a.aStar,0)
+			if(self.algoUtilise == "Rocky"):
+				self.a.expand(self.a.aStar,0)
+			else:
+				self.a.expand(self.a.charlotte,0)
 			self.solution = self.a.end[-1].path[self.nbCoupsJoues+1:len(self.a.end[-1].path)]
 			self.solution = self.traductionEnFleches(self.solution)
 			if(len(self.solution)>45):
-				self.solution = self.couic(self.solution,45)
+				self.solution = self.couic(self.solution,60)
 
 			self.label3 = QLabel("Solution : %s"%(self.solution),self)
 			self.label3.setFont(InterFont("Medium",14))
 			self.label3.setStyleSheet('color:rgb(0,0,0);background-color: rgb(238,238,238); padding: 1em; border-radius: 4px;')
-			self.label3.move(50,395)
+			self.label3.move(50,430)
 			self.label3.show()
 
 			self.label3Present = True
@@ -700,6 +770,21 @@ class Fenetre(QWidget):
 			self.heuristiques.append(6)			
 		elif state != Qt.Checked:
 			self.heuristiques.remove(6)
+	def selectionDesordre(self, state):
+		if state == Qt.Checked:
+			self.heuristiques.append(7)			
+		elif state != Qt.Checked:
+			self.heuristiques.remove(7)
+
+	def RadioBouttonState(self,Boutton):
+		if Boutton.text() == "Rocky - A*":
+			if Boutton.isChecked() == True:
+				self.algoUtilise = "Rocky"
+			else:
+				self.algoUtilise = "Charlotte"
+		print(self.algoUtilise)
+		
+
 	
 
 class __main__:

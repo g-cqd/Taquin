@@ -22,17 +22,6 @@ body,
 *, * > * {
 	box-sizing: border-box;
 }
-body:not(.blurred) main {
-	transition-property: filter;
-	transition-duration: 300ms;
-	transition-timing-function: ease-in-out;
-}
-body.blurred main {
-	filter: blur(10px);
-	transition-property: filter;
-	transition-duration: 300ms;
-	transition-timing-function: ease-in-out;
-}
 h1,h2,h3,h4,h5,h6 {
 	margin: 0;
 	letter-spacing: -.025em;
@@ -193,16 +182,14 @@ label.disabled {
 	height: 100%;
 	width: 100%;
 	z-index: -1;
-	transition-property: bottom;
-	transition-duration: 300ms;
-	transition-timing-function: ease-in-out;
+	background-color: var(--bg-color);
+	transition: 300ms bottom ease-in-out, 600ms background-color ease-in-out;
 	
 }
 a:not(.active) + #settings {
 	bottom: -100%;
-	transition-property: bottom;
-	transition-duration: 300ms;
-	transition-timing-function: ease-in-out;
+	background-color: transparent;
+	transition: 300ms bottom ease-in-out, 600ms background-color ease-in-out;
 }
 
 p {

@@ -278,26 +278,23 @@ class Environment:
 		return self.moves[-1]
 
 
-
-class __main__:
-	width = int(input(">>> Taille du taquin ?\n>>> "))
-	choices = str(input(">>> Heuristiques ?\n>>> Entrez les numéros séparés par des espaces.\n>>> "))
-	decomposition = 0
-	if len(choices) == 1: choices = [int(choices)]
-	else:
-		choices = choices.split(' ')
-		for index,choice in enumerate(choices): choices[index] = int(choice)
-		decomposition = int(input(">>> Voulez-vous associer les heuristiques [0] ou dissocier les exécutions [1] ?\n>>> "))
-
-
-	a = Environment(width,choices)
-	while(a.moves[-1].h != 0):
-		print(a.moves[-1])
-		move = "_"
-		while not move in ["R","L","D","U","E"]:
-			move = str(input((">>> Dans quel direction voulez vous aller ? {}\n>>> Ou alors peut-être voulez-vous explorer ? ['E']\n>>> ").format(a.moves[-1].moves)))
-		if move in a.moves[-1].moves:
-			a.play(move)
-		elif move == "E":
-			a.expand(a.charlotte,decomposition)
-			exit(0)
+#class __main__:
+#	width = int(input(">>> Taille du taquin ?\n>>> "))
+#	choices = str(input(">>> Heuristiques ?\n>>> Entrez les numéros séparés par des espaces.\n>>> "))
+#	decomposition = 0
+#	if len(choices) == 1: choices = [int(choices)]
+#	else:
+#		choices = choices.split(' ')
+#		for index,choice in enumerate(choices): choices[index] = int(choice)
+#		decomposition = int(input(">>> Voulez-vous associer les heuristiques [0] ou dissocier les exécutions [1] ?\n>>> "))
+#	a = Environment(width,choices)
+#	while(a.moves[-1].h != 0):
+#		print(a.moves[-1])
+#		move = "_"
+#		while not move in ["R","L","D","U","E"]:
+#			move = str(input((">>> Dans quel direction voulez vous aller ? {}\n>>> Ou alors peut-être voulez-vous explorer ? ['E']\n>>> ").format(a.moves[-1].moves)))
+#		if move in a.moves[-1].moves:
+#			a.play(move)
+#		elif move == "E":
+#			a.expand(a.charlotte,decomposition)
+#			exit(0)

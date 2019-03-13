@@ -8,6 +8,14 @@
 	layout=a4paper
 ]{geometry}
 
+
+\pretitle{\begin{flushleft}\Huge\textbf}
+\posttitle{\par\end{flushleft}}
+\preauthor{\begin{flushleft}}
+\postauthor{\par\end{flushleft}}
+\predate{\begin{flushleft}}
+\postdate{\end{flushleft}}
+
 \setmainfont{Inter}[
 	Ligatures = TeX,
 	Path=inc/fonts/,
@@ -71,10 +79,3 @@
 \DeclareRobustCommand\bl{\fontseries{bl}\selectfont}
 \DeclareTextFontCommand{\BL}{\bl}
 
-
-\pretitle{\begin{flushleft}\Huge\textbf}
-\posttitle{\par\end{flushleft}}
-\preauthor{\begin{flushleft}}
-\postauthor{\par\end{flushleft}}
-\predate{\begin{flushleft}}
-\postdate{\end{flushleft}}

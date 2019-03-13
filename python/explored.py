@@ -202,9 +202,7 @@ class Environment:
 		while (True):
 			k = list(queue.keys())[0]
 			shouldBeExpanded = queue[k][0]
-			#AJOUUUUUUUT
 			explored[str(queue[k][0].sequence)] = queue[k][0]
-
 			del queue[k][0]
 			if queue[k] == []: del queue[k]
 			children = shouldBeExpanded.children()

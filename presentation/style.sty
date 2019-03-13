@@ -1,0 +1,81 @@
+\ProvidesPackage{style}
+
+\usepackage[french]{babel}
+\usepackage[normalem]{ulem}
+\usepackage{graphicx,xcolor,hyperref,multirow,array,titling,fontspec}
+
+\usepackage[
+	layout=a4paper
+]{geometry}
+
+
+\pretitle{\begin{flushleft}\Huge\textbf}
+\posttitle{\par\end{flushleft}}
+\preauthor{\begin{flushleft}}
+\postauthor{\par\end{flushleft}}
+\predate{\begin{flushleft}}
+\postdate{\end{flushleft}}
+
+\setmainfont{Inter}[
+	Ligatures = TeX,
+	Path=inc/fonts/,
+	Extension=.ttf,
+	UprightFont=*-Regular,
+	ItalicFont=*-Italic,
+	BoldFont=*-Bold,
+	BoldItalicFont=*-BoldItalic,
+	FontFace={th}{n}{*-Thin},
+	FontFace={th}{it}{*-ThinItalic},
+	FontFace={exli}{n}{*-ExtraLight},
+	FontFace={exli}{it}{*-ExtraLightItalic},
+	FontFace={li}{n}{*-Light},
+	FontFace={li}{it}{*-LightItalic},
+	FontFace={me}{n}{*-Medium},
+	FontFace={me}{it}{*-MediumItalic},
+	FontFace={sebo}{n}{*-SemiBold},
+	FontFace={sebo}{it}{*-SemiBoldItalic},
+	FontFace={exbo}{n}{*-ExtraBold},
+	FontFace={exbo}{it}{*-ExtraBoldItalic},
+	FontFace={bl}{n}{*-Black},
+	FontFace={bl}{it}{*-BlackItalic}
+]
+\setsansfont{Inter}[
+	Ligatures = TeX,
+	Path=inc/fonts/,
+	Extension=.ttf,
+	UprightFont=*-Regular,
+	ItalicFont=*-Italic,
+	BoldFont=*-Bold,
+	BoldItalicFont=*-BoldItalic,
+	FontFace={th}{n}{*-Thin},
+	FontFace={th}{it}{*-ThinItalic},
+	FontFace={exli}{n}{*-ExtraLight},
+	FontFace={exli}{it}{*-ExtraLightItalic},
+	FontFace={li}{n}{*-Light},
+	FontFace={li}{it}{*-LightItalic},
+	FontFace={me}{n}{*-Medium},
+	FontFace={me}{it}{*-MediumItalic},
+	FontFace={sebo}{n}{*-SemiBold},
+	FontFace={sebo}{it}{*-SemiBoldItalic},
+	FontFace={exbo}{n}{*-ExtraBold},
+	FontFace={exbo}{it}{*-ExtraBoldItalic},
+	FontFace={bl}{n}{*-Black},
+	FontFace={bl}{it}{*-BlackItalic}
+]
+\setmonofont{SF Mono}
+
+\DeclareRobustCommand\th{\fontseries{th}\selectfont}
+\DeclareTextFontCommand{\TH}{\th}
+\DeclareRobustCommand\exli{\fontseries{exli}\selectfont}
+\DeclareTextFontCommand{\EXLI}{\exli}
+\DeclareRobustCommand\li{\fontseries{li}\selectfont}
+\DeclareTextFontCommand{\LI}{\li}
+\DeclareRobustCommand\me{\fontseries{me}\selectfont}
+\DeclareTextFontCommand{\ME}{\me}
+\DeclareRobustCommand\sebo{\fontseries{sebo}\selectfont}
+\DeclareTextFontCommand{\SEBO}{\sebo}
+\DeclareRobustCommand\exbo{\fontseries{exbo}\selectfont}
+\DeclareTextFontCommand{\EXBO}{\exbo}
+\DeclareRobustCommand\bl{\fontseries{bl}\selectfont}
+\DeclareTextFontCommand{\BL}{\bl}
+

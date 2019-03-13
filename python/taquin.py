@@ -6,8 +6,6 @@ from math import ceil
 from collections import OrderedDict
 import time
 
-Infinity = 10000000000
-
 class Taquin:
 	def __init__(self, environment, previous=None, move=None):
 		self.environment = environment
@@ -189,14 +187,14 @@ class Environment:
 			move.inv,move.dis,move.man,move.h = move.details()
 			move.f = move.g + move.h
 			move.moves = move.findMoves( True )
-	
+
 	@staticmethod
 	def inArray(taquin,array):
 		for element in array:
 			if element.sequence == taquin.sequence: return True
 		return False
-	
-	
+
+
 	def aStar(self):
 		print(self.moves[-1])
 		queue = OrderedDict()
@@ -216,12 +214,14 @@ class Environment:
 					if(child.f in queue): queue[child.f].append(child)
 					else: queue[child.f] = [child]
 				queue = OrderedDict( sorted( queue.items(), key=lambda t: t[0]))
-	
+
 	def charlotte(self):
 		root = self.moves[-1]
 		print(root)
 		bound = root.h
 		path = [root]
+
+		Infinity = 10000000000
 
 		def search(path,g,bound):
 			node = path[-1]
@@ -251,7 +251,7 @@ class Environment:
 			if t == Infinity: return False
 			bound = t
 
-	
+
 	def expand(self,function,decomposition=0):
 		if (decomposition==0):
 			print("\n\n")
@@ -274,9 +274,9 @@ class Environment:
 				print(("Duration : {}").format(time.time() - start))
 				print("\n\n.........................................\n")
 			return results
-	
-	
-	
+
+
+
 	def play(self,move):
 		self.moves.append(Taquin(self,self.moves[-1],move))
 		return self.moves[-1]
@@ -284,7 +284,7 @@ class Environment:
 
 
 
-
+"""
 class __main__:
 	width = int(input(">>> Taille du taquin ?\n>>> "))
 	choices = str(input(">>> Heuristiques ?\n>>> Entrez les numéros séparés par des espaces.\n>>> "))
@@ -306,3 +306,4 @@ class __main__:
 #			a.expand(a.aStar,decomposition)
 			a.expand(a.charlotte,decomposition)
 			exit(0)
+"""

@@ -82,7 +82,7 @@ class Fenetre(QWidget):
 		ComboBox.setFixedSize(QSize(85,20))
 		ComboBox.move(150,102)
 		ComboBox.activated[str].connect(self.selectionDimensions)
-		#combo box choix Mode : 
+		#combo box choix Mode :
 		ComboBoxM = QComboBox(self)
 		ComboBoxM.addItem("Manuel")
 		ComboBoxM.addItem("Pilote")
@@ -97,7 +97,7 @@ class Fenetre(QWidget):
 		generate.setFont(InterFont("Medium", 14))
 		generate.setFixedSize(QSize(90,30))
 		generate.setStyleSheet('color: rgb(179,179,179);background-color: rgb(232,232,232);border: none; border-radius: 4px;')
-		generate.move(700,320)	
+		generate.move(700,320)
 		generate.clicked.connect(self.appuiBoutonGenerate)
 
 
@@ -106,10 +106,10 @@ class Fenetre(QWidget):
 		BoutonSolution.setFont(InterFont("Medium", 15))
 		BoutonSolution.setFixedSize(QSize(115,30))
 		BoutonSolution.setStyleSheet('color: rgb(179,179,179);background-color: rgb(232,232,232);border: none; border-radius: 4px;')
-		BoutonSolution.move(805,320) 
+		BoutonSolution.move(805,320)
 		BoutonSolution.clicked.connect(self.Solution)
 
-		#Check box des heuristiques : 
+		#Check box des heuristiques :
 		h1 = QCheckBox('H.1',self)
 		h1.setFont(InterFont("Bold", 14))
 		h1.move(150,182)
@@ -146,14 +146,14 @@ class Fenetre(QWidget):
 		desordre.move(150,257)
 		desordre.stateChanged.connect(self.selectionDesordre)
 
-		#Radio boutons : 
+		#Radio boutons :
 
 		AStar = QRadioButton('Rocky - A*',self)
 		AStar.setFont(InterFont("Bold", 14))
 		AStar.move(150,290)
 		AStar.setChecked(True)
 		AStar.toggled.connect(lambda:self.RadioBouttonState(AStar))
-	
+
 		IdA = QRadioButton('Charlotte - IDA*',self)
 		IdA.setFont(InterFont("Bold", 14))
 		IdA.move(150,315)
@@ -175,7 +175,7 @@ class Fenetre(QWidget):
 		cp = self.a.moves[-1].findMoves(True)
 		print(cp)
 		positionO = self.positionDansListe(self.a.moves[-1].sequence,0)
-		
+
 		for item in cp:
 			if (item =="R"):
 				numeros.append([self.a.moves[-1].sequence[positionO-1],'R'])
@@ -186,17 +186,17 @@ class Fenetre(QWidget):
 			if (item =="U"):
 				numeros.append([self.a.moves[-1].sequence[positionO+int(self.texte)],'U'])
 		return numeros
-	
+
 
 	def isItTheEnd(self):
-		""" 
+		"""
 		Vérifie si on est dans un état final
 		Cette fonction renvoie un booléen
 		"""
 		i = 0
 		ok = True
 		while(i<len(self.a.moves[-1].sequence)-1):
-			if((i+1)!=self.a.moves[-1].sequence[i]): 
+			if((i+1)!=self.a.moves[-1].sequence[i]):
 				ok = False
 			i+=1
 		return ok
@@ -209,24 +209,24 @@ class Fenetre(QWidget):
 			self.boutonEnCouleur = None
 		if(self.algoUtilise == "Rocky"):
 			self.a.expand(self.a.aStar,0)
-		else: 
+		else:
 			self.a.expand(self.a.charlotte,0)
 		caseAColorer = self.a.end[-1].path[self.nbCoupsJoues+1]
 		verif = self.ok()
 		i = 0
 		while(i<len(verif)):
 			if((self.mode == 'Pilote')and(caseAColorer==verif[i][1])):
-				numeroAColorer = verif[i][0]				
+				numeroAColorer = verif[i][0]
 			i+=1
 		for item in self.box:
-			if(int(item.text())==numeroAColorer):						
+			if(int(item.text())==numeroAColorer):
 				self.boutonEnCouleur = item
 				self.boutonEnCouleur.setStyleSheet('color: rgb(255,255,255);background-color: rgb(135,206,250);border: none; border-radius: 4px;')
 
-		
+
 	def traductionEnFleches(self,codeATraduire):
 		"""
-		Traduit une solution en flèches : 
+		Traduit une solution en flèches :
 		- U (up) devient ↑
 		- D (down) devient ↓
 		- R (right) devient →
@@ -266,34 +266,34 @@ class Fenetre(QWidget):
 				self.label3Present = False
 		#On regarde si le label de coups est présent, si oui on le delete
 			if(self.labelCoupsPresent!=False):
-				self.labelNbCoupsJoues.clear()		
+				self.labelNbCoupsJoues.clear()
 				self.labelCoupsPresent = False
 		#On regarde si le label Manhattan est présent, si oui on le delete
 			if(self.LabelManhattanPresent!=False):
-				self.LabelManhattan.clear()			
+				self.LabelManhattan.clear()
 				self.LabelManhattanPresent = False
 		#On regarde si le label Inv est présent, si oui on le delete
 			if(self.LabelInvPresent!=False):
-				self.LabelInv.clear()			
+				self.LabelInv.clear()
 				self.LabelInvPresent = False
 		#On regarde si le label Dis est présent, si oui on le delete
 			if(self.LabelDisPresent!=False):
-				self.LabelDis.clear()			
+				self.LabelDis.clear()
 				self.LabelDisPresent = False
-		
-		#On delete les boutons précédents du taquin : 		
+
+		#On delete les boutons précédents du taquin :
 			for k in self.box:
 				k.deleteLater()
-		
-			self.box = []       
+
+			self.box = []
 			self.fin= False
 			DimTaquin = int(self.texte)
-		
+
 			self.a = Environment(DimTaquin,self.heuristiques)
 			i = 0
 			x = 0
 			y = 0
-	   #On génère les boutons du Taquin : 
+	   #On génère les boutons du Taquin :
 			while(i<(DimTaquin*DimTaquin)):
 				if(i%DimTaquin==0):
 					x = 0
@@ -311,7 +311,7 @@ class Fenetre(QWidget):
 			for item in self.box:
 				item.clicked.connect(self.appuiBoutonsTaquin)
 				item.show()
-			
+
 			self.start_time = time.time()
 
 			if(self.mode =='Pilote'):
@@ -329,19 +329,19 @@ class Fenetre(QWidget):
 			QMessageBox.critical(self, 'Erreur', "Choisissez une heuristique", QMessageBox.Ok)
 		elif(self.mode=='Pilote' and int(self.texte) != 3):
 			QMessageBox.critical(self, 'Erreur', "Mode 'Pilote' n'est pas compatible avec une taille de Taquin supérieure à 3.", QMessageBox.Ok)
-		
 
 
-	
-		
+
+
+
 	def appuiBoutonsTaquin(self):
 		if(self.fin!=True):
-			#Nombre de coups effectues : 			
+			#Nombre de coups effectues :
 			ok = False
-			#On récupère le numéro du bouton appuyé : 
+			#On récupère le numéro du bouton appuyé :
 			sender = self.sender()
-			#on vérifie qu'on peut bouger le bouton			
-			verif = self.ok() 
+			#on vérifie qu'on peut bouger le bouton
+			verif = self.ok()
 			i = 0
 			move = "_"
 			while(i<len(verif)):
@@ -350,17 +350,17 @@ class Fenetre(QWidget):
 					break
 				i+=1
 
-			#Si on peut bouger, on bouge le bouton : 
+			#Si on peut bouger, on bouge le bouton :
 			if(ok == True):
 				for item in self.box:
 					if(item.text()==sender.text()):
 						BoutonClique = item
 						x = BoutonClique.x()
 						y = BoutonClique.y()
-					 
+
 				if(verif[i][1]=='R'):
 					BoutonClique.move(x+42,y)
-					move = "R"     
+					move = "R"
 				if(verif[i][1]=='L'):
 					BoutonClique.move(x-42,y)
 					move = "L"
@@ -369,7 +369,7 @@ class Fenetre(QWidget):
 					move = "U"
 				if(verif[i][1]=='D'):
 					BoutonClique.move(x,y+42)
-					move ="D" 
+					move ="D"
 				self.a.play(move)
 				self.coupsJoues+=move
 				self.nbCoupsJoues +=1
@@ -385,7 +385,7 @@ class Fenetre(QWidget):
 			self.labelNbCoupsJoues.show()
 			self.labelCoupsPresent = True
 
-			#Label Manhattan : 
+			#Label Manhattan :
 			self.LabelManhattan = QLabel("Manhattan\n%d"%(self.a.moves[-1].man),self)
 			self.LabelManhattan.setFont(InterFont("Medium",14))
 			self.LabelManhattan.setStyleSheet('color:rgb(0,0,0);background-color: rgb(238,238,238); border-radius:4px;')
@@ -395,7 +395,7 @@ class Fenetre(QWidget):
 			self.LabelManhattan.show()
 			self.LabelManhattanPresent = True
 
-			#Label Inv : 
+			#Label Inv :
 			self.LabelInv = QLabel("Inversions\n %d"%(self.a.moves[-1].inv),self)
 			self.LabelInv.setFont(InterFont("Medium",14))
 			self.LabelInv.setStyleSheet('color:rgb(0,0,0);background-color:rgb(238,238,238); border-radius: 4px;')
@@ -405,7 +405,7 @@ class Fenetre(QWidget):
 			self.LabelInv.show()
 			self.LabelInvPresent = True
 
-			#Label Dis : 
+			#Label Dis :
 			self.LabelDis = QLabel("Désordre\n %d"%(self.a.moves[-1].dis),self)
 			self.LabelDis.setFont(InterFont("Medium",14))
 			self.LabelDis.setStyleSheet('color:rgb(0,0,0);background-color: rgb(238,238,238); border-radius: 4px;')
@@ -414,7 +414,7 @@ class Fenetre(QWidget):
 			self.LabelDis.move(185,355)
 			self.LabelDis.show()
 			self.LabelDisPresent = True
-			
+
 			#On vérifie si on est dans l'état final :
 			if(self.isItTheEnd()==True):
 				self.fin = True
@@ -429,7 +429,7 @@ class Fenetre(QWidget):
 					QMessageBox.information(self, 'FELICITATION', "CONGRATULATIONS \nVous avez résolu le taquin en : \n- %d mouvements\n- %d minutes et %d secondes\n- mouvements : %s"%(int(nbCoupsJoueur),int(tempsMinute),int(tempsSecondes),coups), QMessageBox.Ok)
 				else:
 					QMessageBox.information(self, 'FELICITATION', "CONGRATULATIONS \nVous avez résolu le taquin en : \n- %d mouvements\n- %d minutes et %d secondes\n- mouvements : %s\n\n Chemin minimal : \n- %d mouvements\n- chemin : \n%s"%(int(nbCoupsJoueur),int(tempsMinute),int(tempsSecondes),coups,int(self.nbCoupsOpti),self.listeCoupsOpti), QMessageBox.Ok)
-		
+
 			else:
 				if(self.mode == 'Pilote'):
 					self.operationColoration()
@@ -459,11 +459,11 @@ class Fenetre(QWidget):
 
 		else:
 			QMessageBox.critical(self, 'Erreur', "Générez un taquin", QMessageBox.Ok)
-			
+
 
 	def selectionDimensions(self,texte):
 		self.texte = texte
-	def selectionMode(self,mode):       
+	def selectionMode(self,mode):
 		self.mode = mode
 
 	def selectionH1(self,state):
@@ -474,36 +474,36 @@ class Fenetre(QWidget):
 
 	def selectionH2(self,state):
 		if state == Qt.Checked:
-			self.heuristiques.append(2)			
+			self.heuristiques.append(2)
 		elif state != Qt.Checked:
 			self.heuristiques.remove(2)
 
 	def selectionH3(self,state):
 		if state == Qt.Checked:
-			self.heuristiques.append(3)		
+			self.heuristiques.append(3)
 		elif state != Qt.Checked:
 			self.heuristiques.remove(3)
 
 	def selectionH4(self,state):
 		if state == Qt.Checked:
-			self.heuristiques.append(4)				
+			self.heuristiques.append(4)
 		elif state != Qt.Checked:
 			self.heuristiques.remove(4)
 
 	def selectionH5(self,state):
 		if state == Qt.Checked:
-			self.heuristiques.append(5)			
+			self.heuristiques.append(5)
 		elif state != Qt.Checked:
 			self.heuristiques.remove(5)
 
 	def selectionH6(self,state):
 		if state == Qt.Checked:
-			self.heuristiques.append(6)			
+			self.heuristiques.append(6)
 		elif state != Qt.Checked:
 			self.heuristiques.remove(6)
 	def selectionDesordre(self, state):
 		if state == Qt.Checked:
-			self.heuristiques.append(7)			
+			self.heuristiques.append(7)
 		elif state != Qt.Checked:
 			self.heuristiques.remove(7)
 
@@ -514,16 +514,16 @@ class Fenetre(QWidget):
 			else:
 				self.algoUtilise = "Charlotte"
 		print(self.algoUtilise)
-		
 
-	
+
+
 
 class __main__:
-	app = QApplication.instance() 
+	app = QApplication.instance()
 	if not app:
 		app = QApplication(sys.argv)
 
-  
+
 	fen = Fenetre('3','Manuel')
 	fen.show()
 

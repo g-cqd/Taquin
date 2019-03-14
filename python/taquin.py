@@ -2,7 +2,7 @@
 # -*-coding:utf-8 -*
 
 from random import shuffle
-from math import ceil
+from math import ceil,floor
 from collections import OrderedDict
 import time
 
@@ -96,7 +96,7 @@ class Taquin:
 		childList = []
 		for move in self.moves:
 			child = Taquin(self.environment,self,move)
-			if child.h == 0: return child
+			if child.dis == 0: return child
 			i = 0
 			while (i < len(childList)):
 				if (child.f < childList[i].f): break
@@ -178,7 +178,17 @@ class Environment:
 						j += width
 			if index == 6:
 				pi = [1] * length
-			if not index in [1,2,3,4,5,6]:
+			if index == 8:
+				mid = floor(length/2)
+				for i in range(0,mid):
+					pi[i] = mid - i
+				if length % 2 == 1:
+					pi[mid] = 1
+					mid += 1
+				for i in range(mid,length):
+					pi[i] = i+1
+				rho = 2
+			if not index in [1,2,3,4,5,6,8]:
 				pass
 			weightings.append((pi,rho,index))
 		return weightings
@@ -196,6 +206,7 @@ class Environment:
 
 
 	def aStar(self):
+		print(self.moves[-1])
 		explored = dict()
 		queue = OrderedDict()
 		queue[self.moves[-1].f] = [self.moves[-1]]
@@ -211,7 +222,6 @@ class Environment:
 				self.end.append(children)
 				return self.end[-1]
 			else:
-
 				for child in children :
 					if(str(child.sequence)in explored):
 						if(explored[str(child.sequence)].f<child.f):
@@ -221,14 +231,12 @@ class Environment:
 					else: queue[child.f] = [child]
 				queue = OrderedDict( sorted( queue.items(), key=lambda t: t[0]))
 
-	def charlotte(self):
+	def idaStar(self):
 		root = self.moves[-1]
 		print(root)
 		bound = root.h
 		path = [root]
-
 		Infinity = 10000000000
-
 		def search(path,g,bound):
 			node = path[-1]
 			f = g + node.h
@@ -247,7 +255,6 @@ class Environment:
 						if t < minimum: minimum = t
 						path.pop()
 			return minimum
-
 		while (True):
 			t = search(path,0,bound)
 			if isinstance(t,Taquin):
@@ -291,7 +298,7 @@ class Environment:
 
 
 
-"""class __main__:
+class __main__:
 	width = int(input(">>> Taille du taquin ?\n>>> "))
 	choices = str(input(">>> Heuristiques ?\n>>> Entrez les numéros séparés par des espaces.\n>>> "))
 	decomposition = 0
@@ -301,15 +308,13 @@ class Environment:
 		for index,choice in enumerate(choices): choices[index] = int(choice)
 		decomposition = int(input(">>> Voulez-vous associer les heuristiques [0] ou dissocier les exécutions [1] ?\n>>> "))
 	a = Environment(width,choices)
-	a.expand(a.aStar,0)
-	while(a.moves[-1].h != 0):
-		print(a.moves[-1])
+	"""while(a.moves[-1].h != 0):
 		move = "_"
 		while not move in ["R","L","D","U","E"]:
 			move = str(input((">>> Dans quel direction voulez vous aller ? {}\n>>> Ou alors peut-être voulez-vous explorer ? ['E']\n>>> ").format(a.moves[-1].moves)))
 		if move in a.moves[-1].moves:
 			a.play(move)
-		elif move == "E":
-			a.expand(a.aStar,decomposition)
-			a.expand(a.charlotte,decomposition)
-			exit(0)"""
+		elif move == "E":"""
+	a.expand(a.aStar,decomposition)
+	#a.expand(a.idaStar,decomposition)
+	exit(0)

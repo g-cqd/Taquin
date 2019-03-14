@@ -267,6 +267,7 @@ class Environment:
 
 	def expand(self,function,decomposition=0):
 		if (decomposition==0):
+			self.createdTaquins = 0
 			print("\n\n")
 			start = time.time()
 			print(("Heuristiques utilisées : {}").format(self.choices))
@@ -278,6 +279,7 @@ class Environment:
 			results = []
 			decomposition = self.weightings.copy()
 			for weighting in decomposition:
+				self.createdTaquins = 0
 				print("\n")
 				start = time.time()
 				print(("Heuristiques utilisées : {}").format(weighting[2]))

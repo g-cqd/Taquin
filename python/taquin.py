@@ -153,6 +153,22 @@ class Environment:
 			pi = [0] * length
 			if index == 1:
 				if width == 3: pi = [36, 12, 12, 4, 1, 1, 4, 1]
+				else:
+					for y in range(0,width):
+						for x in range(0,width):
+							if x == y == width-1:
+								pass
+							else:
+								if x == y == 0:
+									pi[0] = width * (width*3)
+									x += 1
+								if y == 0:
+									while x < width:
+										pi[y*width+x] = width * 3
+										x += 1
+								else:
+									if (x == 0): pi[y*width+x] = width + (width-x)
+									else: pi[y*width+x] = width-y
 			if index == 2 or index == 3:
 				pi = [(length+1) - i for i in range(1,length+1)]
 			if index == 4 or index == 5:
@@ -183,12 +199,23 @@ class Environment:
 				for i in range(0,mid):
 					pi[i] = mid - i
 				if length % 2 == 1:
-					pi[mid] = 1
+					pi[mid] = length
 					mid += 1
 				for i in range(mid,length):
 					pi[i] = i+1
-				rho = 2
-			if not index in [1,2,3,4,5,6,8]:
+				rho = 2.5
+			if index == 9:
+				j = 1
+				for i in range(0,length):
+					pi[i] = abs(floor(length/2) - (floor((j-1)/2)))
+					if i < length-1:
+						i += 1
+						pi[i] = abs(floor(length/2) - (floor((j-1)/2)))
+					j+=1
+				if length % 2 == 1:
+					pi[length-1] = 1
+				shuffle(pi)
+			if not index in [1,2,3,4,5,6,8,9]:
 				pass
 			weightings.append((pi,rho,index))
 		return weightings
@@ -267,7 +294,7 @@ class Environment:
 
 	def expand(self,function,decomposition=0):
 		if (decomposition==0):
-			self.createdTaquins = 0
+			self.createdTaquins = 1
 			print("\n\n")
 			start = time.time()
 			print(("Heuristiques utilisées : {}").format(self.choices))
@@ -279,7 +306,7 @@ class Environment:
 			results = []
 			decomposition = self.weightings.copy()
 			for weighting in decomposition:
-				self.createdTaquins = 0
+				self.createdTaquins = 1
 				print("\n")
 				start = time.time()
 				print(("Heuristiques utilisées : {}").format(weighting[2]))

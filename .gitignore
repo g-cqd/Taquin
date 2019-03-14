@@ -122,3 +122,6 @@ dmypy.json
 *.out
 *.fls
 *.fdb_latexmk
+*.gz
+*.log
+*.aux

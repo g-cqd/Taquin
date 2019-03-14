@@ -79,18 +79,15 @@
 \end{figure}
 \paragraph{}{Sur le taquin ci-dessus, on a pour $\varepsilon{_E}(5)$:}
 \begin{itemize}
-	\item $x{_{\textrm{\scriptsize{\li{Etat initial}}}}5 = 1}$ \hspace{2cm} $x{_{\textrm{\scriptsize{\li{Etat Final}}}}5 = 2}$
-	\item $y{_{\textrm{\scriptsize{\li{Etat initial}}}}5 = 1}$ \hspace{2cm} $y{_{\textrm{\scriptsize{\li{Etat Final}}}}5 = 2}$
+\item $x{_{\textrm{\scriptsize{\li{Etat initial}}}}5 = 1}$ \hspace{2cm} $x{_{\textrm{\scriptsize{\li{Etat Final}}}}5 = 2}$
+\item $y{_{\textrm{\scriptsize{\li{Etat initial}}}}5 = 1}$ \hspace{2cm} $y{_{\textrm{\scriptsize{\li{Etat Final}}}}5 = 2}$
 \end{itemize}
 \paragraph{}{Donc $\varepsilon{_E}(5)=2$}
 \paragraph{}{Les cœfficients de normalisation correspondant sont pour une heuristique $i$:}
 \begin{itemize}
-	\item $\rho{_{i=1}} = \rho{_{i=3}} = \rho{_{i=5}} = 4$
-	\item $\rho{_{i=2}} = \rho{_{i=4}} = \rho{_{i=6}} = 1$
+\item $\rho{_{i=1}} = \rho{_{i=3}} = \rho{_{i=5}} = 4$
+\item $\rho{_{i=2}} = \rho{_{i=4}} = \rho{_{i=6}} = 1$
 \end{itemize}
-
-
-
 \paragraph{}{Compte tenu du choix effectué sur la définition d’un état pour un taquin de largeur 3:}
 \paragraph{A l’état initial:}
 \begin{itemize}
@@ -117,7 +114,6 @@
 \item [{\ttfamily\bfseries f} =] {\ttfamily 142}
 \end{enumerate}
 \end{itemize}
-
 \paragraph{A l’état final:}
 \begin{itemize}
 \item Taquin Final:
@@ -135,29 +131,23 @@
 \item [{\ttfamily\bfseries f} =] {\ttfamily g}
 \end{enumerate}
 \end{itemize}
-
 \subsection{Définition d’une action}
 \paragraph{}{Une fois les états définis, il faut désormais s’intéresser aux actions. Une action dans ce problème est le déplacement d’une tuile, qui consiste en l'inversion de sa position avec celle du vide.}
 \paragraph{}{Seule les tuiles qui jouxtent le vide sont candidates à ces déplacements et une tuiles qui vient d'être déplacée ne revient pas au coup d'après à sa position précédente pour éviter la possibilité de créer un cycle et ainsi accélerer le parcours des états. Ainsi on peut en tirer les conclusions suivantes:}
 \begin{itemize}
-	\item Si la tuile vide se trouve à l'interieur du taquin à l'état initial, il y 4 coups possibles.
-	\item Si la tuile vide se trouve sur un bord du taquin (mais pas dans un coin) du taquin à l'état initial, il y 3 coups possibles.
-	\item Si la tuile vide se trouve dans un coin du taquin à l'état initial, il y 2 coups possibles.
-	\item En revanche, si l'état actuel n'est pas l'état initial, il faut retirer 1 coup à chacunes des valeurs précédentes.
+\item Si la tuile vide se trouve à l'interieur du taquin à l'état initial, il y 4 coups possibles.
+\item Si la tuile vide se trouve sur un bord du taquin (mais pas dans un coin) du taquin à l'état initial, il y 3 coups possibles.
+\item Si la tuile vide se trouve dans un coin du taquin à l'état initial, il y 2 coups possibles.
+\item En revanche, si l'état actuel n'est pas l'état initial, il faut retirer 1 coup à chacunes des valeurs précédentes.
 \end{itemize}
-
 \subsection{Définition de l'agent}
 \paragraph{}{Il s'agit ici d'agents à réflèxes simples: les agents agissent en tenant compte du dernier percept uniquement. Nous allons donc utiliser de règles de type $\textrm{action} \Longrightarrow \textrm{condition}$}.
-
-
 \subsection{Choix de l’algorithme}
 \paragraph{}{Après avoir défini les états et les actions, nous nous intéressons à la stratégie utilisée par l’algorithme de recherche ${A*}$ dans le but de trouver une séquence d’actions permettant d’atteindre l’état du but à partir de l’état initial.}
 \paragraph{}{La stratégie adoptée par l’algorithme consiste en la construction d'un arbre de recherche et d’y rechercher la solution. Dans ce sens, ${A*}$ va utiliser une fonction d'évaluation basée sur des heuristiques sur chaque nœud de l'arbre afin d’estimer le meilleur chemin à emprunter et d'en visiter les nœuds enfants, triés grâce à cette fonction d'évaluation.}
 \paragraph{}{Le principe repose sur le fait qu'à chaque itération, on tente de se rapprocher de la destination, c’est pourquoi on privilégie les états directement les plus proches de la destination en mettant de côté tous les autres.}
 \paragraph{}{Tous les états ne permettant pas de se rapprocher de la destination sont éloignés et placés plus loin dans la file d'éxécution. Les états parcourus sont placés dans une liste des états explorés de manière à vérifier que le chemin actuellement emprunté est plus performant que celui stocké dans la liste.}
 \paragraph{}{Si cela s'avérait être le contraire, alors l'exploration actuelle s'arreterait pour passer à l'exploration d'un autre chemin. Ainsi, on est sûr d'emprunter un chemin minimal pour les heuristiques choisies et d'éviter d'explorer à nouveau un même nœud mais de coût plus élevé. C'est l'association de ces différents principes qui assure la complétude de l'algorithme.}
-
-
 \subsection{Implémentation de $A*$}
 \paragraph{}{Le problème majeur de $A*$ est sa complexité exponentielle en espace mémoire. Tous les états créés sont conservés ce qui peut, selon les dimensions et l'état initial du taquin, rapidement saturer la mémoire de l'ordinateur, même avec grandes capacités de mémoire actuelles.}
 \paragraph{}{Par conséquent, nous nous sommes , lors de la réalisation de notre programme, à la réduction du nombre d’états et à une bonne gestion de ces derniers. En ce sens, nous avons pensé judicieux d'appliquer quelques optimisations:}

@@ -196,12 +196,13 @@ class Environment:
 
 
 	def aStar(self):
-		print(self.moves[-1])
+		explored = dict()
 		queue = OrderedDict()
 		queue[self.moves[-1].f] = [self.moves[-1]]
 		while (True):
 			k = list(queue.keys())[0]
 			shouldBeExpanded = queue[k][0]
+			explored[str(queue[k][0].sequence)] = queue[k][0]
 			del queue[k][0]
 			if queue[k] == []: del queue[k]
 			children = shouldBeExpanded.children()
@@ -210,8 +211,13 @@ class Environment:
 				self.end.append(children)
 				return self.end[-1]
 			else:
+
 				for child in children :
-					if(child.f in queue): queue[child.f].append(child)
+					if(str(child.sequence)in explored):
+						if(explored[str(child.sequence)].f<child.f):
+							del child
+						else: del explored[str(child.sequence)]
+					elif(child.f in queue): queue[child.f].append(child)
 					else: queue[child.f] = [child]
 				queue = OrderedDict( sorted( queue.items(), key=lambda t: t[0]))
 
@@ -284,8 +290,8 @@ class Environment:
 
 
 
-"""
-class __main__:
+
+"""class __main__:
 	width = int(input(">>> Taille du taquin ?\n>>> "))
 	choices = str(input(">>> Heuristiques ?\n>>> Entrez les numéros séparés par des espaces.\n>>> "))
 	decomposition = 0
@@ -295,6 +301,7 @@ class __main__:
 		for index,choice in enumerate(choices): choices[index] = int(choice)
 		decomposition = int(input(">>> Voulez-vous associer les heuristiques [0] ou dissocier les exécutions [1] ?\n>>> "))
 	a = Environment(width,choices)
+	a.expand(a.aStar,0)
 	while(a.moves[-1].h != 0):
 		print(a.moves[-1])
 		move = "_"
@@ -303,7 +310,6 @@ class __main__:
 		if move in a.moves[-1].moves:
 			a.play(move)
 		elif move == "E":
-#			a.expand(a.aStar,decomposition)
+			a.expand(a.aStar,decomposition)
 			a.expand(a.charlotte,decomposition)
-			exit(0)
-"""
+			exit(0)"""

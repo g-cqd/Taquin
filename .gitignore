@@ -116,4 +116,9 @@ dmypy.json
 # Pyre type checker
 .pyre/
 *.aux
-.DS_Store
+*.synctex.gz
+*.log
+*.vscodeLog
+*.out
+*.fls
+*.fdb_latexmk

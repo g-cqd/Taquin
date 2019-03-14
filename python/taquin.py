@@ -164,10 +164,10 @@ class Environment:
 									x += 1
 								if y == 0:
 									while x < width:
-										pi[y*width+x] = width * 3
+										pi[x] = width * 3
 										x += 1
 								else:
-									if (x == 0): pi[y*width+x] = width + (width-x)
+									if (x == 0): pi[y*width] = width*2
 									else: pi[y*width+x] = width-y
 			if index == 2 or index == 3:
 				pi = [(length+1) - i for i in range(1,length+1)]

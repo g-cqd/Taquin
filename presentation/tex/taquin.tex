@@ -151,10 +151,15 @@
 \subsection{Implémentation de $A*$}
 \paragraph{}{Le problème majeur de $A*$ est sa complexité exponentielle en espace mémoire. Tous les états créés sont conservés ce qui peut, selon les dimensions et l'état initial du taquin, rapidement saturer la mémoire de l'ordinateur, même avec grandes capacités de mémoire actuelles.}
 \paragraph{}{Par conséquent, nous nous sommes , lors de la réalisation de notre programme, à la réduction du nombre d’états et à une bonne gestion de ces derniers. En ce sens, nous avons pensé judicieux d'appliquer quelques optimisations:}
-\paragraph{Améliorer l'estimation de la distance de Manhattan}{en tenant compte des conflits linéaires. L'idée est la suivante: si deux tuiles se situent sur la même ligne (respectivement même colonne), et si leurs positions sont inversées par rapport à celles souhaitées, alors l'une d'elle devra nécessairement quitter temporairement cette ligne (respectivement colonne).}
-\paragraph{}{La distance de Manhattan ne prend pas cela en compte, et on peut donc lui ajouter 2 sans risque de surestimer la distance réelle. Dans certaines positions, il existe plusieurs conflits de la sorte, et on peut donc ainsi obtenir une estimation de distance nettement plus précise que la distance de Manhattan.}
-\paragraph{}{Explorer un sommet coûte alors plus cher en temps, puisque le calcul de distance devient plus complexe. En contrepartie, le nombre de sommets à explorer diminue de façon importante, ce qui permet des gains importants en pratique.}
-\paragraph{Utiliser un dictionnaire ordonné afin de gérer la frontière} {en plus du dictionnaire utilisé pour les états explorés.}
+
+%\paragraph{Améliorer l'estimation de la distance de Manhattan}{en tenant compte des conflits linéaires. L'idée est la suivante: si deux tuiles se situent sur la même ligne (respectivement même colonne), et si leurs positions sont inversées par rapport à celles souhaitées, alors l'une d'elle devra nécessairement quitter temporairement cette ligne (respectivement colonne).}
+%\paragraph{}{La distance de Manhattan ne prend pas cela en compte, et on peut donc lui ajouter 2 sans risque de surestimer la distance réelle. Dans certaines positions, il existe plusieurs conflits de la sorte, et on peut donc ainsi obtenir une estimation de distance nettement plus précise que la distance de Manhattan.}
+%\paragraph{}{Explorer un sommet coûte alors plus cher en temps, puisque le calcul de distance devient plus complexe. En contrepartie, le nombre de sommets à explorer diminue de façon importante, ce qui permet des gains importants en pratique."""}
+\paragraph{Utiliser un dictionnaire ordonné afin de gérer la frontière} : la frontière 
+peut comporter énormément d'états. C'est pour cela qu'il convient de classer ces états afin d'en permettre une meilleure gestion. Un dictionnaire ordonné en fonction d'une clef (la fonction d'évaluation f dans le cas présent) nous a paru le plus adapté. En effet, cela nous permet d'éviter de parcourir la liste des états dans le but d'expanser celui possédant le f le plus petit. Grâce à cette structure, nous expansons uniquement l'état présent en premier dans le dictionnaire.
+\paragraph{Utiliser un dictionnaire pour les états explorés}: afin d'augmenter le temps de traitement et diminuer les expansions, il parait judicieux de supprimer les états redondants inutiles. Les états redondants sont caractérisés par une séquence similaire mais un f différent. Ici, l'état qui va nous intéresser pour une même séquence est l'état possédant un f le plus petit possible. 
+C'est pourquoi notre dictionnaire va prendre en clef la séquence (transformée en chaîne de caractères)
+
 
 
 \part{Etude Expérimentale}

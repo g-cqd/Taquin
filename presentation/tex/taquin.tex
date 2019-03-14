@@ -158,11 +158,36 @@
 \paragraph{Utiliser un dictionnaire ordonné afin de gérer la frontière}{En effet, la frontière peut comporter énormément d'états. C'est pour cela qu'il convient de trier ces états afin d'en permettre une meilleure gestion. Un dictionnaire ordonné en fonction d'une clef (la fonction d'évaluation f dans le cas présent) nous a paru le plus adapté. Cela nous permet d'éviter de parcourir la liste des états dans le but d'expanser celui possédant le f le plus petit. Grâce à cette structure, nous expansons uniquement l'état présent en premier dans le dictionnaire.}
 \paragraph{Utiliser un dictionnaire pour les états explorés}{Afin de réduire le temps de traitement et diminuer les expansions, il parait logique de supprimer les états redondants et par conséquent inutiles. Ce que nous désignons par états redondants, sont en fait les états caractérisés par une séquence similaire mais un f différent. Ici, l'état qui va nous intéresser pour une même séquence est l'état possédant un f le plus petit possible.}
 \paragraph{}{C'est pourquoi notre dictionnaire va ordonner les états en fonction de la séquence (transformée en chaîne de caractères). Après la création des nœuds, nous vérifions que leur séquence n'est pas similaire à celle d'un état présent dans les états explorés. Si c'est le cas : nous regardons le f. Si le f de l'enfant est supérieur à celui de l'état exploré, nous supprimons l'enfant.}
-\paragraph{}{C'est pourquoi notre dictionnaire va prendre en clef la séquence (transformée en chaîne de caractères). Sinon, nous supprimons le l'état présent dans les états explorés. De même, lorsque nous expansons un état, nous l'ajoutons dans la liste des états explorés. Cette structure de donnée nous permet en outre d'optimiser le temps de recherche d'un état exploré.}
+\paragraph{}{Dans cette optique, notre dictionnaire va prendre en clef la séquence (transformée en chaîne de caractères). Sinon, nous supprimons le l'état présent dans les états explorés. De même, lorsque nous expansons un état, nous l'ajoutons dans la liste des états explorés. Cette structure de donnée nous permet en outre d'optimiser le temps de recherche d'un état exploré.}
 
 
 
 \part{Etude Expérimentale}
+\paragraph{Comparaison des heuristiques}{Dans un premier temps, nous allons nous attacher à comparer les différentes heuristiques utilisées dans le but de résoudre ce problème.}
+\paragraph{}{En ce sens, nous avons éxécuté 10 fois le programme en utilisant chaque heuristique afin de collecter des informations relatives au temps d'execution du programme, le nombre d'états créés, et l'optimalité de la solution: }
+{\scriptsize\addfontfeatures{Numbers=Tabular}
+\renewcommand{\arraystretch}{1.3}
+\vspace*{1cm}
+\begin{figure}[h!]
+\centering
+\begin{tabular}
+{| c || p{2,5cm} | p{3cm} | p{3cm} | p{3cm} |} \hline \textbf{ } & \textbf{Temps moyen d'exécution en secondes }&
+ \textbf{Nombre moyen d'états créés} & \textbf{Ecart moyen à la solution optimale} &
+  \textbf{Taux d'optimalité} \\ \hline \hline
+\textbf{H1} & 0,026284623 & 623,7 & 5,2 & $\frac{1}{5}$ \\ \hline
+\textbf{H2} & 0,017823386 & 450,3 & 9,2 & $\frac{1}{5}$   \\ \hline
+\textbf{H3}& 0,049105382 & 1524 & 0,6 & $\frac{2}{3}$ \\ \hline
+\textbf{H4} & 0,014410663 & 410,7 & 8,8 & $\frac{1}{5}$ \\ \hline
+\textbf{H5} & 0,042847085 & 1341,7 & 0,6 & $\frac{2}{3}$  \\ \hline
+\textbf{H6} & 0,087112284 & 2830,6 & 0 & 1  \\ \hline
+\textbf{Taux de désordre} & 1,199918461 & 36088,5 & 0& 1 \\ \hline
+\end{tabular}
 
+\end{figure} \vspace*{1cm}}
+\paragraph{}{Nous remarquons donc que H4 présente le temps d'exécution moyen, et un nombre d'état créé le plus faible cependant elle ne renvoie un résultat optimal qu'une fois sur 5 exécutions.}
+
+\paragraph{}{Au contraire, les heuristiques H6 et Taux de désordre renvoient à chaque exécution un résultat optimal mais leurs temps d'exécution se classent parmis les plus élevés.}
+
+\paragraph{}{Cette étude soulève donc une question importante : doit-on privilégier la rapidité d'un programme au détriment de son optimalité? Ou au contraire primer un résultat minimal?}
 
 \end{document}

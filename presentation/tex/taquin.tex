@@ -1,77 +1,173 @@
 \documentclass[10pt,a4paper]{report}
-
 \usepackage{style}
-
 \title{\Huge{\textbf{Le Taquin}}}
 \author{Mélanie MARQUES \& Guillaume COQUARD}
 \date{Rendu le 18 mars 2019}
-
 \begin{document}
-
 \begin{titlepage}
 \maketitle
 \end{titlepage}
-
-
 \part{Etude Théorique}
-
 \section{Le Problème du Taquin}
-
 \paragraph{} {Un taquin ${n \times n}$ est un puzzle carré, d'une largeur ${l}$ et d'une taille ${t}$, telles que ${l = n}$, ${t = n \times n}$, composé de ${t - 1}$ tuiles numérotées de 1 à ${t}$ et d’un trou.}
-
 \begin{figure}[!h]
 \centering
 \includegraphics[keepaspectratio=true,width=10cm]{./inc/media/presentation_twoTaquins.pdf}
 \caption{Un départ possible et l'arrivée voulue}
 \label{presentationTwoTaquins}
 \end{figure}
-
 \paragraph{} {Les tuiles ne peuvent se déplacer que par glissement dans la seule case vide à un moment donné. Le jeu consiste à replacer les tuiles dans l’ordre numérique. Ainsi, par le biais de ce projet, nous allons donc, à l'aide du langage de programmation {\ttfamily Python}, développer ce jeu et répondre aux deux questions suivantes: Quelle est la séquence minimale de mouvements à faire sur un taquin pour obtenir la solution? Comment trouver cette séquence?}
-
 \section{Etude du cas général}
-
 \paragraph{}{Pour ce faire, nous détaillerons dans cette partie l’algorithme ${A*}$, prononcer A star, utilisé pour résoudre le problème, la définition des états et des actions que l’agent pourra réaliser dans chaque état puis nous aborderons spécifiquement la stratégie de recherche utilisée par l’algorithme dans le but d'obtenir une solution optimale.}
-
 \subsection{Définition d’un état}
-
 \paragraph{}{Afin de suivre précisément l’évolution de la résolution du problème, il convient de formaliser tout d’abord ce qu'est un état, et l'environnement dans lequel il évolue. Ainsi, par l'intermédiaire de la programmation orientée objet, nous pouvons définir l'environnement et les états par les attributs suivants:}
-
 \paragraph{Environnement}
 \begin{enumerate}
-	\item [{\ttfamily\bfseries sizes}:] {les dimensions du taquin, largeur et taille}
-	\item [{\ttfamily\bfseries choices}:] {les heuristiques choisies pour une exécution, soient les identifiants de chaque pondération ou de l'heuristique de la Mauvaise Place par exemple}
-	\item [{\ttfamily\bfseries weightings}:] {les pondérations utilisées pour une exécution}
-	\item [{\ttfamily\bfseries moves}:] {l'historique des coups joués par l'utilisateur}
-	\item [{\ttfamily\bfseries end}:] {la solution trouvée par l'algorithme}
+\item [{\ttfamily\bfseries sizes}:] {les dimensions du taquin, largeur et taille}
+\item [{\ttfamily\bfseries choices}:] {les heuristiques choisies pour une exécution, soient les identifiants de chaque pondération ou de l'heuristique de la Mauvaise Place par exemple}
+\item [{\ttfamily\bfseries weightings}:] {les pondérations utilisées pour une exécution}
+\item [{\ttfamily\bfseries moves}:] {l'historique des coups joués par l'utilisateur}
+\item [{\ttfamily\bfseries end}:] {la solution trouvée par l'algorithme}
 \end{enumerate}
 \paragraph{Taquin}
 \begin{enumerate}
-	\item [{\ttfamily\bfseries environment}:] {l'environnement dans lequel évolue l’état}
-	\item [{\ttfamily\bfseries previous}:] {la référence au taquin précédent – parent}
-	\item [{\ttfamily\bfseries sequence}:] {l'ordre des tuiles dans le taquin, représenté par une liste, le vide vaut ${0}$; à l'état initial la {\ttfamily sequence} est une liste remplie aléatoirement}
-	\item [{\ttfamily\bfseries inv}:] {le nombre d'inversions,  c’est-à-dire, le nombre de fois pour chaque élément de la {\ttfamily sequence}  où celui-ci est plus grand que chacun des éléments suivants}
-	\item [{\ttfamily\bfseries dis}:] {l'abréviation de l'anglais {\em disorder}, désordre, soit le nombre de tuiles qui ne sont pas à la place occupée dans l'état final}
-	\item [{\ttfamily\bfseries man}:] {la distance de Manhattan brute, n'ayant subie aucune pondération}
-	\item [{\ttfamily\bfseries path}:] {le chemin emprunté par l'algorithme pour atteindre l'état actuel, réprésenté par une suite de lettres: {\ttfamily\bfseries L} pour gauche (left), {\ttfamily\bfseries R} pour droite (right), {\ttfamily\bfseries U} pour haut (up) et {\ttfamily\bfseries D} pour bas (down)}
-	\item [{\ttfamily\bfseries moves}:] {la liste des prochains coups possibles à partir de l'état actuel}
-	\item [{\ttfamily\bfseries h}:] {la somme des calculs de chaque heuristique utilisée}
-	\item [{\ttfamily\bfseries g}:] {le côut d'un chemin allant de l'état initial à l'état actuel représenté par un entier}
-	\item [{\ttfamily\bfseries f}:] {la fonction d'évaluation: ${f(n) = g(n) + h(n)}$ avec ${n}$ le taquin actuel}
+\item [{\ttfamily\bfseries environment}:] {l'environnement dans lequel évolue l’état}
+\item [{\ttfamily\bfseries previous}:] {la référence au taquin précédent – parent}
+\item [{\ttfamily\bfseries sequence}:] {l'ordre des tuiles dans le taquin, représenté par une liste, le vide vaut ${0}$; à l'état initial la {\ttfamily sequence} est une liste remplie aléatoirement}
+\item [{\ttfamily\bfseries inv}:] {le nombre d'inversions,  c’est-à-dire, le nombre de fois pour chaque élément de la {\ttfamily sequence}  où celui-ci est plus grand que chacun des éléments suivants}
+\item [{\ttfamily\bfseries dis}:] {l'abréviation de l'anglais {\em disorder}, désordre, soit le nombre de tuiles qui ne sont pas à la place occupée dans l'état final}
+\item [{\ttfamily\bfseries man}:] {la distance de Manhattan brute, n'ayant subie aucune pondération}
+\item [{\ttfamily\bfseries path}:] {le chemin emprunté par l'algorithme pour atteindre l'état actuel, réprésenté par une suite de lettres: {\ttfamily\bfseries L} pour gauche (left), {\ttfamily\bfseries R} pour droite (right), {\ttfamily\bfseries U} pour haut (up) et {\ttfamily\bfseries D} pour bas (down)}
+\item [{\ttfamily\bfseries moves}:] {la liste des prochains coups possibles à partir de l'état actuel}
+\item [{\ttfamily\bfseries h}:] {la somme des calculs de chaque heuristique utilisée}
+\item [{\ttfamily\bfseries g}:] {le côut d'un chemin allant de l'état initial à l'état actuel représenté par un entier}
+\item [{\ttfamily\bfseries f}:] {la fonction d'évaluation: ${f(n) = g(n) + h(n)}$ avec ${n}$ le taquin actuel}
 \end{enumerate}
-
 \subsection{Détail des heuristiques}
-
 \paragraph{} {Dans le cadre de l'utilisation de l'algorithme ${A*}$, le choix d'heuristiques est nécessaire. De fait, nous aurons recours à 7 heuristiques, surestimant la longueur du chemin à parcourir pour atteindre l'état final. Les 6 premières sont des distances dérivées de la distance de Manhattan, correspondant aux heuristiques {\bfseries H.1}, {\bfseries H.2}, {\bfseries H.3}, {\bfseries H.4}, {\bfseries H.5}, {\bfseries H.6} et pondérées par les jeux de poids suivants:}
 {\scriptsize\addfontfeatures{Numbers=Tabular}
 \renewcommand{\arraystretch}{1.3}
-\begin{center}
-	\begin{tabular}
-		{| c || c | c | c | c | c | c | c |} \hline & \textbf{1} & \textbf{2} & \textbf{3} & \textbf{4} & \textbf{5} & \textbf{6} & \textbf{7} & \textbf{8} \\
+\vspace*{1cm}
+\begin{figure}[h!]
+\centering
+\begin{tabular}
+{| c || c | c | c | c | c | c | c | c |} \hline \textbf{ } & \textbf{1} & \textbf{2} & \textbf{3} & \textbf{4} & \textbf{5} & \textbf{6} & \textbf{7} & \textbf{8} \\ \hline \hline
+π\textsubscript{1} & 36 & 12 & 12 & 4 & 1 & 1 & 4 & 1  \\ \hline
+π\textsubscript{2} = π\textsubscript{3} & 8 & 7 & 6 & 5 & 4 & 3 & 2 & 1 \\ \hline
+π\textsubscript{4} = π\textsubscript{5} & 8 & 7 & 6 & 5 & 3 & 2 & 4 & 1 \\ \hline
+π\textsubscript{6} & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 \\ \hline
+\end{tabular}
+\caption{Tableau des pondérations des distances de Manhattan}
+\label{ponderations}
+\end{figure} \vspace*{1cm}}
+\paragraph{}{A partir de ces pondérations nous pouvons calculer une distance de Manhattan grâce à la formule suivante:}
+\begin{figure}[h!]
+\centering
+\[{h}_{k}({E})=\Bigg({\sum_{i=1}^{8}}\pi _{k}(i) \times \varepsilon _{E}(i)\Bigg) \quad \textrm{div} \quad \rho _{k}\]
+\label{calculponderations}
+\end{figure}
+\paragraph{}{$\varepsilon _{E}(i)$ correspond au nombre de déplacements élémentaires nécessaire pour déplacer la tuile de numéro $i$ de sa position initiale à sa position dans l'état final. On calcule ce nombre grâce à la formule suivante:}
+\begin{figure}[h!]
+\centering
+\[d(A,B)=|X{_B} - X{_A}| + |Y{_B}-Y{_A}|\]
+\label{calculdistanceelementaire}
+\end{figure}
+\begin{figure}[!h]
+\centering
+\includegraphics[keepaspectratio=true,width=5cm]{./inc/media/example_1.pdf}
+\label{exampleTaquin}
+\end{figure}
+\paragraph{}{Sur le taquin ci-dessus, on a pour $\varepsilon{_E}(5)$:}
+\begin{itemize}
+	\item $x{_{\textrm{\scriptsize{\li{Etat initial}}}}5 = 1}$ \hspace{2cm} $x{_{\textrm{\scriptsize{\li{Etat Final}}}}5 = 2}$
+	\item $y{_{\textrm{\scriptsize{\li{Etat initial}}}}5 = 1}$ \hspace{2cm} $y{_{\textrm{\scriptsize{\li{Etat Final}}}}5 = 2}$
+\end{itemize}
+\paragraph{}{Donc $\varepsilon{_E}(5)=2$}
+\paragraph{}{Les cœfficients de normalisation correspondant sont pour une heuristique $i$:}
+\begin{itemize}
+	\item $\rho{_{i=1}} = \rho{_{i=3}} = \rho{_{i=5}} = 4$
+	\item $\rho{_{i=2}} = \rho{_{i=4}} = \rho{_{i=6}} = 1$
+\end{itemize}
 
-		\hline
-	\end{tabular}
-\end{center}}
 
+
+\paragraph{}{Compte tenu du choix effectué sur la définition d’un état pour un taquin de largeur 3:}
+\paragraph{A l’état initial:}
+\begin{itemize}
+\item Environnement:
+\begin{enumerate}
+\item [{\ttfamily\bfseries sizes} =] {\ttfamily [3, 9]}
+\item [{\ttfamily\bfseries choices} =] {\ttfamily [1, 2, 3, 4, 5, 6]}
+\item [{\ttfamily\bfseries weightings} =] {\color{gray}{\em Une liste des jeux de pondérations choisis}}
+\item [{\ttfamily\bfseries moves} =] {\ttfamily [Taquin Initial]}
+\item [{\ttfamily\bfseries end} =] {\ttfamily []}
+\end{enumerate}
+\item Taquin Initial:
+\begin{enumerate}
+\item [{\ttfamily\bfseries environment} =] {\color{gray}{\em L'environnement ci-dessus}}
+\item [{\ttfamily\bfseries previous} =] {\ttfamily None}
+\item [{\ttfamily\bfseries sequence} =] {\ttfamily [4, 6, 2, 1, 3, 5, 0, 7, 8]} {\color{gray}{\em Une liste générée aléatoirement et valide}}
+\item [{\ttfamily\bfseries inv} =] {\ttfamily 8}
+\item [{\ttfamily\bfseries dis} =] {\ttfamily 8}
+\item [{\ttfamily\bfseries man} =] {\ttfamily 10}
+\item [{\ttfamily\bfseries path} =] {\ttfamily ""}
+\item [{\ttfamily\bfseries moves} =] {\ttfamily ["L", "D"]}
+\item [{\ttfamily\bfseries h} =] {\ttfamily 142}
+\item [{\ttfamily\bfseries g} =] {\ttfamily 0}
+\item [{\ttfamily\bfseries f} =] {\ttfamily 142}
+\end{enumerate}
+\end{itemize}
+
+\paragraph{A l’état final:}
+\begin{itemize}
+\item Taquin Final:
+\begin{enumerate}
+\item [{\ttfamily\bfseries environment} =] {\color{gray}{\em L'environnement est toujours le même, seul l'état final est ajouté à la liste \ttfamily end}}
+\item [{\ttfamily\bfseries previous} =] {\color{gray}{\em L'avant-dernier état}}
+\item [{\ttfamily\bfseries sequence} =] {\ttfamily [1, 2, 3, 4, 5, 6, 7, 8, 0]}
+\item [{\ttfamily\bfseries inv} =] {\ttfamily 0}
+\item [{\ttfamily\bfseries dis} =] {\ttfamily 0}
+\item [{\ttfamily\bfseries man} =] {\ttfamily 0}
+\item [{\ttfamily\bfseries path} =] {\color{gray}{\em Le chemin minimal depuis l'état initial jusqu'à cet état}}
+\item [{\ttfamily\bfseries moves} =] {\ttfamily ["R"]}
+\item [{\ttfamily\bfseries h} =] {\ttfamily 0}
+\item [{\ttfamily\bfseries g} =] {\color{gray}{\em La longueur du chemin minimal}}
+\item [{\ttfamily\bfseries f} =] {\ttfamily g}
+\end{enumerate}
+\end{itemize}
+
+\subsection{Définition d’une action}
+\paragraph{}{Une fois les états définis, il faut désormais s’intéresser aux actions. Une action dans ce problème est le déplacement d’une tuile, qui consiste en l'inversion de sa position avec celle du vide.}
+\paragraph{}{Seule les tuiles qui jouxtent le vide sont candidates à ces déplacements et une tuiles qui vient d'être déplacée ne revient pas au coup d'après à sa position précédente pour éviter la possibilité de créer un cycle et ainsi accélerer le parcours des états. Ainsi on peut en tirer les conclusions suivantes:}
+\begin{itemize}
+	\item Si la tuile vide se trouve à l'interieur du taquin à l'état initial, il y 4 coups possibles.
+	\item Si la tuile vide se trouve sur un bord du taquin (mais pas dans un coin) du taquin à l'état initial, il y 3 coups possibles.
+	\item Si la tuile vide se trouve dans un coin du taquin à l'état initial, il y 2 coups possibles.
+	\item En revanche, si l'état actuel n'est pas l'état initial, il faut retirer 1 coup à chacunes des valeurs précédentes.
+\end{itemize}
+
+\subsection{Définition de l'agent}
+\paragraph{}{Il s'agit ici d'agents à réflèxes simples: les agents agissent en tenant compte du dernier percept uniquement. Nous allons donc utiliser de règles de type $\textrm{action} \Longrightarrow \textrm{condition}$}.
+
+
+\subsection{Choix de l’algorithme}
+\paragraph{}{Après avoir défini les états et les actions, nous nous intéressons à la stratégie utilisée par l’algorithme de recherche ${A*}$ dans le but de trouver une séquence d’actions permettant d’atteindre l’état du but à partir de l’état initial.}
+\paragraph{}{La stratégie adoptée par l’algorithme consiste en la construction d'un arbre de recherche et d’y rechercher la solution. Dans ce sens, ${A*}$ va utiliser une fonction d'évaluation basée sur des heuristiques sur chaque nœud de l'arbre afin d’estimer le meilleur chemin à emprunter et d'en visiter les nœuds enfants, triés grâce à cette fonction d'évaluation.}
+\paragraph{}{Le principe repose sur le fait qu'à chaque itération, on tente de se rapprocher de la destination, c’est pourquoi on privilégie les états directement les plus proches de la destination en mettant de côté tous les autres.}
+\paragraph{}{Tous les états ne permettant pas de se rapprocher de la destination sont éloignés et placés plus loin dans la file d'éxécution. Les états parcourus sont placés dans une liste des états explorés de manière à vérifier que le chemin actuellement emprunté est plus performant que celui stocké dans la liste.}
+\paragraph{}{Si cela s'avérait être le contraire, alors l'exploration actuelle s'arreterait pour passer à l'exploration d'un autre chemin. Ainsi, on est sûr d'emprunter un chemin minimal pour les heuristiques choisies et d'éviter d'explorer à nouveau un même nœud mais de coût plus élevé. C'est l'association de ces différents principes qui assure la complétude de l'algorithme.}
+
+
+\subsection{Implémentation de $A*$}
+\paragraph{}{Le problème majeur de $A*$ est sa complexité exponentielle en espace mémoire. Tous les états créés sont conservés ce qui peut, selon les dimensions et l'état initial du taquin, rapidement saturer la mémoire de l'ordinateur, même avec grandes capacités de mémoire actuelles.}
+\paragraph{}{Par conséquent, nous nous sommes , lors de la réalisation de notre programme, à la réduction du nombre d’états et à une bonne gestion de ces derniers. En ce sens, nous avons pensé judicieux d'appliquer quelques optimisations:}
+\paragraph{Améliorer l'estimation de la distance de Manhattan}{en tenant compte des conflits linéaires. L'idée est la suivante: si deux tuiles se situent sur la même ligne (respectivement même colonne), et si leurs positions sont inversées par rapport à celles souhaitées, alors l'une d'elle devra nécessairement quitter temporairement cette ligne (respectivement colonne).}
+\paragraph{}{La distance de Manhattan ne prend pas cela en compte, et on peut donc lui ajouter 2 sans risque de surestimer la distance réelle. Dans certaines positions, il existe plusieurs conflits de la sorte, et on peut donc ainsi obtenir une estimation de distance nettement plus précise que la distance de Manhattan.}
+\paragraph{}{Explorer un sommet coûte alors plus cher en temps, puisque le calcul de distance devient plus complexe. En contrepartie, le nombre de sommets à explorer diminue de façon importante, ce qui permet des gains importants en pratique.}
+\paragraph{Utiliser un dictionnaire ordonné afin de gérer la frontière} {en plus du dictionnaire utilisé pour les états explorés.}
+
+
+\part{Etude Expérimentale}
 
 
 \end{document}

@@ -7,7 +7,7 @@
 \begin{titlepage}
 \maketitle
 \end{titlepage}
-\part{Etude Théorique}
+\chapter{Etude Théorique}
 \section{Le Problème du Taquin}
 \paragraph{} {Un taquin ${n \times n}$ est un puzzle carré, d'une largeur ${l}$ et d'une taille ${t}$, telles que ${l = n}$, ${t = n \times n}$, composé de ${t - 1}$ tuiles numérotées de 1 à ${t}$ et d’un trou.}
 \begin{figure}[!h]
@@ -162,47 +162,58 @@
 
 
 
-\part{Etude Expérimentale}
-\textbf{TAQUINS 3*3}
-\paragraph{}{Dans cette première partie nous allons nous intéresser aux performances de l'algorithme. Pour cela nous exécuterons le programme sur les taquins suivants (solvables et générés aléatoirement par une fonction de notre programme) : }
+\chapter{Etude Expérimentale}
+\section{TAQUINS 3*3}
+\paragraph{}{Dans cette première partie nous allons nous intéresser aux performances de l'algorithme. Pour cela nous exécuterons le programme sur les taquins suivants (solubles et générés aléatoirement par une fonction de notre programme): }
 \begin{itemize}
 \item \lbrack3, 4, 0, 7, 2, 1, 8, 6, 5\rbrack
-\item	\lbrack5, 4, 3, 0, 7, 1, 2, 6, 8\rbrack
-\item	\lbrack8, 4, 5, 7, 0, 6, 3, 1, 2\rbrack
+\item \lbrack5, 4, 3, 0, 7, 1, 2, 6, 8\rbrack
+\item \lbrack8, 4, 5, 7, 0, 6, 3, 1, 2\rbrack
 \item \lbrack0, 3, 8, 4, 6, 1, 7, 5, 2\rbrack
-\item	\lbrack6, 7, 5, 4, 8, 2, 0, 3, 1\rbrack
+\item \lbrack6, 7, 5, 4, 8, 2, 0, 3, 1\rbrack
 \item \lbrack6, 2, 5, 3, 4, 7, 1, 0, 8\rbrack
 \item \lbrack3, 6, 5, 0, 1, 4, 8, 2, 7\rbrack
 \item \lbrack3, 0, 6, 1, 8, 2, 5, 7, 4\rbrack
 \item \lbrack2, 5, 7, 0, 1, 6, 8, 3, 4\rbrack
 \item \lbrack0, 2, 8, 1, 4, 5, 6, 3, 7\rbrack
 \end{itemize}
+
 \paragraph{}{A partir de ces derniers, nous collecterons des informations relatives au temps d'exécution du programme, le nombre d'états créés, l'écart à la solution optimale ainsi que le taux d'optimalité (nombre de fois moyens où la solution renvoyée est minimale) le tout en faisant varier les heuristiques.}
+
 \paragraph{Comparaison des heuristiques individuellement}{Dans un premier temps, nous allons nous attacher à comparer les différentes heuristiques utilisées dans le but de résoudre ce problème.}
+\paragraph{}{En ce sens, nous avons éxécuté 10 fois le programme en utilisant chaque heuristique afin de collecter des informations relatives au temps d'execution du programme, le nombre d'états créés, et l'optimalité de la solution:}
 {\scriptsize\addfontfeatures{Numbers=Tabular}
 \renewcommand{\arraystretch}{1.3}
 \vspace*{1cm}
 \begin{figure}[h!]
 \centering
-\begin{tabular}
-{| c || p{2,5cm} | p{3cm} | p{3cm} | p{3cm} |} \hline \textbf{ } & \textbf{Temps moyen d'exécution en secondes }&
- \textbf{Nombre moyen d'états créés} & \textbf{Ecart moyen à la solution optimale} &
-  \textbf{Taux d'optimalité} \\ \hline \hline
-\textbf{H1} & 0,026284623 & 623,7 & 5,2 & $\frac{1}{5}$ \\ \hline
-\textbf{H2} & 0,017823386 & 450,3 & 9,2 & $\frac{1}{5}$   \\ \hline
-\textbf{H3}& 0,049105382 & 1524 & 0,6 & $\frac{2}{3}$ \\ \hline
-\textbf{H4} & 0,014410663 & 410,7 & 8,8 & $\frac{1}{5}$ \\ \hline
-\textbf{H5} & 0,042847085 & 1341,7 & 0,6 & $\frac{2}{3}$  \\ \hline
-\textbf{H6} & 0,087112284 & 2830,6 & 0 & 1  \\ \hline
-\textbf{Taux de désordre} & 1,199918461 & 36088,5 & 0& 1 \\ \hline
+\begin{tabular}{| c | c | c | c | c |} \hline
+\textbf{ } & \textbf{Temps} & \textbf{Etats créés} & \textbf{Ecart à la Solution} & \textbf{Optimalité} \\ \hline
+\textbf{H.1} & 26ms & 624 & 5,2 & ${\mathsf{\tfrac{1}{5}}}$ \\ \hline
+\textbf{H.2} & 18ms & 450 & 9,2 & ${\mathsf{\tfrac{1}{5}}}$ \\ \hline
+\textbf{H.3} & 49ms & 1524 & 0,6 & ${\mathsf{\tfrac{2}{3}}}$ \\ \hline
+\textbf{H.4} & 14ms & 411 & 8,8 & ${\mathsf{\tfrac{1}{5}}}$ \\ \hline
+\textbf{H.5} & 43ms & 1342 & 0,6 & ${\mathsf{\tfrac{2}{3}}}$ \\ \hline
+\textbf{H.6} & 87ms & 2831 & 0 & 1 \\ \hline
+\textbf{Désordre} & 1,2s & 36089 & 0 & 1 \\ \hline
 \end{tabular}
+\end{figure}
+\vspace*{1cm}
+}
 
-\end{figure} \vspace*{1cm}}
-\paragraph{}{Nous remarquons donc que H4 présente le temps d'exécution moyen, et un nombre d'état créé le plus faible cependant elle ne renvoie un résultat optimal qu'une fois sur 5 exécutions.}
+% \textbf{H1} & 0,026284623 & 623,7 & 5,2 & $\frac{1}{5}$ \\ \hline
+% \textbf{H2} & 0,017823386 & 450,3 & 9,2 & $\frac{1}{5}$   \\ \hline
+% \textbf{H3}& 0,049105382 & 1524 & 0,6 & $\frac{2}{3}$ \\ \hline
+% \textbf{H4} & 0,014410663 & 410,7 & 8,8 & $\frac{1}{5}$ \\ \hline
+% \textbf{H5} & 0,042847085 & 1341,7 & 0,6 & $\frac{2}{3}$  \\ \hline
+% \textbf{H6} & 0,087112284 & 2830,6 & 0 & 1  \\ \hline
+% \textbf{Taux de désordre} & 1,199918461 & 36088,5 & 0& 1 \\ \hline
 
-\paragraph{}{Au contraire, les heuristiques H6 et Taux de désordre renvoient à chaque exécution un résultat optimal mais leurs temps d'exécution se classent parmis les plus élevés.}
+\paragraph{}{Nous remarquons donc que H.4 présente le temps d'exécution moyen, et un nombre d'état créé le plus faible cependant elle ne renvoie un résultat optimal qu'une exécution sur 5.}
 
-\paragraph{}{Cette étude soulève donc une question importante : doit-on privilégier la rapidité d'un programme au détriment de son optimalité? Ou au contraire primer un résultat minimal?}
+\paragraph{}{Au contraire, les heuristiques H.6 et Désordre renvoient à chaque exécution un résultat optimal mais leurs temps d'exécution se classent parmis les plus élevés.}
+
+\paragraph{}{Cette étude soulève donc une question importante : doit-on privilégier la rapidité d'un programme au détriment de son optimalité ou au contraire favoriser un résultat minimal?}
 
 \paragraph{}{En outre, nous pouvons remarquer que lorsque le coefficient de normalisation
 vaut 1, le temps moyen d'exécution ainsi que le nombre moyen d'états créés est plus faible 

@@ -194,6 +194,7 @@ class Environment:
 						j += width
 			if index == 6:
 				pi = [1] * length
+				rho = 1 / ((self.sizes[0] - 3) + 1)
 			if index == 8:
 				mid = floor(length/2)
 				for i in range(0,mid):
@@ -205,6 +206,7 @@ class Environment:
 					pi[i] = i+1
 				rho = 2.5
 			if index == 9:
+				rho = 2
 				j = 1
 				for i in range(0,length):
 					pi[i] = abs(floor(length/2) - (floor((j-1)/2)))
@@ -344,6 +346,6 @@ class __main__:
 		if move in a.moves[-1].moves:
 			a.play(move)
 		elif move == "E":"""
-	a.expand(a.aStar,decomposition)
-	#a.expand(a.idaStar,decomposition)
+	#a.expand(a.aStar,decomposition)
+	a.expand(a.idaStar,decomposition)
 	exit(0)

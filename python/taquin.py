@@ -62,9 +62,11 @@ class Taquin:
 					if weighting == weightings[0]: man += stepMan
 					stepH += weighting[0][k] * stepMan
 					k += 1
+
+			if weighting[2] == 7: stepH += dis
 			stepH = int(stepH / weighting[1])
-			if weighting[2] == 7: h += dis
-			else: h += stepH
+			h += stepH
+		h = int(h/len(weightings))
 		return [inv,dis,man,h]
 
 	def findMoves(self,flex=False):
@@ -195,6 +197,8 @@ class Environment:
 			if index == 6:
 				pi = [1] * length
 				rho = 1 / ((self.sizes[0] - 3) + 1)
+			if index == 7:
+				pass
 			if index == 8:
 				mid = floor(length/2)
 				for i in range(0,mid):
@@ -346,6 +350,6 @@ class __main__:
 		if move in a.moves[-1].moves:
 			a.play(move)
 		elif move == "E":"""
-	#a.expand(a.aStar,decomposition)
-	a.expand(a.idaStar,decomposition)
+	a.expand(a.aStar,decomposition)
+	#a.expand(a.idaStar,decomposition)
 	exit(0)

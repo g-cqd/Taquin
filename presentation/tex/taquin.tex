@@ -221,12 +221,15 @@ que pour un coefficient de normalisation valant 4. L'algorithme sous estime le c
 \textbf{H1 H2 H3 H4 H5 H6} & 0,077811193 & 747,6 & 23 & $\frac{1}{10}$ \\ \hline
 \textbf{H6 Taux de désordre} & 0,074782300 & 1753 & 0,6 & $\frac{7}{10}$   \\ \hline
 \textbf{H5 Taux de désordre}& 0,043249559 & 913,2 & 1,8 & $\frac{1}{2}$ \\ \hline
-\textbf{H2/H4}&0,032602048&656,8&12,4&$\frac{2}{10}$\\ \hline
-\textbf{H4/H6}&0,025508618&523,1&10,2&$\frac{2}{10}$\\ \hline
+\textbf{H2/H4}&0,032602048&656,8&12,4&$\frac{1}{5}$\\ \hline
 
 \end{tabular}
 
 \end{figure} \vspace*{1cm}}
-2 h les plus rapides : H2 et H4
-1h rapide 1 h opti
+\paragraph{}{Tout d'abord, nous pouvons noter que lors de l'utilisation simultanée de toutes les heuristiques, l'écart moyen à la solution est très élevé et le taux d'optimalité extrêmement faible. De plus le temps d'exécution moyen se classe parmi les plus élevés.}
+\paragraph{}{De plus, deux heuristiques intéressantes à combiner étaient la distance de Mahnattan avec une pondération de 1 ainsi que le taux de désordre.En effet, ces deux heuristiques optimales 10 fois sur 10 tentatives mais possédant un temps moyen et un nombre d'espace moyen très élevé séparément  se révèlent être des alliées redoutables lorsqu'elles sont mises en commun. En effet, leur écart moyen à la solution optimal est minime : 0,6 et leur taux d'optimalité acceptable :$\frac{7}{10}$. }
+
+\paragraph{}{De même, les heuristiques H5 et le taux de désordre combinés proposent de bonne performances au niveau du temps d'exécution et du nombre d'états moyen créés. Cependant l'écart moyen à la solution optimale est 3 fois supérieur à celui de H6 et Taux de désordre combinés. Le taux d'optimalité est par ailleurs faible : 1 fois sur 2.}
+
+\paragraph{}{Pour finir, nous avons tenté de combiner H2 ainsi que H4, les deux heuristiques qui séparées présentent les temps moyen ainsi que le nombre moyen d'états créés le plus faible.  Toutefois nous pouvons constater que mises ensemble ces dernières présentent des performances inférieures et un taux d'optimalité équivalent. }
 \end{document}

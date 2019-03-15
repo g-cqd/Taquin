@@ -1,4 +1,4 @@
-This is LuaTeX, Version 1.07.0 (TeX Live 2018)  (format=lualatex 2018.10.8)  15 MAR 2019 22:10
+This is LuaTeX, Version 1.07.0 (TeX Live 2018)  (format=lualatex 2018.10.8)  15 MAR 2019 22:43
  restricted system commands enabled.
 **taquin.tex
 (./taquin.tex
@@ -35,7 +35,7 @@ Inserting `luaotfload.aux.set_capheight' at position 3 in `luaotfload.patch_font
 '.
 Inserting `luaotfload.rewrite_fontname' at position 4 in `luaotfload.patch_font'
 .
-luaotfload | main : initialization completed in 0.089 seconds
+luaotfload | main : initialization completed in 0.090 seconds
 Babel <3.18> and hyphenation patterns for 1 language(s) loaded.
 (/usr/local/texlive/2018/texmf-dist/tex/latex/base/report.cls
 Document Class: report 2014/09/29 v1.4h Standard LaTeX document class
@@ -1420,32 +1420,32 @@ Underfull \hbox (badness 10000) in paragraph at lines 219--219
  []
 
 
-Overfull \hbox (75.27995pt too wide) in paragraph at lines 217--228
+Overfull \hbox (75.27995pt too wide) in paragraph at lines 217--227
  [][] 
  []
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 232.
-[10]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 232.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 235.
+[10] [11]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 235.
  (./taquin.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 232.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 232.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 235.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 235.
 Package rerunfilecheck Info: File `taquin.out' has not changed.
 (rerunfilecheck)             Checksum: 7CA32C6409B6BBBAB65DF0EB547B0FA3;701.
 
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 232.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 235.
 )
 
 Here is how much of LuaTeX's memory you used:
- 19133 strings out of 494413
- 100000,552014 words of node,token memory allocated
- 78034 words of node memory still in use:
-   4 hlist, 1 vlist, 1 rule, 52 glue, 1 penalty, 10365 glyph, 2010 attribute, 60
- glue_spec, 335 attribute_list, 1 write nodes
-   avail lists: 2:1071,3:143,4:81,5:257,6:49,7:1454,8:151,9:260,10:7,11:226
+ 19138 strings out of 494413
+ 125007,552014 words of node,token memory allocated
+ 86056 words of node memory still in use:
+   4 hlist, 1 vlist, 1 rule, 56 glue, 1 penalty, 11503 glyph, 2022 attribute, 60
+ glue_spec, 337 attribute_list, 1 write nodes
+   avail lists: 2:1057,3:143,4:81,5:287,6:49,7:2932,8:151,9:260,10:7,11:226
  22249 multiletter control sequences out of 65536+600000
  102 fonts using 27780423 bytes
  46i,13n,81p,695b,556s stack positions out of 5000i,500n,10000p,200000b,100000s
@@ -1460,10 +1460,10 @@ onts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2018/texmf-dist/font
 s/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2018/texmf-dist/fonts/t
 ype1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1
 /public/amsfonts/cm/cmsy10.pfb>
-Output written on taquin.pdf (11 pages, 216870 bytes).
+Output written on taquin.pdf (12 pages, 218644 bytes).
 
-PDF statistics: 257 PDF objects out of 1000 (max. 8388607)
- 201 compressed objects within 3 object streams
- 60 named destinations out of 1000 (max. 131072)
+PDF statistics: 266 PDF objects out of 1000 (max. 8388607)
+ 209 compressed objects within 3 object streams
+ 65 named destinations out of 1000 (max. 131072)
  81 words of extra memory for PDF output out of 10000 (max. 100000000)
 

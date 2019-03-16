@@ -291,6 +291,12 @@
 \paragraph{H.6 + Désordre}{Nous remarquons également que l'association H.6 + Désordre produit un résultat convenable également. Cependant, son nombre de coups moyen étant supérieur à H.6 utilisée seule, nous ne retiendrons pas cette combinaison.}
 \paragraph{Conclusion}{Nous pouvons en conclure que la meilleure heuristique pour résoudre un taquin 4*4 est H6 avec un coefficient de normalisation valant $\mathsf{\tfrac{1}{2}}$ ; dans les faits, ce dernier multiplie la valeur de la distance de Manhattan non pondérée par 2.}
 \section{TAQUINS 5*5}
+\paragraph{Résolution des Taquins 5*5}{Afin de résoudre de façon rapide un Taquin 5*5, nous utilisons l'algorithme IDA* et les heuristiques H6 (avec un coefficient de normalisation de $\mathsf{\tfrac{1}{3}}$) ainsi que Taux de Désordre. Sur 10 exécutions on obtient : }
+\begin{itemize}
+\item Un temps moyen de : 57 secondes
+\item Un nombre d'états moyens créés de : 402562,8 états
+\item Un nombre de coups moyens de : 232,4 coups
+\end{itemize}
 \section{Implémentation d'un autre algorithme de recherche}
 \paragraph{L'algorithme IDA*}{Nous avons choisi d'implémenter une variante de l'algorithme \textbf{A*} : IDA*. Son fonctionnement est similaire à celui de \textbf{A*} mais avec une recherche en profondeur itérative.}
 \paragraph{}{L'algorithme fonctionne comme suit: à chaque itération, on effectue une recherche en profondeur d'abord, en coupant une branche lorsque son coût total
@@ -298,10 +304,33 @@ $\mathsf{f(n) = g(n) + h(n)}$ dépasse un seuil donné. Ce seuil commence à l'e
 
 Comme dans \textbf{A*}, l'heuristique doit avoir des propriétés particulières pour garantir l'optimalité de la solution. Nous utiliserons donc les même heuristiques que précédemment.}
 
-\section{Création de nouvelles heuristiques}
-- Taux de désordre
-- H9 (heuristique aléatoire)
-\section{Interface graphique}
-\section{Interface Web}
+\paragraph{Exemple d'exécution : }{Un exemple d'exécution de l'algorithme (en utilisant les heuristiques 6 et Taux de désordre) est le suivant : }
+\begin{itemize}
+\item \textbf{Taquin : } \lbrack3, 5, 2, 4, 1, 7, 0, 6, 8\rbrack
+\item \textbf{Temps : }IDA* :  0.184770107 secondes / \textbf{A*} : 0.063782215 secondes
+\item \textbf{Nombre d'états créés :} IDA* : 4426 / \textbf{A*} : 1206
+\item \textbf{Nombre de coups réalisés : } IDA* : 20 / \textbf{A*} : 20
+\end{itemize}
 
+\section{Création de nouvelles heuristiques}
+\paragraph{}{Afin de permettre une meilleure résolution des taquins (en temps, espace et optimalité), nous avons créé de nouvelles heuristiques : }
+\paragraph{Le taux de désordre}{Cette heuristique calcule le nombre de tuiles mal placées dans le taquin. Comme vu dans les expériences précédentes, cette heuristique combinée à d'autres (H.6 par exemple) s'avère très utile et performante.}
+\paragraph{Une heuristique qui attribue les poids de manière aléatoire}{un algorithme génère des paires de nombres allant de 1 au nombre de tuiles totales dans le taquin. Par exemple pour un taquin 3*3, nous aurons une paire de 1, une paire de 2, 1 paire de 3, une paire de 4. Puis nous mélangeons ces chiffres de façon aléatoire afin de générer les poids. Un exemple de mélange obtenu est le suivant : \lbrack2, 1, 2, 4, 1, 4, 3, 3\rbrack. Nous avions créé cette heuristique à but expérimental, mais cette dernière présente de bonnes performances sur les taquins 3*3, 4*4, et combinée à une autre heuristique (H.6 par exemple) elle peut également résoudre des taquins 5*5.}
+\section{Interface graphique}
+\paragraph{}{Dans l'intention de mettre en valeur notre programme, nous avons jugé opportun de réaliser une interface graphique en utilisant PyQt5. Cette interface nous permet de générer aléatoirement un Taquin et de le résoudre. Pour cela, on doit renseigner : }
+\begin{itemize}
+\item une largeur de Taquin parmi : 3, 4, 5
+\item un mode : le mode 'Manuel' ou le mode 'Pilot'.
+\begin{enumerate}
+\item Le mode 'Manuel' permet de générer un taquin jouable.
+\item Le mode 'Pilot' permet de générer un taquin avec des indications du "prochain meilleur coup". En effet, après chaque déplacement de tuiles, il colore en bleu la tuile correspondant au  mouvement suivant à effectuer. Ce mode n'est disponible que pour les taquins 3*3.
+\end{enumerate}
+\item les heuristiques à utiliser
+\item un algorithme de recherche : IDA* ou \textbf{A*}
+\end{itemize}
+\paragraph{}{A partir de ces renseignements, le programme va générer un Taquin aléatoire sur lequel nous pourrons jouer et demander la solution à n'importe quel moment et autant de fois que désiré.}
+\paragraph{}{Une fois le Taquin résolu, une fenêtre s'ouvre récapitulant les performances du joueur : le nombre de mouvements qu'il a effectué, le temps qu'il a mis pour résoudre le Taquin et la séquence de mouvements effectués. S'il s'agit d'un Taquin 3*3, il affichera le chemin minimal calculé par l'algorithme à partir du Taquin initial ainsi que le nombre de coups minimal pour résoudre ce dernier.}
+\section{Interface Web}
+\section{Conclusion globale} 
+\paragraph{}{En conclusion, l'algorithme \textbf{A*} parvient toujours à trouver une solution au problème. Cependant selon les heuristiques utilisées les solutions ne sont pas toujours optimales en nombre de coups mais aussi en temps et en espace. On remarque par ailleurs que bien souvent pour atteindre une solution optimale le temps de calcul est très long.}
 \end{document}

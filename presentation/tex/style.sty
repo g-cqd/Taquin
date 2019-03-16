@@ -2,19 +2,24 @@
 
 \usepackage[french]{babel}
 \usepackage[normalem]{ulem}
-\usepackage{graphicx,xcolor,hyperref,multirow,array,titling,fontspec,textgreek}
+\usepackage{amsmath,graphicx,xcolor,hyperref,multirow,array,titling,fontspec,textgreek}
 
 \usepackage[
-	layout=a4paper
+	layout=a4paper,
+	top=15mm,
+	right=15mm,
+	bottom=15mm,
+	left=15mm,
+	footskip=6mm,
 ]{geometry}
 
 
-\pretitle{\begin{flushleft}\Huge\textbf}
-\posttitle{\par\end{flushleft}}
-\preauthor{\begin{flushleft}}
-\postauthor{\par\end{flushleft}}
-\predate{\begin{flushleft}}
-\postdate{\end{flushleft}}
+\pretitle{\centering\Huge\textbf}
+\posttitle{\par}
+\preauthor{\vspace*{.5cm}\centering}
+\postauthor{\par}
+\predate{\vspace*{.5cm}\centering}
+\postdate{\par}
 
 \setmainfont{Inter}[
 	Ligatures = TeX,

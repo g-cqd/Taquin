@@ -22,15 +22,15 @@
 \subsection{Définition d’un état}
 \paragraph{}{Afin de suivre précisément l’évolution de la résolution du problème, il convient de formaliser tout d’abord ce qu'est un état, et l'environnement dans lequel il évolue. Ainsi, par l'intermédiaire de la programmation orientée objet, nous pouvons définir l'environnement et les états par les attributs suivants:}
 \paragraph{Environnement}
-\begin{enumerate}
+\begin{itemize}
 \item [{\ttfamily\bfseries sizes}:] {les dimensions du taquin, largeur et taille}
 \item [{\ttfamily\bfseries choices}:] {les heuristiques choisies pour une exécution, soient les identifiants de chaque pondération ou de l'heuristique de la Mauvaise Place par exemple}
 \item [{\ttfamily\bfseries weightings}:] {les pondérations utilisées pour une exécution}
 \item [{\ttfamily\bfseries moves}:] {l'historique des coups joués par l'utilisateur}
 \item [{\ttfamily\bfseries end}:] {la solution trouvée par l'algorithme}
-\end{enumerate}
+\end{itemize}
 \paragraph{Taquin}
-\begin{enumerate}
+\begin{itemize}
 \item [{\ttfamily\bfseries environment}:] {l'environnement dans lequel évolue l’état}
 \item [{\ttfamily\bfseries previous}:] {la référence au taquin précédent – parent}
 \item [{\ttfamily\bfseries sequence}:] {l'ordre des tuiles dans le taquin, représenté par une liste, le vide vaut ${0}$; à l'état initial la {\ttfamily sequence} est une liste remplie aléatoirement}
@@ -42,7 +42,7 @@
 \item [{\ttfamily\bfseries h}:] {la somme des calculs de chaque heuristique utilisée}
 \item [{\ttfamily\bfseries g}:] {le côut d'un chemin allant de l'état initial à l'état actuel représenté par un entier}
 \item [{\ttfamily\bfseries f}:] {la fonction d'évaluation: ${f(n) = g(n) + h(n)}$ avec ${n}$ le taquin actuel}
-\end{enumerate}
+\end{itemize}
 \subsection{Détail des heuristiques}
 \paragraph{} {Dans le cadre de l'utilisation de l'algorithme ${A*}$, le choix d'heuristiques est nécessaire. De fait, nous aurons recours à 7 heuristiques, surestimant la longueur du chemin à parcourir pour atteindre l'état final. Les 6 premières sont des distances dérivées de la distance de Manhattan, correspondant aux heuristiques {\bfseries H.1}, {\bfseries H.2}, {\bfseries H.3}, {\bfseries H.4}, {\bfseries H.5}, {\bfseries H.6} et pondérées par les jeux de poids suivants:}
 {\scriptsize\addfontfeatures{Numbers=Tabular}
@@ -92,15 +92,15 @@
 \paragraph{A l’état initial:}
 \begin{itemize}
 \item Environnement:
-\begin{enumerate}
+\begin{itemize}
 \item [{\ttfamily\bfseries sizes} =] {\ttfamily [3, 9]}
 \item [{\ttfamily\bfseries choices} =] {\ttfamily [1, 2, 3, 4, 5, 6]}
 \item [{\ttfamily\bfseries weightings} =] {\color{gray}{\em Une liste des jeux de pondérations choisis}}
 \item [{\ttfamily\bfseries moves} =] {\ttfamily [Taquin Initial]}
 \item [{\ttfamily\bfseries end} =] {\ttfamily []}
-\end{enumerate}
+\end{itemize}
 \item Taquin Initial:
-\begin{enumerate}
+\begin{itemize}
 \item [{\ttfamily\bfseries environment} =] {\color{gray}{\em L'environnement ci-dessus}}
 \item [{\ttfamily\bfseries previous} =] {\ttfamily None}
 \item [{\ttfamily\bfseries sequence} =] {\ttfamily [4, 6, 2, 1, 3, 5, 0, 7, 8]} {\color{gray}{\em Une liste générée aléatoirement et valide}}
@@ -112,12 +112,12 @@
 \item [{\ttfamily\bfseries h} =] {\ttfamily 142}
 \item [{\ttfamily\bfseries g} =] {\ttfamily 0}
 \item [{\ttfamily\bfseries f} =] {\ttfamily 142}
-\end{enumerate}
+\end{itemize}
 \end{itemize}
 \paragraph{A l’état final:}
 \begin{itemize}
 \item Taquin Final:
-\begin{enumerate}
+\begin{itemize}
 \item [{\ttfamily\bfseries environment} =] {\color{gray}{\em L'environnement est toujours le même, seul l'état final est ajouté à la liste \ttfamily end}}
 \item [{\ttfamily\bfseries previous} =] {\color{gray}{\em L'avant-dernier état}}
 \item [{\ttfamily\bfseries sequence} =] {\ttfamily [1, 2, 3, 4, 5, 6, 7, 8, 0]}
@@ -129,7 +129,7 @@
 \item [{\ttfamily\bfseries h} =] {\ttfamily 0}
 \item [{\ttfamily\bfseries g} =] {\color{gray}{\em La longueur du chemin minimal}}
 \item [{\ttfamily\bfseries f} =] {\ttfamily g}
-\end{enumerate}
+\end{itemize}
 \end{itemize}
 \subsection{Définition d’une action}
 \paragraph{}{Une fois les états définis, il faut désormais s’intéresser aux actions. Une action dans ce problème est le déplacement d’une tuile, qui consiste en l'inversion de sa position avec celle du vide.}
@@ -165,16 +165,16 @@
 \chapter{Etude Expérimentale}
 \paragraph{}{Dans cette première partie nous allons nous intéresser aux performances de l'algorithme sur des taquins 3*3. Pour cela nous exécuterons le programme sur les taquins suivants (solubles et générés aléatoirement par une fonction de notre programme): }
 \begin{itemize}
-\item \lbrack3, 4, 0, 7, 2, 1, 8, 6, 5\rbrack
-\item \lbrack5, 4, 3, 0, 7, 1, 2, 6, 8\rbrack
-\item \lbrack8, 4, 5, 7, 0, 6, 3, 1, 2\rbrack
-\item \lbrack0, 3, 8, 4, 6, 1, 7, 5, 2\rbrack
-\item \lbrack6, 7, 5, 4, 8, 2, 0, 3, 1\rbrack
-\item \lbrack6, 2, 5, 3, 4, 7, 1, 0, 8\rbrack
-\item \lbrack3, 6, 5, 0, 1, 4, 8, 2, 7\rbrack
-\item \lbrack3, 0, 6, 1, 8, 2, 5, 7, 4\rbrack
-\item \lbrack2, 5, 7, 0, 1, 6, 8, 3, 4\rbrack
-\item \lbrack0, 2, 8, 1, 4, 5, 6, 3, 7\rbrack
+\item {\ttfamily\lbrack3, 4, 0, 7, 2, 1, 8, 6, 5\rbrack}
+\item {\ttfamily\lbrack5, 4, 3, 0, 7, 1, 2, 6, 8\rbrack}
+\item {\ttfamily\lbrack8, 4, 5, 7, 0, 6, 3, 1, 2\rbrack}
+\item {\ttfamily\lbrack0, 3, 8, 4, 6, 1, 7, 5, 2\rbrack}
+\item {\ttfamily\lbrack6, 7, 5, 4, 8, 2, 0, 3, 1\rbrack}
+\item {\ttfamily\lbrack6, 2, 5, 3, 4, 7, 1, 0, 8\rbrack}
+\item {\ttfamily\lbrack3, 6, 5, 0, 1, 4, 8, 2, 7\rbrack}
+\item {\ttfamily\lbrack3, 0, 6, 1, 8, 2, 5, 7, 4\rbrack}
+\item {\ttfamily\lbrack2, 5, 7, 0, 1, 6, 8, 3, 4\rbrack}
+\item {\ttfamily\lbrack0, 2, 8, 1, 4, 5, 6, 3, 7\rbrack}
 \end{itemize}
 
 \paragraph{}{A partir de ces derniers, nous collecterons des informations relatives au temps d'exécution du programme, le nombre d'états créés, l'écart à la solution optimale ainsi que le taux d'optimalité (nombre de fois moyens où la solution renvoyée est minimale) le tout en faisant varier les heuristiques.}
@@ -183,21 +183,21 @@
 \paragraph{}{En ce sens, nous avons éxécuté 10 fois le programme en utilisant chaque heuristique afin de collecter des informations relatives au temps d'execution du programme, le nombre d'états créés, et l'optimalité de la solution:}
 {\scriptsize\addfontfeatures{Numbers=Tabular}
 \renewcommand{\arraystretch}{1.3}
-\vspace*{1cm}
+\vspace*{.5cm}
 \begin{figure}[h!]
 \centering
 \begin{tabular}{| c | c | c | c | c |} \hline
 \textbf{ } & \textbf{Temps} & \textbf{Etats créés} & \textbf{Ecart à la Solution} & \textbf{Optimalité} \\ \hline
-\textbf{H.1} & 26ms & 624 & 5,2 &  $\frac{1}{5}$ \\ \hline
-\textbf{H.2} & 18ms & 450 & 9,2 & $\frac{1}{5}$ \\ \hline
-\textbf{H.3} & 49ms & 1524 & 0,6 & $\frac{2}{3}$ \\ \hline
-\textbf{H.4} & 14ms & 411 & 8,8 & $\frac{1}{5}$ \\ \hline
-\textbf{H.5} & 43ms & 1342 & 0,6 & $\frac{2}{3}$ \\ \hline
-\textbf{H.6} & 87ms & 2831 & 0 & 1 \\ \hline
-\textbf{Désordre} & 1,2s & 36089 & 0 & 1 \\ \hline
+\textbf{H.1} & 26ms & 624 & 5,2 états & $\mathsf{\tfrac{1}{5}}$ \\ \hline
+\textbf{H.2} & 18ms & 450 & 9,2 états & $\mathsf{\tfrac{1}{5}}$ \\ \hline
+\textbf{H.3} & 49ms & 1524 & 0,6 états & $\mathsf{\tfrac{2}{3}}$ \\ \hline
+\textbf{H.4} & 14ms & 411 & 8,8 états & $\mathsf{\tfrac{1}{5}}$ \\ \hline
+\textbf{H.5} & 43ms & 1342 & 0,6 états & $\mathsf{\tfrac{2}{3}}$ \\ \hline
+\textbf{H.6} & 87ms & 2831 & 0 états & 1 \\ \hline
+\textbf{Désordre} & 1,2s & 36089 & 0 états & 1 \\ \hline
 \end{tabular}
 \end{figure}
-\vspace*{1cm}
+\vspace*{.5cm}
 }
 
 % \textbf{H1} & 0,026284623 & 623,7 & 5,2 & $\frac{1}{5}$ \\ \hline
@@ -209,57 +209,60 @@
 % \textbf{Taux de désordre} & 1,199918461 & 36088,5 & 0& 1 \\ \hline
 % ${\mathsf{\tfrac{1}{5}}}$
 
-\paragraph{}{Nous remarquons donc que H.4 présente le temps d'exécution moyen, et un nombre d'état créé le plus faible cependant elle ne renvoie un résultat optimal qu'une exécution sur 5.}
+\paragraph{}{Nous remarquons donc que H.4 présente le temps d'exécution moyen et le nombre d'états créés moyen les plus faibles, cependant elle ne renvoie un résultat optimal qu'une exécution sur 5.}
 
-\paragraph{}{Au contraire, les heuristiques H.6 et Désordre renvoient à chaque exécution un résultat optimal mais leurs temps d'exécution se classent parmis les plus élevés.}
+\paragraph{}{Au contraire, les heuristiques H.6 et Désordre permettent l'obtention d'un résultat optimal mais leurs temps d'exécution se classent parmis les plus élevés.}
 
 \paragraph{}{Cette étude soulève donc une question importante : doit-on privilégier la rapidité d'un programme au détriment de son optimalité ou au contraire favoriser un résultat minimal?}
 
-\paragraph{}{En outre, nous pouvons remarquer que lorsque le coefficient de normalisation
-vaut 1, le temps moyen d'exécution ainsi que le nombre moyen d'états créés est plus faible 
-que pour un coefficient de normalisation valant 4. L'algorithme sous estime le chemin lorsque le coefficient de normalisation est trop élevé.}
-\paragraph{Comparaison de l'association d'heuristiques}{Nous allons maintenant nous pencher sur l'utilisation de plusieurs heuristiques afin de résoudre le problème.}
+\paragraph{}{En outre, nous pouvons remarquer que lorsque le coefficient de normalisation vaut 1, le temps moyen d'exécution ainsi que le nombre moyen d'états créés est plus faible que pour un coefficient de normalisation valant 4. L'algorithme sur-estime le chemin lorsque le coefficient de normalisation n'est pas appliqué et retourne donc rapidement un chemin de plus mauvaise qualité, fait décrit par l'écart moyen à la solution plus élevé sur les heuristiques H.1, H.2 et H.4.}
+
+\paragraph{Comparaison de l'association d'heuristiques}{Nous allons maintenant nous pencher sur l'association de plusieurs heuristiques afin de résoudre le problème.}
 
 {\scriptsize\addfontfeatures{Numbers=Tabular}
 \renewcommand{\arraystretch}{1.3}
-\vspace*{1cm}
+\vspace*{.5cm}
 \begin{figure}[h!]
 \centering
-\begin{tabular}
-{| c || p{2,5cm} | p{3cm} | p{3cm} | p{3cm} |} \hline \textbf{ } & \textbf{Temps moyen d'exécution en secondes }&
- \textbf{Nombre moyen d'états créés} & \textbf{Ecart moyen à la solution optimale} &
-\textbf{Taux d'optimalité} \\ \hline \hline
-\textbf{H1 H2 H3 H4 H5 H6} & 0,077811193 & 747,6 & 23 & $\frac{1}{10}$ \\ \hline
-\textbf{H6 Taux de désordre} & 0,074782300 & 1753 & 0,6 & $\frac{7}{10}$   \\ \hline
-\textbf{H5 Taux de désordre}& 0,043249559 & 913,2 & 1,8 & $\frac{1}{2}$ \\ \hline
-\textbf{H2/H4}&0,032602048&656,8&12,4&$\frac{1}{5}$\\ \hline
-
+\begin{tabular}{| c | c | c | c | c |} \hline
+\textbf{ } & \textbf{Temps} & \textbf{Etats créés} & \textbf{Ecart à la Solution} & \textbf{Optimalité} \\ \hline
+\textbf{H.1 ⟶ H.6} & 78ms & 748 & 23 états & $\mathsf{\tfrac{1}{10}}$ \\ \hline
+\textbf{H.6 + Désordre} & 75ms & 1753 & 0,6 états & $\mathsf{\tfrac{7}{10}}$ \\ \hline
+\textbf{H.5 + Désordre}& 43ms & 913 & 1,8 états & $\mathsf{\tfrac{1}{2}}$ \\ \hline
+\textbf{H.2 + H.4} & 33ms & 657 & 12,4 états &$\mathsf{\tfrac{1}{5}}$ \\ \hline
 \end{tabular}
+\end{figure}
+\vspace*{0,5cm}
+}
 
-\end{figure} \vspace*{0,5cm}}
-\paragraph{}{Tout d'abord, nous pouvons noter que lors de l'utilisation simultanée de toutes les heuristiques, l'écart moyen à la solution est très élevé et le taux d'optimalité extrêmement faible. De plus le temps d'exécution moyen se classe parmi les plus élevés.}
-\paragraph{}{En outre, deux heuristiques qui nous semblaient intéressantes à combiner étaient la distance de Mahnattan avec une pondération de 1 ainsi que le taux de désordre.En effet, ces deux heuristiques optimales 10 fois sur 10 tentatives mais possédant un temps moyen et un nombre d'espace moyen utilisé très élevé séparément  se révèlent être des alliées redoutables lorsqu'elles sont mises en commun. Effectivement, leur écart moyen à la solution optimal est minime : 0,6 et leur taux d'optimalité acceptable :$\frac{7}{10}$. }
+%\textbf{ } & \textbf{Temps} & \textbf{Etats créés} & \textbf{Ecart à la Solution} & \textbf{Optimalité} \\ \hline
+%\textbf{H1 H2 H3 H4 H5 H6} & 0,077811193 & 747,6 & 23 & ${\mathsf\tfrac{1}{10}}$ \\ \hline
+%\textbf{H6 Taux de désordre} & 0,074782300 & 1753 & 0,6 & ${\mathsf\tfrac{7}{10}}$   \\ \hline
+%\textbf{H5 Taux de désordre}& 0,043249559 & 913,2 & 1,8 & ${\mathsf\tfrac{1}{2}}$ \\ \hline
+%\textbf{H2/H4}&0,032602048&656,8&12,4&$\frac{1}{5}$\\ \hline
 
-\paragraph{}{De même, les heuristiques H5 et le taux de désordre combinés proposent de bonne performances au niveau du temps d'exécution et du nombre d'états moyen créés. Cependant l'écart moyen à la solution optimale est 3 fois supérieur à celui de H6 et Taux de désordre combinés. Le taux d'optimalité est par ailleurs faible : 1 fois sur 2.}
+\paragraph{}{Tout d'abord, nous pouvons noter que lors de l'utilisation simultanée de toutes les heuristiques, l'écart moyen à la solution est très élevé et le taux d'optimalité extrêmement faible. De plus, le temps d'exécution moyen se classe parmi les plus élevés.}
+\paragraph{}{Néanmoins, deux heuristiques nous semblaient intéressantes à combiner: la distance de Mahnattan avec une pondération de 1 ainsi que le taux de désordre. Il s'avère en effet que ces deux heuristiques optimales 10 fois sur 10 tentatives et possédant un temps et un nombre d'états créés moyens très élevés séparément se révèlent être des alliées redoutables lorsqu'elles travaillent de pair. Effectivement, l'écart moyen de leur concours à la solution optimal est minime : 0,6 états et leur taux d'optimalité acceptable :$\mathsf{\tfrac{7}{10}}$.}
 
-\paragraph{}{Pour finir, nous avons tenté de combiner H2 ainsi que H4, les deux heuristiques qui dissociées présentent les temps moyen ainsi que le nombre moyen d'états créés le plus faible.  Toutefois nous pouvons constater que mises ensemble ces dernières présentent des performances inférieures et un taux d'optimalité équivalent. }
-\newline
+\paragraph{}{De même, les heuristiques H.5 et le taux de désordre combinés proposent de bonne performances au niveau du temps d'exécution et du nombre d'états moyen créés. Cependant l'écart moyen à la solution optimale est 3 fois supérieur à celui de H.6 et taux de désordre combinés. Le taux d'optimalité est par ailleurs faible : 1 fois sur 2.}
+
+\paragraph{}{Pour finir, nous avons tenté de combiner H.2 ainsi que H.4, les deux heuristiques qui dissociées présentent les temps moyen ainsi que le nombre moyen d'états créés le plus faible. Toutefois nous pouvons constater que mises ensemble ces dernières présentent des performances inférieures et un taux d'optimalité équivalent.}
 \chapter{Extensions}
 \section{TAQUINS 4*4}
 
 \paragraph{}{Nous allons maintenant nous intéresser à la résolution de taquins 4*4 par notre algorithme. Pour cela nous allons collecter des données relatives au temps moyen d'exécution, le nombre d'états moyens créés et le nombre de coup moyen pour parvenir à résoudre le problème.}
 \paragraph{}{De même que lors de la partie précédente, nous collecterons ces données à partir de taquins solubles générés aléatoirement. Ces taquins sont les suivants : }
 \begin{itemize}
-\item \lbrack 0, 7, 3, 12, 14, 13, 5, 9, 10, 6, 11, 15, 1, 2, 8, 4\rbrack
-\item \lbrack 5, 14, 3, 9, 2, 0, 10, 1, 4, 15, 11, 6, 13, 7, 8, 12\rbrack
-\item \lbrack 1, 12, 8, 7, 2, 10, 3, 9, 0, 6, 5, 14, 4, 11, 13, 15\rbrack
-\item \lbrack 13, 11, 12, 8, 15, 1, 0, 3, 7, 14, 9, 4, 5, 2, 6, 10\rbrack
-\item \lbrack 9, 2, 4, 14, 3, 11, 8, 15, 12, 5, 1, 7, 13, 0, 6, 10\rbrack
-\item \lbrack 14, 7, 8, 11, 10, 6, 1, 12, 15, 0, 5, 3, 9, 2, 13, 4\rbrack
-\item \lbrack 4, 7, 5, 0, 13, 11, 1, 12, 15, 10, 9, 3, 8, 2, 14, 6\rbrack
-\item \lbrack 14, 12, 11, 6, 9, 15, 3, 1, 2, 5, 10, 13, 8, 4, 0, 7\rbrack
-\item \lbrack 2, 3, 14, 8, 0, 9, 13, 6, 10, 4, 7, 1, 15, 12, 5, 11\rbrack
-\item \lbrack 7, 15, 2, 12, 1, 6, 5, 3, 10, 4, 11, 14, 13, 0, 8, 9\rbrack
+\item {\ttfamily\lbrack 0, 7, 3, 12, 14, 13, 5, 9, 10, 6, 11, 15, 1, 2, 8, 4\rbrack}
+\item {\ttfamily\lbrack 5, 14, 3, 9, 2, 0, 10, 1, 4, 15, 11, 6, 13, 7, 8, 12\rbrack}
+\item {\ttfamily\lbrack 1, 12, 8, 7, 2, 10, 3, 9, 0, 6, 5, 14, 4, 11, 13, 15\rbrack}
+\item {\ttfamily\lbrack 13, 11, 12, 8, 15, 1, 0, 3, 7, 14, 9, 4, 5, 2, 6, 10\rbrack}
+\item {\ttfamily\lbrack 9, 2, 4, 14, 3, 11, 8, 15, 12, 5, 1, 7, 13, 0, 6, 10\rbrack}
+\item {\ttfamily\lbrack 14, 7, 8, 11, 10, 6, 1, 12, 15, 0, 5, 3, 9, 2, 13, 4\rbrack}
+\item {\ttfamily\lbrack 4, 7, 5, 0, 13, 11, 1, 12, 15, 10, 9, 3, 8, 2, 14, 6\rbrack}
+\item {\ttfamily\lbrack 14, 12, 11, 6, 9, 15, 3, 1, 2, 5, 10, 13, 8, 4, 0, 7\rbrack}
+\item {\ttfamily\lbrack 2, 3, 14, 8, 0, 9, 13, 6, 10, 4, 7, 1, 15, 12, 5, 11\rbrack}
+\item {\ttfamily\lbrack 7, 15, 2, 12, 1, 6, 5, 3, 10, 4, 11, 14, 13, 0, 8, 9\rbrack}
 \end{itemize}
 \paragraph{}{Cependant, pour la résolution des taquins 4*4 nous avons pris la liberté de modifier le coefficient de normalisation de H6. Ce dernier vaut désormais $\frac{1}{2}$. Sans cette modification, H6 sous estimait grandement le chemin et par conséquent une exécution du programme avec cette dernière pouvait prendre plus d'une heure.}
 {\scriptsize\addfontfeatures{Numbers=Tabular}
@@ -276,18 +279,26 @@ que pour un coefficient de normalisation valant 4. L'algorithme sous estime le c
 \textbf{H.5} & 2,548957515 & 45226,2 & 65,3\\ \hline
 \textbf{H.6} & 4,902488279 & 86994,7 & 61,3 \\ \hline
 \textbf{H1/H2/H3/H4/H5/H6}&5,448457384&29989,8&159,5\\ \hline
+\textbf{H6/Taux de désordre}&4,026388192&50552,5&68,1\\ \hline
 \end{tabular}
 \end{figure}
-
 }
-\paragraph{}{Tout d'abord, nous pouvons observer que lors de l'utilisation simultanée de toutes les heuristiques, l'algorithme sur-estime grandement le chemin et par conséquent le nombre de coup moyen est très élevé.}
+\newpage
+\paragraph{Utilisation des heuristiques en simultané}{Tout d'abord, nous pouvons observer que lors de l'utilisation simultanée de toutes les heuristiques, l'algorithme sur-estime grandement le chemin et par conséquent le nombre de coup moyen est très élevé.}
+\paragraph{Comparaison des heuristiques séparément}{En outre, nous pouvons également observer que pour la résolution d'un taquin 4*4, l'heuristique H6 (avec un coefficient de normalisation modifié) paraît la plus judicieuse à utiliser. En effet, elle présente le nombre de coup moyen le plus faible et un temps moyen ainsi qu'une utilisation de l'espace mémoire raisonnable. Par opposition, l'heuristique H1 semble être à éviter puisque son temps moyen et son espace mémoire utilisé est déraisonnable.}
+\paragraph{H6/Taux de désordre}{Nous remarquons également que l'association H6/Taux de désordre produit un résultat convenable également. Cependant, son nombre de coup moyen étant supérieur à H6 utilisée seule, nous ne retiendrons pas cette combinaison.}
+\paragraph{Conclusion}{Par conséquent, nous pouvons en conclure que la meilleure heuristique pour résoudre un taquin 4*4 est H6 avec un coefficient de normalisation valant $\frac{1}{2}$.}
 \section{TAQUINS 5*5}
 \section{Implémentation d'un autre algorithme de recherche}
-%\paragraph{L'algorithme IDA*}{Nous avons choisi d'implémenter une variante de l'algorithme A* : IDA*. Son fonctionnement est plus ou moins semblable à celui de A* mais avec un approfondissement itératif.}
-%Quant à lui, utilise comme limite de l'horizon de recherche la valeur de la fonction heuristique f(n)
-%Chaque itération de IDA* est une recherche en profondeur qui étend tous les nœuds à l'intérieur d'un contour délimité par la valeur courante de flimite en regardant par dessus cette limite pour savoir où se trouvera la prochaine valeur de f
-%limite
+\paragraph{L'algorithme IDA*}{Nous avons choisi d'implémenter une variante de l'algorithme A* : IDA*. Son fonctionnement est semblable à celui de A* mais avec un approfondissement itératif.}
+\paragraph{}{L'algorithme fonctionne comme suit: à chaque itération, on effectue une recherche en profondeur d'abord, en coupant une branche lorsque son coût total
+f (n) = g (n) + h (n) dépasse un seuil donné. Ce seuil commence à l'estimation du coût à l'état initial et augmente à chaque itération de l'algorithme. À chaque itération, le seuil utilisé pour la prochaine itération est le coût minimum de toutes les valeurs dépassant le seuil actuel.
+
+Comme dans A *, l'heuristique doit avoir des propriétés particulières pour garantir l'optimalité de la solution. Nous utiliserons donc les même heuristiques que précédemment.}
+
 \section{Création de nouvelles heuristiques}
+- Taux de désordre
+- H9 (heuristique aléatoire
 \section{Interface graphique}
 \section{Interface Web}
 

@@ -13,12 +13,10 @@
 \begin{figure}[!h]
 \centering
 \includegraphics[keepaspectratio=true,width=10cm]{./inc/media/presentation_twoTaquins.pdf}
-\caption{Un départ possible et l'arrivée voulue}
-\label{presentationTwoTaquins}
 \end{figure}
 \paragraph{} {Les tuiles ne peuvent se déplacer que par glissement dans la seule case vide à un moment donné. Le jeu consiste à replacer les tuiles dans l’ordre numérique. Ainsi, par le biais de ce projet, nous allons donc, à l'aide du langage de programmation {\ttfamily Python}, développer ce jeu et répondre aux deux questions suivantes: Quelle est la séquence minimale de mouvements à faire sur un taquin pour obtenir la solution? Comment trouver cette séquence?}
 \section{Etude du cas général}
-\paragraph{}{Pour ce faire, nous détaillerons dans cette partie l’algorithme ${A*}$, prononcer A star, utilisé pour résoudre le problème, la définition des états et des actions que l’agent pourra réaliser dans chaque état puis nous aborderons spécifiquement la stratégie de recherche utilisée par l’algorithme dans le but d'obtenir une solution optimale.}
+\paragraph{}{Pour ce faire, nous détaillerons dans cette partie l’algorithme \textbf{A*}, prononcer A star, utilisé pour résoudre le problème, la définition des états et des actions que l’agent pourra réaliser dans chaque état puis nous aborderons spécifiquement la stratégie de recherche utilisée par l’algorithme dans le but d'obtenir une solution optimale.}
 \subsection{Définition d’un état}
 \paragraph{}{Afin de suivre précisément l’évolution de la résolution du problème, il convient de formaliser tout d’abord ce qu'est un état, et l'environnement dans lequel il évolue. Ainsi, par l'intermédiaire de la programmation orientée objet, nous pouvons définir l'environnement et les états par les attributs suivants:}
 \paragraph{Environnement}
@@ -44,10 +42,10 @@
 \item [{\ttfamily\bfseries f}:] {la fonction d'évaluation: ${f(n) = g(n) + h(n)}$ avec ${n}$ le taquin actuel}
 \end{itemize}
 \subsection{Détail des heuristiques}
-\paragraph{} {Dans le cadre de l'utilisation de l'algorithme ${A*}$, le choix d'heuristiques est nécessaire. De fait, nous aurons recours à 7 heuristiques, surestimant la longueur du chemin à parcourir pour atteindre l'état final. Les 6 premières sont des distances dérivées de la distance de Manhattan, correspondant aux heuristiques {\bfseries H.1}, {\bfseries H.2}, {\bfseries H.3}, {\bfseries H.4}, {\bfseries H.5}, {\bfseries H.6} et pondérées par les jeux de poids suivants:}
+\paragraph{} {Dans le cadre de l'utilisation de l'algorithme \textbf{A*}, le choix d'heuristiques est nécessaire. De fait, nous aurons recours à 7 heuristiques, surestimant la longueur du chemin à parcourir pour atteindre l'état final. Les 6 premières sont des distances dérivées de la distance de Manhattan, correspondant aux heuristiques {\bfseries H.1}, {\bfseries H.2}, {\bfseries H.3}, {\bfseries H.4}, {\bfseries H.5}, {\bfseries H.6} et pondérées par les jeux de poids suivants:}
 {\scriptsize\addfontfeatures{Numbers=Tabular}
 \renewcommand{\arraystretch}{1.3}
-\vspace*{1cm}
+\vspace*{.5cm}
 \begin{figure}[h!]
 \centering
 \begin{tabular}
@@ -57,9 +55,7 @@
 π\textsubscript{4} = π\textsubscript{5} & 8 & 7 & 6 & 5 & 3 & 2 & 4 & 1 \\ \hline
 π\textsubscript{6} & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 \\ \hline
 \end{tabular}
-\caption{Tableau des pondérations des distances de Manhattan}
-\label{ponderations}
-\end{figure} \vspace*{1cm}}
+\end{figure} \vspace*{.5cm}}
 \paragraph{}{A partir de ces pondérations nous pouvons calculer une distance de Manhattan grâce à la formule suivante:}
 \begin{figure}[h!]
 \centering
@@ -75,7 +71,6 @@
 \begin{figure}[!h]
 \centering
 \includegraphics[keepaspectratio=true,width=5cm]{./inc/media/example_1.pdf}
-\label{exampleTaquin}
 \end{figure}
 \paragraph{}{Sur le taquin ci-dessus, on a pour $\varepsilon{_E}(5)$:}
 \begin{itemize}
@@ -143,13 +138,13 @@
 \subsection{Définition de l'agent}
 \paragraph{}{Il s'agit ici d'agents à réflèxes simples: les agents agissent en tenant compte du dernier percept uniquement. Nous allons donc utiliser de règles de type $\textrm{action} \Longrightarrow \textrm{condition}$}.
 \subsection{Choix de l’algorithme}
-\paragraph{}{Après avoir défini les états et les actions, nous nous intéressons à la stratégie utilisée par l’algorithme de recherche ${A*}$ dans le but de trouver une séquence d’actions permettant d’atteindre l’état du but à partir de l’état initial.}
-\paragraph{}{La stratégie adoptée par l’algorithme consiste en la construction d'un arbre de recherche et d’y rechercher la solution. Dans ce sens, ${A*}$ va utiliser une fonction d'évaluation basée sur des heuristiques sur chaque nœud de l'arbre afin d’estimer le meilleur chemin à emprunter et d'en visiter les nœuds enfants, triés grâce à cette fonction d'évaluation.}
+\paragraph{}{Après avoir défini les états et les actions, nous nous intéressons à la stratégie utilisée par l’algorithme de recherche \textbf{A*} dans le but de trouver une séquence d’actions permettant d’atteindre l’état du but à partir de l’état initial.}
+\paragraph{}{La stratégie adoptée par l’algorithme consiste en la construction d'un arbre de recherche et d’y rechercher la solution. Dans ce sens, \textbf{A*} va utiliser une fonction d'évaluation basée sur des heuristiques sur chaque nœud de l'arbre afin d’estimer le meilleur chemin à emprunter et d'en visiter les nœuds enfants, triés grâce à cette fonction d'évaluation.}
 \paragraph{}{Le principe repose sur le fait qu'à chaque itération, on tente de se rapprocher de la destination, c’est pourquoi on privilégie les états directement les plus proches de la destination en mettant de côté tous les autres.}
 \paragraph{}{Tous les états ne permettant pas de se rapprocher de la destination sont éloignés et placés plus loin dans la file d'éxécution. Les états parcourus sont placés dans une liste des états explorés de manière à vérifier que le chemin actuellement emprunté est plus performant que celui stocké dans la liste.}
 \paragraph{}{Si cela s'avérait être le contraire, alors l'exploration actuelle s'arreterait pour passer à l'exploration d'un autre chemin. Ainsi, on est sûr d'emprunter un chemin minimal pour les heuristiques choisies et d'éviter d'explorer à nouveau un même nœud mais de coût plus élevé. C'est l'association de ces différents principes qui assure la complétude de l'algorithme.}
-\subsection{Implémentation de $A*$}
-\paragraph{}{Le problème majeur de $A*$ est sa complexité exponentielle en espace mémoire. Tous les états créés sont conservés, ce qui peut selon les dimensions et l'état initial du taquin, rapidement saturer la mémoire de l'ordinateur, même avec les grandes capacités de mémoire actuelles.}
+\subsection{Implémentation de \textbf{A*}}
+\paragraph{}{Le problème majeur de \textbf{A*} est sa complexité exponentielle en espace mémoire. Tous les états créés sont conservés, ce qui peut selon les dimensions et l'état initial du taquin, rapidement saturer la mémoire de l'ordinateur, même avec les grandes capacités de mémoire actuelles.}
 \paragraph{}{Par conséquent, nous nous sommes, lors de la réalisation de notre programme, chercher à réduire le nombre d’états et à établir la meilleure gestion possible de ces derniers. En ce sens, nous avons pensé judicieux d'appliquer quelques optimisations:}
 
 %\paragraph{Améliorer l'estimation de la distance de Manhattan}{en tenant compte des conflits linéaires. L'idée est la suivante: si deux tuiles se situent sur la même ligne (respectivement même colonne), et si leurs positions sont inversées par rapport à celles souhaitées, alors l'une d'elle devra nécessairement quitter temporairement cette ligne (respectivement colonne).}
@@ -242,63 +237,70 @@
 %\textbf{H2/H4}&0,032602048&656,8&12,4&$\frac{1}{5}$\\ \hline
 
 \paragraph{}{Tout d'abord, nous pouvons noter que lors de l'utilisation simultanée de toutes les heuristiques, l'écart moyen à la solution est très élevé et le taux d'optimalité extrêmement faible. De plus, le temps d'exécution moyen se classe parmi les plus élevés.}
-\paragraph{}{Néanmoins, deux heuristiques nous semblaient intéressantes à combiner: la distance de Mahnattan avec une pondération de 1 ainsi que le taux de désordre. Il s'avère en effet que ces deux heuristiques optimales 10 fois sur 10 tentatives et possédant un temps et un nombre d'états créés moyens très élevés séparément se révèlent être des alliées redoutables lorsqu'elles travaillent de pair. Effectivement, l'écart moyen de leur concours à la solution optimal est minime : 0,6 états et leur taux d'optimalité acceptable :$\mathsf{\tfrac{7}{10}}$.}
+\paragraph{}{Néanmoins, deux heuristiques nous semblaient intéressantes à combiner: la distance de Mahnattan avec une pondération de 1 ainsi que le taux de désordre. Il s'avère en effet que ces deux heuristiques optimales 10 fois sur 10 tentatives et possédant un temps et un nombre d'états créés moyens très élevés séparément se révèlent être des alliées redoutables lorsqu'elles travaillent de pair. Effectivement, l'écart moyen de leur concours à la solution optimal est minime : 0,6 états et leur taux d'optimalité acceptable: $\mathsf{\tfrac{7}{10}}$.}
 
-\paragraph{}{De même, les heuristiques H.5 et le taux de désordre combinés proposent de bonne performances au niveau du temps d'exécution et du nombre d'états moyen créés. Cependant l'écart moyen à la solution optimale est 3 fois supérieur à celui de H.6 et taux de désordre combinés. Le taux d'optimalité est par ailleurs faible : 1 fois sur 2.}
+\paragraph{}{De même, les heuristiques H.5 et le taux de désordre combinés proposent de bonne performances au niveau du temps d'exécution et du nombre d'états moyen créés. Cependant l'écart moyen à la solution optimale est 3 fois supérieur à celui de H.6 et taux de désordre combinés. Le taux d'optimalité est par ailleurs faible: 1 fois sur 2.}
 
-\paragraph{}{Pour finir, nous avons tenté de combiner H.2 ainsi que H.4, les deux heuristiques qui dissociées présentent les temps moyen ainsi que le nombre moyen d'états créés le plus faible. Toutefois nous pouvons constater que mises ensemble ces dernières présentent des performances inférieures et un taux d'optimalité équivalent.}
+\paragraph{}{Pour finir, nous avons tenté de combiner H.2 ainsi que H.4, les deux heuristiques qui dissociées présentent les temps moyen ainsi que le nombre moyen d'états créés le plus faible. Toutefois nous pouvons constater que leur concours présente des performances inférieures et un taux d'optimalité équivalent.}
 \chapter{Extensions}
 \section{TAQUINS 4*4}
-
-\paragraph{}{Nous allons maintenant nous intéresser à la résolution de taquins 4*4 par notre algorithme. Pour cela nous allons collecter des données relatives au temps moyen d'exécution, le nombre d'états moyens créés et le nombre de coup moyen pour parvenir à résoudre le problème.}
-\paragraph{}{De même que lors de la partie précédente, nous collecterons ces données à partir de taquins solubles générés aléatoirement. Ces taquins sont les suivants : }
+\paragraph{}{Intéressons nous maintenant à la résolution de taquins 4*4 par notre algorithme. Pour cela nous allons collecter des données relatives au temps moyen d'exécution, le nombre d'états moyens créés et le nombre de coups moyen pour parvenir à résoudre le problème.}
+\paragraph{}{De même que lors de la partie précédente, nous collecterons ces données à partir de taquins solubles générés aléatoirement. Ces taquins sont les suivants:}
 \begin{itemize}
-\item {\ttfamily\lbrack 0, 7, 3, 12, 14, 13, 5, 9, 10, 6, 11, 15, 1, 2, 8, 4\rbrack}
-\item {\ttfamily\lbrack 5, 14, 3, 9, 2, 0, 10, 1, 4, 15, 11, 6, 13, 7, 8, 12\rbrack}
-\item {\ttfamily\lbrack 1, 12, 8, 7, 2, 10, 3, 9, 0, 6, 5, 14, 4, 11, 13, 15\rbrack}
-\item {\ttfamily\lbrack 13, 11, 12, 8, 15, 1, 0, 3, 7, 14, 9, 4, 5, 2, 6, 10\rbrack}
-\item {\ttfamily\lbrack 9, 2, 4, 14, 3, 11, 8, 15, 12, 5, 1, 7, 13, 0, 6, 10\rbrack}
-\item {\ttfamily\lbrack 14, 7, 8, 11, 10, 6, 1, 12, 15, 0, 5, 3, 9, 2, 13, 4\rbrack}
-\item {\ttfamily\lbrack 4, 7, 5, 0, 13, 11, 1, 12, 15, 10, 9, 3, 8, 2, 14, 6\rbrack}
-\item {\ttfamily\lbrack 14, 12, 11, 6, 9, 15, 3, 1, 2, 5, 10, 13, 8, 4, 0, 7\rbrack}
-\item {\ttfamily\lbrack 2, 3, 14, 8, 0, 9, 13, 6, 10, 4, 7, 1, 15, 12, 5, 11\rbrack}
-\item {\ttfamily\lbrack 7, 15, 2, 12, 1, 6, 5, 3, 10, 4, 11, 14, 13, 0, 8, 9\rbrack}
+\item {\ttfamily\lbrack  0,  7,  3, 12, 14, 13,  5,  9, 10,  6, 11, 15,  1,  2,  8,  4\rbrack}
+\item {\ttfamily\lbrack  5, 14,  3,  9,  2,  0, 10,  1,  4, 15, 11,  6, 13,  7,  8, 12\rbrack}
+\item {\ttfamily\lbrack  1, 12,  8,  7,  2, 10,  3,  9,  0,  6,  5, 14,  4, 11, 13, 15\rbrack}
+\item {\ttfamily\lbrack 13, 11, 12,  8, 15,  1,  0,  3,  7, 14,  9,  4,  5,  2,  6, 10\rbrack}
+\item {\ttfamily\lbrack  9,  2,  4, 14,  3, 11,  8, 15, 12,  5,  1,  7, 13,  0,  6, 10\rbrack}
+\item {\ttfamily\lbrack 14,  7,  8, 11, 10,  6,  1, 12, 15,  0,  5,  3,  9,  2, 13,  4\rbrack}
+\item {\ttfamily\lbrack  4,  7,  5,  0, 13, 11,  1, 12, 15, 10,  9,  3,  8,  2, 14,  6\rbrack}
+\item {\ttfamily\lbrack 14, 12, 11,  6,  9, 15,  3,  1,  2,  5, 10, 13,  8,  4,  0,  7\rbrack}
+\item {\ttfamily\lbrack  2,  3, 14,  8,  0,  9, 13,  6, 10,  4,  7,  1, 15, 12,  5, 11\rbrack}
+\item {\ttfamily\lbrack  7, 15,  2, 12,  1,  6,  5,  3, 10,  4, 11, 14, 13,  0,  8,  9\rbrack}
 \end{itemize}
-\paragraph{}{Cependant, pour la résolution des taquins 4*4 nous avons pris la liberté de modifier le coefficient de normalisation de H6. Ce dernier vaut désormais $\frac{1}{2}$. Sans cette modification, H6 sous estimait grandement le chemin et par conséquent une exécution du programme avec cette dernière pouvait prendre plus d'une heure.}
+\paragraph{}{Cependant, pour la résolution des taquins 4*4 nous avons pris la liberté de modifier le coefficient de normalisation de H6. Ce dernier vaut désormais $\mathsf{\tfrac{1}{2}}$. Sans cette modification, H.6 sous estimait grandement le chemin et par conséquent une exécution du programme avec cette dernière pouvait prendre plus d'une heure.}
 {\scriptsize\addfontfeatures{Numbers=Tabular}
 \renewcommand{\arraystretch}{1.3}
-\vspace*{1cm}
+\vspace*{.5cm}
 \begin{figure}[h!]
 \centering
 \begin{tabular}{| c | c | c | c |} \hline
-\textbf{ } & \textbf{Temps Moyen} & \textbf{Etats créés en moyenne} & \textbf{Nombre de coups moyens}\\ \hline
-\textbf{H.1} & 86,852147675 & 1239867,5 & 64,1 \\ \hline
-\textbf{H.2} & 2,358877850 & 34478,3 & 120,3 \\ \hline
-\textbf{H.3} & 7,183158445 & 124681,6 & 67,3 \\ \hline
-\textbf{H.4} & 2,345959473 & 36172,6 & 116,9 \\ \hline
-\textbf{H.5} & 2,548957515 & 45226,2 & 65,3\\ \hline
-\textbf{H.6} & 4,902488279 & 86994,7 & 61,3 \\ \hline
-\textbf{H1/H2/H3/H4/H5/H6}&5,448457384&29989,8&159,5\\ \hline
-\textbf{H6/Taux de désordre}&4,026388192&50552,5&68,1\\ \hline
+\textbf{ } & \textbf{Temps} & \textbf{Etats créés} & \textbf{Nombre de Coups}\\ \hline
+\textbf{H.1} & 87s & 1239868 & 64 \\ \hline
+\textbf{H.2} & 2s & 34478 & 120 \\ \hline
+\textbf{H.3} & 7s & 124682 & 67 \\ \hline
+\textbf{H.4} & 2s & 36173 & 117 \\ \hline
+\textbf{H.5} & 3s & 45226 & 65\\ \hline
+\textbf{H.6} & 5s & 86995 & 61 \\ \hline
+\textbf{H.1 ⟶ H.6}&5s&29990&160\\ \hline
+\textbf{H.6 + Désordre}&4s&50553&68\\ \hline
 \end{tabular}
 \end{figure}
 }
-\newpage
-\paragraph{Utilisation des heuristiques en simultané}{Tout d'abord, nous pouvons observer que lors de l'utilisation simultanée de toutes les heuristiques, l'algorithme sur-estime grandement le chemin et par conséquent le nombre de coup moyen est très élevé.}
-\paragraph{Comparaison des heuristiques séparément}{En outre, nous pouvons également observer que pour la résolution d'un taquin 4*4, l'heuristique H6 (avec un coefficient de normalisation modifié) paraît la plus judicieuse à utiliser. En effet, elle présente le nombre de coup moyen le plus faible et un temps moyen ainsi qu'une utilisation de l'espace mémoire raisonnable. Par opposition, l'heuristique H1 semble être à éviter puisque son temps moyen et son espace mémoire utilisé est déraisonnable.}
-\paragraph{H6/Taux de désordre}{Nous remarquons également que l'association H6/Taux de désordre produit un résultat convenable également. Cependant, son nombre de coup moyen étant supérieur à H6 utilisée seule, nous ne retiendrons pas cette combinaison.}
-\paragraph{Conclusion}{Par conséquent, nous pouvons en conclure que la meilleure heuristique pour résoudre un taquin 4*4 est H6 avec un coefficient de normalisation valant $\frac{1}{2}$.}
+% \textbf{H.1} & 86,852147675 & 1239867,5 & 64,1 \\ \hline
+% \textbf{H.2} & 2,358877850 & 34478,3 & 120,3 \\ \hline
+% \textbf{H.3} & 7,183158445 & 124681,6 & 67,3 \\ \hline
+% \textbf{H.4} & 2,345959473 & 36172,6 & 116,9 \\ \hline
+% \textbf{H.5} & 2,548957515 & 45226,2 & 65,3\\ \hline
+% \textbf{H.6} & 4,902488279 & 86994,7 & 61,3 \\ \hline
+% \textbf{H1/H2/H3/H4/H5/H6}&5,448457384&29989,8&159,5\\ \hline
+% \textbf{H6/Taux de désordre}&4,026388192&50552,5&68,1\\ \hline
+
+\paragraph{Utilisation des heuristiques en simultané}{Dans un premier temps, nous pouvons noter que lors de l'utilisation simultanée de toutes les heuristiques, l'algorithme sur-estime grandement le chemin et par conséquent le nombre de coups moyen est très élevé.}
+\paragraph{Comparaison des heuristiques séparément}{Dans un second temps, nous constatons que pour la résolution d'un taquin 4*4, l'heuristique H.6 (avec un coefficient de normalisation modifié) paraît la plus judicieuse à utiliser. En effet, elle présente le nombre de coups moyen le plus faible et un temps moyen ainsi qu'une utilisation de l'espace mémoire raisonnable. Par opposition, l'heuristique H.1 semble être à éviter puisque son temps moyen et son espace mémoire utilisé est déraisonnable.}
+\paragraph{H.6 + Désordre}{Nous remarquons également que l'association H.6 + Désordre produit un résultat convenable également. Cependant, son nombre de coups moyen étant supérieur à H.6 utilisée seule, nous ne retiendrons pas cette combinaison.}
+\paragraph{Conclusion}{Nous pouvons en conclure que la meilleure heuristique pour résoudre un taquin 4*4 est H6 avec un coefficient de normalisation valant $\mathsf{\tfrac{1}{2}}$ ; dans les faits, ce dernier multiplie la valeur de la distance de Manhattan non pondérée par 2.}
 \section{TAQUINS 5*5}
 \section{Implémentation d'un autre algorithme de recherche}
-\paragraph{L'algorithme IDA*}{Nous avons choisi d'implémenter une variante de l'algorithme A* : IDA*. Son fonctionnement est semblable à celui de A* mais avec un approfondissement itératif.}
+\paragraph{L'algorithme IDA*}{Nous avons choisi d'implémenter une variante de l'algorithme \textbf{A*} : IDA*. Son fonctionnement est similaire à celui de \textbf{A*} mais avec une recherche en profondeur itérative.}
 \paragraph{}{L'algorithme fonctionne comme suit: à chaque itération, on effectue une recherche en profondeur d'abord, en coupant une branche lorsque son coût total
-f (n) = g (n) + h (n) dépasse un seuil donné. Ce seuil commence à l'estimation du coût à l'état initial et augmente à chaque itération de l'algorithme. À chaque itération, le seuil utilisé pour la prochaine itération est le coût minimum de toutes les valeurs dépassant le seuil actuel.
+$\mathsf{f(n) = g(n) + h(n)}$ dépasse un seuil donné. Ce seuil commence à l'estimation du coût à l'état initial et augmente à chaque itération de l'algorithme. Ainsi, le seuil utilisé pour l'itération suivante est le coût minimum de toutes les valeurs dépassant le seuil actuel.
 
-Comme dans A *, l'heuristique doit avoir des propriétés particulières pour garantir l'optimalité de la solution. Nous utiliserons donc les même heuristiques que précédemment.}
+Comme dans \textbf{A*}, l'heuristique doit avoir des propriétés particulières pour garantir l'optimalité de la solution. Nous utiliserons donc les même heuristiques que précédemment.}
 
 \section{Création de nouvelles heuristiques}
 - Taux de désordre
-- H9 (heuristique aléatoire
+- H9 (heuristique aléatoire)
 \section{Interface graphique}
 \section{Interface Web}
 

@@ -276,18 +276,26 @@ que pour un coefficient de normalisation valant 4. L'algorithme sous estime le c
 \textbf{H.5} & 2,548957515 & 45226,2 & 65,3\\ \hline
 \textbf{H.6} & 4,902488279 & 86994,7 & 61,3 \\ \hline
 \textbf{H1/H2/H3/H4/H5/H6}&5,448457384&29989,8&159,5\\ \hline
+\textbf{H6/Taux de désordre}&4,026388192&50552,5&68,1\\ \hline
 \end{tabular}
 \end{figure}
-
 }
-\paragraph{}{Tout d'abord, nous pouvons observer que lors de l'utilisation simultanée de toutes les heuristiques, l'algorithme sur-estime grandement le chemin et par conséquent le nombre de coup moyen est très élevé.}
+\newpage
+\paragraph{Utilisation des heuristiques en simultané}{Tout d'abord, nous pouvons observer que lors de l'utilisation simultanée de toutes les heuristiques, l'algorithme sur-estime grandement le chemin et par conséquent le nombre de coup moyen est très élevé.}
+\paragraph{Comparaison des heuristiques séparément}{En outre, nous pouvons également observer que pour la résolution d'un taquin 4*4, l'heuristique H6 (avec un coefficient de normalisation modifié) paraît la plus judicieuse à utiliser. En effet, elle présente le nombre de coup moyen le plus faible et un temps moyen ainsi qu'une utilisation de l'espace mémoire raisonnable. Par opposition, l'heuristique H1 semble être à éviter puisque son temps moyen et son espace mémoire utilisé est déraisonnable.}
+\paragraph{H6/Taux de désordre}{Nous remarquons également que l'association H6/Taux de désordre produit un résultat convenable également. Cependant, son nombre de coup moyen étant supérieur à H6 utilisée seule, nous ne retiendrons pas cette combinaison.}
+\paragraph{Conclusion}{Par conséquent, nous pouvons en conclure que la meilleure heuristique pour résoudre un taquin 4*4 est H6 avec un coefficient de normalisation valant $\frac{1}{2}$.}
 \section{TAQUINS 5*5}
 \section{Implémentation d'un autre algorithme de recherche}
-%\paragraph{L'algorithme IDA*}{Nous avons choisi d'implémenter une variante de l'algorithme A* : IDA*. Son fonctionnement est plus ou moins semblable à celui de A* mais avec un approfondissement itératif.}
-%Quant à lui, utilise comme limite de l'horizon de recherche la valeur de la fonction heuristique f(n)
-%Chaque itération de IDA* est une recherche en profondeur qui étend tous les nœuds à l'intérieur d'un contour délimité par la valeur courante de flimite en regardant par dessus cette limite pour savoir où se trouvera la prochaine valeur de f
-%limite
+\paragraph{L'algorithme IDA*}{Nous avons choisi d'implémenter une variante de l'algorithme A* : IDA*. Son fonctionnement est semblable à celui de A* mais avec un approfondissement itératif.}
+\paragraph{}{L'algorithme fonctionne comme suit: à chaque itération, on effectue une recherche en profondeur d'abord, en coupant une branche lorsque son coût total
+f (n) = g (n) + h (n) dépasse un seuil donné. Ce seuil commence à l'estimation du coût à l'état initial et augmente à chaque itération de l'algorithme. À chaque itération, le seuil utilisé pour la prochaine itération est le coût minimum de toutes les valeurs dépassant le seuil actuel.
+
+Comme dans A *, l'heuristique doit avoir des propriétés particulières pour garantir l'optimalité de la solution. Nous utiliserons donc les même heuristiques que précédemment.}
+
 \section{Création de nouvelles heuristiques}
+- Taux de désordre
+- H9 (heuristique aléatoire
 \section{Interface graphique}
 \section{Interface Web}
 

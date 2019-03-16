@@ -163,8 +163,7 @@
 
 
 \chapter{Etude Expérimentale}
-\section{TAQUINS 3*3}
-\paragraph{}{Dans cette première partie nous allons nous intéresser aux performances de l'algorithme. Pour cela nous exécuterons le programme sur les taquins suivants (solubles et générés aléatoirement par une fonction de notre programme): }
+\paragraph{}{Dans cette première partie nous allons nous intéresser aux performances de l'algorithme sur des taquins 3*3. Pour cela nous exécuterons le programme sur les taquins suivants (solubles et générés aléatoirement par une fonction de notre programme): }
 \begin{itemize}
 \item \lbrack3, 4, 0, 7, 2, 1, 8, 6, 5\rbrack
 \item \lbrack5, 4, 3, 0, 7, 1, 2, 6, 8\rbrack
@@ -245,8 +244,8 @@ que pour un coefficient de normalisation valant 4. L'algorithme sous estime le c
 
 \paragraph{}{Pour finir, nous avons tenté de combiner H2 ainsi que H4, les deux heuristiques qui dissociées présentent les temps moyen ainsi que le nombre moyen d'états créés le plus faible.  Toutefois nous pouvons constater que mises ensemble ces dernières présentent des performances inférieures et un taux d'optimalité équivalent. }
 \newline
-
-\textbf{TAQUINS 4*4}
+\chapter{Extensions}
+\section{TAQUINS 4*4}
 
 \paragraph{}{Nous allons maintenant nous intéresser à la résolution de taquins 4*4 par notre algorithme. Pour cela nous allons collecter des données relatives au temps moyen d'exécution, le nombre d'états moyens créés et le nombre de coup moyen pour parvenir à résoudre le problème.}
 \paragraph{}{De même que lors de la partie précédente, nous collecterons ces données à partir de taquins solubles générés aléatoirement. Ces taquins sont les suivants : }
@@ -262,7 +261,7 @@ que pour un coefficient de normalisation valant 4. L'algorithme sous estime le c
 \item \lbrack 2, 3, 14, 8, 0, 9, 13, 6, 10, 4, 7, 1, 15, 12, 5, 11\rbrack
 \item \lbrack 7, 15, 2, 12, 1, 6, 5, 3, 10, 4, 11, 14, 13, 0, 8, 9\rbrack
 \end{itemize}
-
+\paragraph{}{Cependant, pour la résolution des taquins 4*4 nous avons pris la liberté de modifier le coefficient de normalisation de H6. Ce dernier vaut désormais $\frac{1}{2}$. Sans cette modification, H6 sous estimait grandement le chemin et par conséquent une exécution du programme avec cette dernière pouvait prendre plus d'une heure.}
 {\scriptsize\addfontfeatures{Numbers=Tabular}
 \renewcommand{\arraystretch}{1.3}
 \vspace*{1cm}
@@ -276,9 +275,20 @@ que pour un coefficient de normalisation valant 4. L'algorithme sous estime le c
 \textbf{H.4} & 2,345959473 & 36172,6 & 116,9 \\ \hline
 \textbf{H.5} & 2,548957515 & 45226,2 & 65,3\\ \hline
 \textbf{H.6} & 4,902488279 & 86994,7 & 61,3 \\ \hline
+\textbf{H1/H2/H3/H4/H5/H6}&5,448457384&29989,8&159,5\\ \hline
 \end{tabular}
 \end{figure}
-\vspace*{1cm}
+
 }
-\paragraph{}{}
+\paragraph{}{Tout d'abord, nous pouvons observer que lors de l'utilisation simultanée de toutes les heuristiques, l'algorithme sur-estime grandement le chemin et par conséquent le nombre de coup moyen est très élevé.}
+\section{TAQUINS 5*5}
+\section{Implémentation d'un autre algorithme de recherche}
+%\paragraph{L'algorithme IDA*}{Nous avons choisi d'implémenter une variante de l'algorithme A* : IDA*. Son fonctionnement est plus ou moins semblable à celui de A* mais avec un approfondissement itératif.}
+%Quant à lui, utilise comme limite de l'horizon de recherche la valeur de la fonction heuristique f(n)
+%Chaque itération de IDA* est une recherche en profondeur qui étend tous les nœuds à l'intérieur d'un contour délimité par la valeur courante de flimite en regardant par dessus cette limite pour savoir où se trouvera la prochaine valeur de f
+%limite
+\section{Création de nouvelles heuristiques}
+\section{Interface graphique}
+\section{Interface Web}
+
 \end{document}

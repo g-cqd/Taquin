@@ -1,4 +1,4 @@
-This is LuaTeX, Version 1.07.0 (TeX Live 2018)  (format=lualatex 2018.10.8)  16 MAR 2019 13:04
+This is LuaTeX, Version 1.07.0 (TeX Live 2018)  (format=lualatex 2018.10.8)  16 MAR 2019 18:09
  restricted system commands enabled.
 **taquin.tex
 (./taquin.tex
@@ -35,7 +35,7 @@ Inserting `luaotfload.aux.set_capheight' at position 3 in `luaotfload.patch_font
 '.
 Inserting `luaotfload.rewrite_fontname' at position 4 in `luaotfload.patch_font'
 .
-luaotfload | main : initialization completed in 0.090 seconds
+luaotfload | main : initialization completed in 0.087 seconds
 Babel <3.18> and hyphenation patterns for 1 language(s) loaded.
 (/usr/local/texlive/2018/texmf-dist/tex/latex/base/report.cls
 Document Class: report 2014/09/29 v1.4h Standard LaTeX document class
@@ -1199,7 +1199,7 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <7> on input line 12.
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <5> on input line 12.
-<./inc/media/presentation_twoTaquins.pdf, id=55, 171.64125pt x 81.30376pt>
+<./inc/media/presentation_twoTaquins.pdf, id=79, 171.64125pt x 81.30376pt>
 File: ./inc/media/presentation_twoTaquins.pdf Graphic file (type pdf)
 <use ./inc/media/presentation_twoTaquins.pdf>
 Package luatex.def Info: ./inc/media/presentation_twoTaquins.pdf  used on input 
@@ -1358,7 +1358,7 @@ um;"
 . - 'bold italic small caps'  (bx/itsc) with NFSS spec.: 
 .................................................
  [2]
-<./inc/media/example_1.pdf, id=97, 81.30376pt x 81.30376pt>
+<./inc/media/example_1.pdf, id=121, 81.30376pt x 81.30376pt>
 File: ./inc/media/example_1.pdf Graphic file (type pdf)
 <use ./inc/media/example_1.pdf>
 Package luatex.def Info: ./inc/media/example_1.pdf  used on input line 77.
@@ -1391,51 +1391,60 @@ LaTeX Warning: `!h' float specifier changed to `!ht'.
 [8
 
 ]
-Underfull \hbox (badness 1622) in paragraph at lines 230--230
+Underfull \hbox (badness 1622) in paragraph at lines 229--229
 []|\TU/Inter(0)/bx/n/10 Temps moyen
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 231--231
+Underfull \hbox (badness 10000) in paragraph at lines 230--230
 []|\TU/Inter(0)/bx/n/10 Nombre moyen
  []
 
 
-Overfull \hbox (75.27995pt too wide) in paragraph at lines 229--239
+Overfull \hbox (75.27995pt too wide) in paragraph at lines 228--238
  [][] 
  []
 
 [9]
-Underfull \hbox (badness 10000) in paragraph at lines 246--248
+Underfull \hbox (badness 10000) in paragraph at lines 245--247
 
+ []
+
+[10]
+Chapitre 3.
+
+Overfull \hbox (45.78049pt too wide) in paragraph at lines 270--280
+ [][] 
  []
 
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 284.
-[10] [11]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 284.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 294.
+[11
+
+] [12]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 294.
  (./taquin.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 284.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 284.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 294.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 294.
 Package rerunfilecheck Info: File `taquin.out' has not changed.
-(rerunfilecheck)             Checksum: 26CBACBDAFFE4A89FCB905460FAB3076;759.
+(rerunfilecheck)             Checksum: 051B3EE073D6866002D267C8FAB82E53;1168.
 
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 284.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 294.
 )
 
 Here is how much of LuaTeX's memory you used:
- 19142 strings out of 494413
- 156267,552014 words of node,token memory allocated
- 94526 words of node memory still in use:
-   4 hlist, 1 vlist, 1 rule, 57 glue, 1 penalty, 12576 glyph, 2430 attribute, 60
- glue_spec, 405 attribute_list, 1 write nodes
-   avail lists: 2:1064,3:127,4:71,5:324,6:30,7:2842,8:174,9:276,10:7,11:256
- 22245 multiletter control sequences out of 65536+600000
+ 19156 strings out of 494413
+ 156265,552014 words of node,token memory allocated
+ 99153 words of node memory still in use:
+   4 hlist, 1 vlist, 1 rule, 57 glue, 1 penalty, 13211 glyph, 2508 attribute, 60
+ glue_spec, 418 attribute_list, 1 write nodes
+   avail lists: 2:1274,3:127,4:70,5:293,6:30,7:2447,8:174,9:276,10:7,11:256
+ 22251 multiletter control sequences out of 65536+600000
  102 fonts using 27781047 bytes
  46i,13n,81p,695b,560s stack positions out of 5000i,500n,10000p,200000b,100000s
 </Users/melaniemarques/Library/Fonts/SFMono-RegularItalic.otf><./inc/fonts/Inter
@@ -1449,10 +1458,10 @@ onts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2018/texmf-dist/font
 s/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2018/texmf-dist/fonts/t
 ype1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1
 /public/amsfonts/cm/cmsy10.pfb>
-Output written on taquin.pdf (12 pages, 220754 bytes).
+Output written on taquin.pdf (13 pages, 222989 bytes).
 
-PDF statistics: 274 PDF objects out of 1000 (max. 8388607)
- 217 compressed objects within 3 object streams
- 70 named destinations out of 1000 (max. 131072)
- 89 words of extra memory for PDF output out of 10000 (max. 100000000)
+PDF statistics: 303 PDF objects out of 1000 (max. 8388607)
+ 245 compressed objects within 3 object streams
+ 78 named destinations out of 1000 (max. 131072)
+ 137 words of extra memory for PDF output out of 10000 (max. 100000000)
 

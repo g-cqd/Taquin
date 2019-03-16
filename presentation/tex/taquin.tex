@@ -189,11 +189,11 @@
 \centering
 \begin{tabular}{| c | c | c | c | c |} \hline
 \textbf{ } & \textbf{Temps} & \textbf{Etats créés} & \textbf{Ecart à la Solution} & \textbf{Optimalité} \\ \hline
-\textbf{H.1} & 26ms & 624 & 5,2 & ${\mathsf{\tfrac{1}{5}}}$ \\ \hline
-\textbf{H.2} & 18ms & 450 & 9,2 & ${\mathsf{\tfrac{1}{5}}}$ \\ \hline
-\textbf{H.3} & 49ms & 1524 & 0,6 & ${\mathsf{\tfrac{2}{3}}}$ \\ \hline
-\textbf{H.4} & 14ms & 411 & 8,8 & ${\mathsf{\tfrac{1}{5}}}$ \\ \hline
-\textbf{H.5} & 43ms & 1342 & 0,6 & ${\mathsf{\tfrac{2}{3}}}$ \\ \hline
+\textbf{H.1} & 26ms & 624 & 5,2 &  $\frac{1}{5}$ \\ \hline
+\textbf{H.2} & 18ms & 450 & 9,2 & $\frac{1}{5}$ \\ \hline
+\textbf{H.3} & 49ms & 1524 & 0,6 & $\frac{2}{3}$ \\ \hline
+\textbf{H.4} & 14ms & 411 & 8,8 & $\frac{1}{5}$ \\ \hline
+\textbf{H.5} & 43ms & 1342 & 0,6 & $\frac{2}{3}$ \\ \hline
 \textbf{H.6} & 87ms & 2831 & 0 & 1 \\ \hline
 \textbf{Désordre} & 1,2s & 36089 & 0 & 1 \\ \hline
 \end{tabular}
@@ -208,6 +208,7 @@
 % \textbf{H5} & 0,042847085 & 1341,7 & 0,6 & $\frac{2}{3}$  \\ \hline
 % \textbf{H6} & 0,087112284 & 2830,6 & 0 & 1  \\ \hline
 % \textbf{Taux de désordre} & 1,199918461 & 36088,5 & 0& 1 \\ \hline
+% ${\mathsf{\tfrac{1}{5}}}$
 
 \paragraph{}{Nous remarquons donc que H.4 présente le temps d'exécution moyen, et un nombre d'état créé le plus faible cependant elle ne renvoie un résultat optimal qu'une exécution sur 5.}
 
@@ -243,6 +244,41 @@ que pour un coefficient de normalisation valant 4. L'algorithme sous estime le c
 \paragraph{}{De même, les heuristiques H5 et le taux de désordre combinés proposent de bonne performances au niveau du temps d'exécution et du nombre d'états moyen créés. Cependant l'écart moyen à la solution optimale est 3 fois supérieur à celui de H6 et Taux de désordre combinés. Le taux d'optimalité est par ailleurs faible : 1 fois sur 2.}
 
 \paragraph{}{Pour finir, nous avons tenté de combiner H2 ainsi que H4, les deux heuristiques qui dissociées présentent les temps moyen ainsi que le nombre moyen d'états créés le plus faible.  Toutefois nous pouvons constater que mises ensemble ces dernières présentent des performances inférieures et un taux d'optimalité équivalent. }
+\newline
+
 \textbf{TAQUINS 4*4}
 
+\paragraph{}{Nous allons maintenant nous intéresser à la résolution de taquins 4*4 par notre algorithme. Pour cela nous allons collecter des données relatives au temps moyen d'exécution, le nombre d'états moyens créés et le nombre de coup moyen pour parvenir à résoudre le problème.}
+\paragraph{}{De même que lors de la partie précédente, nous collecterons ces données à partir de taquins solubles générés aléatoirement. Ces taquins sont les suivants : }
+\begin{itemize}
+\item \lbrack 0, 7, 3, 12, 14, 13, 5, 9, 10, 6, 11, 15, 1, 2, 8, 4\rbrack
+\item \lbrack 5, 14, 3, 9, 2, 0, 10, 1, 4, 15, 11, 6, 13, 7, 8, 12\rbrack
+\item \lbrack 1, 12, 8, 7, 2, 10, 3, 9, 0, 6, 5, 14, 4, 11, 13, 15\rbrack
+\item \lbrack 13, 11, 12, 8, 15, 1, 0, 3, 7, 14, 9, 4, 5, 2, 6, 10\rbrack
+\item \lbrack 9, 2, 4, 14, 3, 11, 8, 15, 12, 5, 1, 7, 13, 0, 6, 10\rbrack
+\item \lbrack 14, 7, 8, 11, 10, 6, 1, 12, 15, 0, 5, 3, 9, 2, 13, 4\rbrack
+\item \lbrack 4, 7, 5, 0, 13, 11, 1, 12, 15, 10, 9, 3, 8, 2, 14, 6\rbrack
+\item \lbrack 14, 12, 11, 6, 9, 15, 3, 1, 2, 5, 10, 13, 8, 4, 0, 7\rbrack
+\item \lbrack 2, 3, 14, 8, 0, 9, 13, 6, 10, 4, 7, 1, 15, 12, 5, 11\rbrack
+\item \lbrack 7, 15, 2, 12, 1, 6, 5, 3, 10, 4, 11, 14, 13, 0, 8, 9\rbrack
+\end{itemize}
+
+{\scriptsize\addfontfeatures{Numbers=Tabular}
+\renewcommand{\arraystretch}{1.3}
+\vspace*{1cm}
+\begin{figure}[h!]
+\centering
+\begin{tabular}{| c | c | c | c |} \hline
+\textbf{ } & \textbf{Temps Moyen} & \textbf{Etats créés en moyenne} & \textbf{Nombre de coups moyens}\\ \hline
+\textbf{H.1} & 86,852147675 & 1239867,5 & 64,1 \\ \hline
+\textbf{H.2} & 2,358877850 & 34478,3 & 120,3 \\ \hline
+\textbf{H.3} & 7,183158445 & 124681,6 & 67,3 \\ \hline
+\textbf{H.4} & 2,345959473 & 36172,6 & 116,9 \\ \hline
+\textbf{H.5} & 2,548957515 & 45226,2 & 65,3\\ \hline
+\textbf{H.6} & 4,902488279 & 86994,7 & 61,3 \\ \hline
+\end{tabular}
+\end{figure}
+\vspace*{1cm}
+}
+\paragraph{}{}
 \end{document}

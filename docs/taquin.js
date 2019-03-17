@@ -22,8 +22,9 @@ class Taquin {
 	}
 	coordinates( content = 0 ) {
 		let width = this.environment.sizes[0];
-		if ( content instanceof Object ) { return ( width * content[1] ) + content[0]; }
-		else {
+		if ( content instanceof Object ) {
+			return ( width * content[1] ) + content[0];
+		} else {
 			let index = this.sequence.indexOf( content );
 			let y = Math.ceil( ( index + 1 ) / width ) - 1;
 			let x = index - ( y * width );
@@ -33,7 +34,7 @@ class Taquin {
 	details() {
 		let [width,length] = this.environment.sizes,
 		weightings = this.environment.weightings,
-		sequence = this.sequence,
+		seq = this.sequence,
 		inv = 0,
 		dis = 0,
 		man = 0,
@@ -45,24 +46,33 @@ class Taquin {
 				let stepMan = 0;
 				if ( weighting == weightings[0] ) {
 					for ( let j = i+1 ; j < length ; j++ ) {
-						if ( sequence[i] != 0 && sequence[j] != 0 && sequence[i] > sequence[j] ) { inv++; }
+						if ( seq[i] != 0 && seq[j] != 0 && seq[i] > seq[j] ) {
+							inv++;
+						}
 					}
-					if ( sequence[i] != 0 && sequence[i] != ( i + 1 ) ) { dis++; }
+					if ( seq[i] != 0 && seq[i] != ( i + 1 ) ) {
+						dis++;
+					}
 				}
 				if ( i > 0 ) {
 					let pos = this.coordinates( i ),
 					x = i % width,
 					coords = [( ( x == 0 ) ? ( width - 1 ) : ( x - 1 ) ), ( Math.ceil( i / width ) - 1 )];
 					stepMan += ( Math.abs( pos[0] - coords[0] ) + Math.abs( pos[1] - coords[1] ) );
-					if ( weighting == weightings[0] ) { man += stepMan; }
+					if ( weighting == weightings[0] ) {
+						man += stepMan;
+					}
 					stepH += weighting[0][k] * stepMan;
 					k++;
 				}
 			}
-			if ( weighting[2] == 7 ) { stepH += dis; }
-			stepH = Math.trunc(stepH / weighting[1]);
+			if ( weighting[2] == 7 ) {
+				stepH += dis;
+			}
+			stepH = parseInt(stepH / weighting[1]);
 			h += stepH;
 		}
+		h = parseInt( h / weightings.length );
 		return [inv,dis,man,h];
 	}
 	findMoves( flex = false ) {
@@ -77,7 +87,7 @@ class Taquin {
 		return moves;
 	}
 	moveTile( move ) {
-		let sequence = this.sequence,
+		let seq = this.sequence,
 		width = this.environment.sizes[0],
 		x = this.coordinates( this.coordinates() ),
 		y;
@@ -85,8 +95,8 @@ class Taquin {
 		if ( move == 'L' ) { y = x + 1; }
 		if ( move == 'D' ) { y = x - width; }
 		if ( move == 'U' ) { y = x + width; }
-		sequence[x] = sequence[y];
-		sequence[y] = 0;
+		seq[x] = seq[y];
+		seq[y] = 0;
 	}
 	valid() {
 		let width = this.environment.sizes[0];
@@ -98,7 +108,9 @@ class Taquin {
 		let childList = [];
 		for ( let move of this.moves ) {
 			let child = new Taquin( this.environment, this, move );
-			if ( child.h == 0 ) { return child; }
+			if ( child.dis == 0 ) {
+				return child;
+			}
 			let i = 0;
 			for (i; i < childList.length; i++) {
 				if (child.f < childList[i].f) {
@@ -111,35 +123,43 @@ class Taquin {
 	}
 	magic( rand = 0 ) {
 		let length = this.environment.sizes[1],
-		sequence = new Array( length ).fill(0);
-		for ( let i = 1 ; i < length ; i++ ) { sequence[i-1] = i; }
+		seq = new Array( length ).fill(0);
+		for ( let i = 1 ; i < length ; i++ ) {
+			seq[i-1] = i;
+		}
 		if ( rand == 1 ) {
 			do {
-				sequence.shuffle();
-				this.sequence = sequence;
+				seq.shuffle();
+				this.sequence = seq;
 			} while ( !this.valid() );
 		}
-		return sequence;
+		return seq;
 	}
 	traceroute() {
 		let path = [this];
-		while ( path[0].previous instanceof Taquin ) { path.unshift( path[0].previous ); }
+		while ( path[0].previous instanceof Taquin ) {
+			path.unshift( path[0].previous );
+		}
 		return path;
 	}
 }
 
 class Environment {
 	constructor( width, choices = undefined ) {
+		this.createdTaquins = 0;
 		this._sizes = [width, width * width];
+		this.choices = choices;
 		this._weightings = this.getWeightings( choices );
 		this.moves = [new Taquin( this )];
 		this.end = [];
 	}
 	get sizes() { return this._sizes; }
 	getWeightings( choices ) {
-		const width = this.sizes[0],
+		let width = this.sizes[0],
 		length = this.sizes[1] - 1;
-		if ( !choices ) { choices = [5]; }
+		if ( choices == undefined ) {
+			choices = [5];
+		}
 		let weightings = [],
 		weight = length;
 		for ( let index of choices ) {
@@ -147,22 +167,28 @@ class Environment {
 			let pi = new Array(length).fill(0);
 			switch (index) {
 				case 1:
-					if ( width == 3 ) { pi = [36, 12, 12, 4, 1, 1, 4, 1]; }
-					else {
-						for ( let y = 0 ; y < width; y++ ) {
+					if ( width == 3 ) {
+						pi = [36, 12, 12, 4, 1, 1, 4, 1];
+					} else {
+						for ( let y = 0 ; y < width ; y++ ) {
 							for ( let x = 0 ; x < width ; x++ ) {
-								if ( x == y == width-1 ) { continue; }
-								else {
+								if ( x == y == width-1 ) {
+									continue;
+								} else {
 									if ( x == y == 0 ) {
 										pi[0] = width * ( width * 3 );
 										x++;
 									}
 									if ( y == 0 ) {
-										while ( x < width ) { pi[x++] = width * 3; }
-									}
-									else {
-										if ( x == 0 ) { pi[y*width] = width * 2;}
-										else { pi[y*width+x] = width-y; }
+										while ( x < width ) {
+											pi[x++] = width * 3;
+										}
+									} else {
+										if ( x == 0 ) {
+											pi[y*width] = width * 2;
+										} else {
+											pi[y*width+x] = width - y;
+										}
 									}
 								}
 							}
@@ -177,8 +203,12 @@ class Environment {
 				case 5:
 					for (let i = 0; i < ( width - 1 ) ; i++ ) {
 						let j = 0;
-						while ( pi[j] != 0 ) { j++; }
-						for ( let k = 0; k < ( width - i ); k++ ) { pi[j++] = weight--; }
+						while ( pi[j] != 0 ) {
+							j++;
+						}
+						for ( let k = 0 ; k < ( width - i ) ; k++ ) {
+							pi[j++] = weight--;
+						}
 						j += i;
 						pi[j] = weight--;
 						j += width;
@@ -196,12 +226,16 @@ class Environment {
 					break;
 				case 8:
 					let mid = Math.floor(length/2);
-					for (let i = 0; i < mid ; i++) { pi[i] = mid - i; }
+					for (let i = 0; i < mid ; i++) {
+						pi[i] = mid - i;
+					}
 					if (length % 2 == 1) {
 						pi[mid] = length;
 						mid++;
 					}
-					for (let i = mid; i < length; i++) { pi[i] = i+1; }
+					for (let i = mid; i < length; i++) {
+						pi[i] = i+1;
+					}
 					rho = 2.5;
 					break;
 				case 9:
@@ -215,7 +249,9 @@ class Environment {
 						}
 						j++;
 					}
-					if (length % 2 == 1) { pi[length-1] = 1; }
+					if (length % 2 == 1) {
+						pi[length-1] = 1;
+					}
 					pi.shuffle();
 					break;
 				default:
@@ -243,41 +279,42 @@ class Environment {
 		return false;
 	}
 	aStar() {
-		const startTime = Date.now();
+
 		let explored = new Map();
 		let queue = new Map();
 		queue.set(this.moves.last().f,[this.moves.last()]);
+
 		while (true) {
 			let k = Array.from( queue.keys() )[0];
 			let kArray = queue.get( k );
-
 			let shouldBeExpanded = kArray.shift();
-			explored.set((shouldBeExpanded.sequence).join(''),shouldBeExpanded);
-			if ( kArray.length == 0 ) { queue.delete(k); }
-			else { queue.set( k, kArray ); }
-			const children = shouldBeExpanded.children();
-			if (children instanceof Taquin) {
-				const end = Date.now() - startTime;
-				this.end.push(children);
-				return children;
+
+			explored.set(shouldBeExpanded.sequence.toString(),shouldBeExpanded);
+
+			if ( kArray.length == 0 ) {
+				queue.delete(k);
+			} else {
+				queue.set( k, kArray );
 			}
-			else {
+
+			let children = shouldBeExpanded.children();
+			if (children instanceof Taquin) {
+				this.end.push(children);
+				return this.end.last();
+			} else {
 				for (let child of children) {
-					let sequenceString = (child.sequence).join('');
+					let sequenceString = child.sequence.toString();
 					if (explored.has(sequenceString)) {
 						if (explored.get(sequenceString).f < child.f) {
 							children.splice(children.indexOf(child),1);
-						}
-						else {
+						} else {
 							explored.delete(sequenceString);
 						}
-					}
-					 else if (queue.has(child.f)) {
+					} else if (queue.has(child.f)) {
 						let cArray = queue.get(child.f);
 						cArray.push(child);
 						queue.set(child.f,cArray);
-					}
-					else {
+					} else {
 						queue.set(child.f,[child]);
 					}
 				}
@@ -294,7 +331,6 @@ class Environment {
 	}
 
 	idaStar() {
-		const startTime = Date.now();
 		let root = this.moves.last();
 		let bound = root.h;
 		let path = [root];
@@ -302,7 +338,7 @@ class Environment {
 			let node = path.last();
 			let f = g + node.h;
 			if (f > bound) { return f; }
-			let min = Infinity;
+			let minimum = Infinity;
 			let children = node.children();
 			if (children instanceof Taquin) {
 				path.push(children);
@@ -313,12 +349,12 @@ class Environment {
 						path.push(child);
 						let t = search(path,g+1,bound);
 						if (t instanceof Taquin) {return t;}
-						if (t < min) { min = t;}
+						if (t < minimum) { minimum = t;}
 						path.pop();
 					}
 				}
 			}
-			return min;
+			return minimum;
 		}
 		while (true) {
 			let t = search(path,0,bound);
@@ -367,12 +403,12 @@ class Environment {
 		return this[func]();
 	}
 	play(move) {
-		const lastTaquin = this.moves.last(),
+		lastTaquin = this.moves.last(),
 		newTaquin = new Taquin(this,lastTaquin,move);
 		newTaquin.moves = newTaquin.findMoves(true);
 		this.moves.push(newTaquin);
 		display.taquin.play();
-		if (this.moves.last().h==0) {
+		if (this.moves.last().dis == 0) {
 			document.body.classList.toggle("win");
 		}
 	}

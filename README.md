@@ -66,6 +66,8 @@
 	- Implémentation des coups possibles
 	- Implémentation du jeu de chaque coup
 	- Implémentation de la distance de Manhattan totale
+### 19-02-22
+- [x] @mmrqs : Généralisation des heuristiques H4/H5 à des taquins de taille n*n
 
 ### 19-02-26
 - [x] @originecode: Implémentations
@@ -74,9 +76,9 @@
 	- positionnement et personnalisation des boutons
 	- positionnement des labels
 	- génération d'un taquin de taille variable en fonction des paramètres entrés.
-	
-### 19-02-28
-- [x] @mmrqs : Généralisation des heuristiques H4/H5 à des taquins de taille n*n
+### 19-02-27	
+- [x] @originecode: - Gestion des états redondants avant la création d'un noeud
+		    - Résolution effective
 
 ### 19-03-04
 - [x] @mmrqs : Utilisation d'un dictionnaire ordonné pour gérer la frontière
@@ -86,6 +88,9 @@
 
 ### 19-03-08
 - [x] @mmrqs : Modification de l'interface graphique. Elle permet dorénavant de générer un Taquin solvable, d'y jouer et de lancer la solution.
+- [x] @originecode: - Modification de la fonction permettant de jouer un coup sur le taquin
+		    - Suppression de la variable Taquin.start
+		    - L'expansion commence au dernier Taquin ajouté dans self.moves
 
 ### 19-03-09
 - [x] @mmrqs : - Intégration du mode 'Pilot' dans l'interface Graphique (pour les Taquins 3*3). 
@@ -97,6 +102,12 @@
 ### 19-03-12
 - [x] @mmrqs : - Choix de l'algorithme à utiliser dans l'interface
 	       - Intégration du taux de désordre dans l'interface 
+- [x] @originecode: Ajout d'un nouvel algorithme de recherche : ida*
 ### 19-03-13:
 - [x] @mmrqs : - Gestion des états explorés à l'aide d'un dictionnaire
 
+### 19-03-14 : 
+- [x] @originecode: Ajout heuristique H9 (aléatoire)
+
+### 19-03-15 : 
+- [x] @originecode: Modification du coefficient de normalisation de H6 pour de meilleures performances

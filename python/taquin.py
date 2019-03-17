@@ -349,16 +349,16 @@ class Environment:
 
 
 
-class __main__:
-	width = int(input(">>> Taille du taquin ?\n>>> "))
-	choices = str(input(">>> Heuristiques ?\n>>> Entrez les numéros séparés par des espaces.\n>>> "))
-	decomposition = 0
-	if len(choices) == 1: choices = [int(choices)]
-	else:
-		choices = choices.split(' ')
-		for index,choice in enumerate(choices): choices[index] = int(choice)
-		decomposition = int(input(">>> Voulez-vous associer les heuristiques [0] ou dissocier les exécutions [1] ?\n>>> "))
-	a = Environment(width,choices)
+#class __main__:
+	#width = int(input(">>> Taille du taquin ?\n>>> "))
+	#choices = str(input(">>> Heuristiques ?\n>>> Entrez les numéros séparés #par des espaces.\n>>> "))
+	#decomposition = 0
+	#if len(choices) == 1: choices = [int(choices)]
+	#else:
+	#	choices = choices.split(' ')
+	#	for index,choice in enumerate(choices): choices[index] = int(choice)
+	#	decomposition = int(input(">>> Voulez-vous associer les heuristiques [0] ou dissocier les exécutions [1] ?\n>>> "))
+	#a = Environment(width,choices)
 	"""while(a.moves[-1].h != 0):
 		move = "_"
 		while not move in ["R","L","D","U","E"]:
@@ -367,5 +367,5 @@ class __main__:
 			a.play(move)
 		elif move == "E":"""
 	#a.expand(a.aStar,decomposition)
-	a.expand(a.idaStar,decomposition)
-	exit(0)
+	#a.expand(a.idaStar,decomposition)
+	#exit(0)

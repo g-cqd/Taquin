@@ -42,7 +42,7 @@
 \item [{\ttfamily\bfseries f}:] {la fonction d'évaluation: ${f(n) = g(n) + h(n)}$ avec ${n}$ le taquin actuel}
 \end{itemize}
 \subsection{Détail des heuristiques}
-\paragraph{} {Dans le cadre de l'utilisation de l'algorithme \textbf{A*}, le choix d'heuristiques est nécessaire. De fait, nous aurons recours à 7 heuristiques, surestimant la longueur du chemin à parcourir pour atteindre l'état final. Les 6 premières sont des distances dérivées de la distance de Manhattan, correspondant aux heuristiques {\bfseries H.1}, {\bfseries H.2}, {\bfseries H.3}, {\bfseries H.4}, {\bfseries H.5}, {\bfseries H.6} et pondérées par les jeux de poids suivants:}
+\paragraph{} {Dans le cadre de l'utilisation de l'algorithme \textbf{A*}, le choix d'heuristiques est nécessaire. De fait, nous aurons recours à 7 heuristiques, estimant la longueur du chemin à parcourir pour atteindre l'état final. Les 6 premières sont des distances dérivées de la distance de Manhattan, correspondant aux heuristiques {\bfseries H.1}, {\bfseries H.2}, {\bfseries H.3}, {\bfseries H.4}, {\bfseries H.5}, {\bfseries H.6} et pondérées par les jeux de poids suivants:}
 {\scriptsize\addfontfeatures{Numbers=Tabular}
 \renewcommand{\arraystretch}{1.3}
 \vspace*{.5cm}
@@ -131,12 +131,12 @@
 \paragraph{}{Seule les tuiles qui jouxtent le vide sont candidates à ces déplacements et une tuiles qui vient d'être déplacée ne revient pas au coup d'après à sa position précédente pour éviter la possibilité de créer un cycle et ainsi accélerer le parcours des états. Ainsi on peut en tirer les conclusions suivantes:}
 \begin{itemize}
 \item Si la tuile vide se trouve à l'interieur du taquin à l'état initial, il y 4 coups possibles.
-\item Si la tuile vide se trouve sur un bord du taquin (mais pas dans un coin) du taquin à l'état initial, il y 3 coups possibles.
+\item Si la tuile vide se trouve sur un bord du taquin (mais pas dans un coin) à l'état initial, il y 3 coups possibles.
 \item Si la tuile vide se trouve dans un coin du taquin à l'état initial, il y 2 coups possibles.
 \item En revanche, si l'état actuel n'est pas l'état initial, il faut retirer 1 coup à chacunes des valeurs précédentes.
 \end{itemize}
 \subsection{Définition de l'agent}
-\paragraph{}{Il s'agit ici d'agents à réflèxes simples: les agents agissent en tenant compte du dernier percept uniquement. Nous allons donc utiliser de règles de type $\textrm{action} \Longrightarrow \textrm{condition}$}.
+\paragraph{}{Il s'agit ici d'agents à réflèxes simples: les agents agissent en tenant compte du dernier percept uniquement. Nous allons donc utiliser de règles de type $\textrm{action} \longrightarrow \textrm{condition}$}.
 \subsection{Choix de l’algorithme}
 \paragraph{}{Après avoir défini les états et les actions, nous nous intéressons à la stratégie utilisée par l’algorithme de recherche \textbf{A*} dans le but de trouver une séquence d’actions permettant d’atteindre l’état du but à partir de l’état initial.}
 \paragraph{}{La stratégie adoptée par l’algorithme consiste en la construction d'un arbre de recherche et d’y rechercher la solution. Dans ce sens, \textbf{A*} va utiliser une fonction d'évaluation basée sur des heuristiques sur chaque nœud de l'arbre afin d’estimer le meilleur chemin à emprunter et d'en visiter les nœuds enfants, triés grâce à cette fonction d'évaluation.}
@@ -145,15 +145,15 @@
 \paragraph{}{Si cela s'avérait être le contraire, alors l'exploration actuelle s'arreterait pour passer à l'exploration d'un autre chemin. Ainsi, on est sûr d'emprunter un chemin minimal pour les heuristiques choisies et d'éviter d'explorer à nouveau un même nœud mais de coût plus élevé. C'est l'association de ces différents principes qui assure la complétude de l'algorithme.}
 \subsection{Implémentation de \textbf{A*}}
 \paragraph{}{Le problème majeur de \textbf{A*} est sa complexité exponentielle en espace mémoire. Tous les états créés sont conservés, ce qui peut selon les dimensions et l'état initial du taquin, rapidement saturer la mémoire de l'ordinateur, même avec les grandes capacités de mémoire actuelles.}
-\paragraph{}{Par conséquent, nous nous sommes, lors de la réalisation de notre programme, chercher à réduire le nombre d’états et à établir la meilleure gestion possible de ces derniers. En ce sens, nous avons pensé judicieux d'appliquer quelques optimisations:}
+\paragraph{}{Par conséquent, nous avons, lors de la réalisation de notre programme, cherché à réduire le nombre d’états et à établir la meilleure gestion possible de ces derniers. En ce sens, nous avons pensé judicieux d'appliquer quelques optimisations:}
 
 %\paragraph{Améliorer l'estimation de la distance de Manhattan}{en tenant compte des conflits linéaires. L'idée est la suivante: si deux tuiles se situent sur la même ligne (respectivement même colonne), et si leurs positions sont inversées par rapport à celles souhaitées, alors l'une d'elle devra nécessairement quitter temporairement cette ligne (respectivement colonne).}
 %\paragraph{}{La distance de Manhattan ne prend pas cela en compte, et on peut donc lui ajouter 2 sans risque de surestimer la distance réelle. Dans certaines positions, il existe plusieurs conflits de la sorte, et on peut donc ainsi obtenir une estimation de distance nettement plus précise que la distance de Manhattan.}
 %\paragraph{}{Explorer un sommet coûte alors plus cher en temps, puisque le calcul de distance devient plus complexe. En contrepartie, le nombre de sommets à explorer diminue de façon importante, ce qui permet des gains importants en pratique."""}
 \paragraph{Utiliser un dictionnaire ordonné afin de gérer la frontière}{En effet, la frontière peut comporter énormément d'états. C'est pour cela qu'il convient de trier ces états afin d'en permettre une meilleure gestion. Un dictionnaire ordonné en fonction d'une clef (la fonction d'évaluation f dans le cas présent) nous a paru le plus adapté. Cela nous permet d'éviter de parcourir la liste des états dans le but d'expanser celui possédant le f le plus petit. Grâce à cette structure, nous expansons uniquement l'état présent en premier dans le dictionnaire.}
-\paragraph{Utiliser un dictionnaire pour les états explorés}{Afin de réduire le temps de traitement et diminuer les expansions, il parait logique de supprimer les états redondants et par conséquent inutiles. Ce que nous désignons par états redondants, sont en fait les états caractérisés par une séquence similaire mais un f différent. Ici, l'état qui va nous intéresser pour une même séquence est l'état possédant un f le plus petit possible.}
-\paragraph{}{C'est pourquoi notre dictionnaire va ordonner les états en fonction de la séquence (transformée en chaîne de caractères). Après la création des nœuds, nous vérifions que leur séquence n'est pas similaire à celle d'un état présent dans les états explorés. Si c'est le cas : nous regardons le f. Si le f de l'enfant est supérieur à celui de l'état exploré, nous supprimons l'enfant.}
-\paragraph{}{Dans cette optique, notre dictionnaire va prendre en clef la séquence (transformée en chaîne de caractères). Sinon, nous supprimons le l'état présent dans les états explorés. De même, lorsque nous expansons un état, nous l'ajoutons dans la liste des états explorés. Cette structure de donnée nous permet en outre d'optimiser le temps de recherche d'un état exploré.}
+\paragraph{Utiliser un dictionnaire pour les états explorés}{Afin de réduire le temps de traitement et diminuer les expansions, il parait logique de supprimer les états redondants et par conséquent inutiles. Ce que nous désignons par états redondants, sont en fait les états caractérisés par une séquence similaire mais un f différent. Ici, l'état qui va nous intéresser pour une même séquence est l'état possédant un f minimum.}
+\paragraph{}{C'est pourquoi notre dictionnaire va ordonner les états en fonction de la séquence (transformée en chaîne de caractères). Après la création des nœuds, nous vérifions que leur séquence n'est pas similaire à celle d'un état présent dans les états explorés. Si c'est le cas : nous regardons le f. Si le f de l'enfant est supérieur à celui de l'état exploré, nous ne traitons pas l'enfant.}
+\paragraph{}{Dans cette optique, notre dictionnaire va prendre en clef la séquence (transformée en chaîne de caractères). Sinon, nous supprimons l'état présent dans les états explorés. De même, lorsque nous expansons un état, nous l'ajoutons dans la liste des états explorés. Cette structure de donnée nous permet d'optimiser le temps de recherche d'un état exploré.}
 
 
 
@@ -175,7 +175,7 @@
 \paragraph{}{A partir de ces derniers, nous collecterons des informations relatives au temps d'exécution du programme, le nombre d'états créés, l'écart à la solution optimale ainsi que le taux d'optimalité (nombre de fois moyens où la solution renvoyée est minimale) le tout en faisant varier les heuristiques.}
 
 \paragraph{Comparaison des heuristiques individuellement}{Dans un premier temps, nous allons nous attacher à comparer les différentes heuristiques utilisées dans le but de résoudre ce problème.}
-\paragraph{}{En ce sens, nous avons éxécuté 10 fois le programme en utilisant chaque heuristique afin de collecter des informations relatives au temps d'execution du programme, le nombre d'états créés, et l'optimalité de la solution:}
+\paragraph{}{En ce sens, nous avons éxécuté 10 fois le programme en utilisant chaque heuristique afin de collecter des informations relatives au temps d'execution du programme, le nombre d'états créés, et l'optimalité de la solution. Il faut noter que toutes les valeurs présentes dans les tableaux suivants sont des valeurs moyennes.}
 {\scriptsize\addfontfeatures{Numbers=Tabular}
 \renewcommand{\arraystretch}{1.3}
 \vspace*{.5cm}
@@ -258,7 +258,7 @@
 \item {\ttfamily\lbrack  2,  3, 14,  8,  0,  9, 13,  6, 10,  4,  7,  1, 15, 12,  5, 11\rbrack}
 \item {\ttfamily\lbrack  7, 15,  2, 12,  1,  6,  5,  3, 10,  4, 11, 14, 13,  0,  8,  9\rbrack}
 \end{itemize}
-\paragraph{}{Cependant, pour la résolution des taquins 4*4 nous avons pris la liberté de modifier le coefficient de normalisation de H6. Ce dernier vaut désormais $\mathsf{\tfrac{1}{2}}$. Sans cette modification, H.6 sous estimait grandement le chemin et par conséquent une exécution du programme avec cette dernière pouvait prendre plus d'une heure.}
+\paragraph{}{Cependant, pour la résolution des taquins 4*4 nous avons pris la liberté de modifier le coefficient de normalisation de H.6. Ce dernier vaut désormais $\mathsf{\tfrac{1}{2}}$. Sans cette modification, H.6 sous estimait grandement le chemin et par conséquent une exécution du programme avec cette dernière pouvait prendre plus d'une heure.}
 {\scriptsize\addfontfeatures{Numbers=Tabular}
 \renewcommand{\arraystretch}{1.3}
 \vspace*{.5cm}
@@ -287,11 +287,11 @@
 % \textbf{H6/Taux de désordre}&4,026388192&50552,5&68,1\\ \hline
 
 \paragraph{Utilisation des heuristiques en simultané}{Dans un premier temps, nous pouvons noter que lors de l'utilisation simultanée de toutes les heuristiques, l'algorithme sur-estime grandement le chemin et par conséquent le nombre de coups moyen est très élevé.}
-\paragraph{Comparaison des heuristiques séparément}{Dans un second temps, nous constatons que pour la résolution d'un taquin 4*4, l'heuristique H.6 (avec un coefficient de normalisation modifié) paraît la plus judicieuse à utiliser. En effet, elle présente le nombre de coups moyen le plus faible et un temps moyen ainsi qu'une utilisation de l'espace mémoire raisonnable. Par opposition, l'heuristique H.1 semble être à éviter puisque son temps moyen et son espace mémoire utilisé est déraisonnable.}
+\paragraph{Comparaison des heuristiques séparément}{Dans un second temps, nous constatons que pour la résolution d'un taquin 4*4, l'heuristique H.6 (avec un coefficient de normalisation modifié) paraît la plus judicieuse à utiliser. En effet, elle présente le nombre de coups moyen le plus faible et un temps moyen ainsi qu'une utilisation de l'espace mémoire raisonnable. Par opposition, l'heuristique H.1 semble être à éviter puisque son temps moyen et son espace mémoire utilisé sont déraisonnables.}
 \paragraph{H.6 + Désordre}{Nous remarquons également que l'association H.6 + Désordre produit un résultat convenable également. Cependant, son nombre de coups moyen étant supérieur à H.6 utilisée seule, nous ne retiendrons pas cette combinaison.}
 \paragraph{Conclusion}{Nous pouvons en conclure que la meilleure heuristique pour résoudre un taquin 4*4 est H6 avec un coefficient de normalisation valant $\mathsf{\tfrac{1}{2}}$ ; dans les faits, ce dernier multiplie la valeur de la distance de Manhattan non pondérée par 2.}
 \section{TAQUINS 5*5}
-\paragraph{Résolution des Taquins 5*5}{Afin de résoudre de façon rapide un Taquin 5*5, nous utilisons l'algorithme IDA* et les heuristiques H6 (avec un coefficient de normalisation de $\mathsf{\tfrac{1}{3}}$) ainsi que Taux de Désordre. Sur 10 exécutions on obtient : }
+\paragraph{Résolution des Taquins 5*5}{Afin de résoudre de façon rapide un Taquin 5*5, nous utilisons l'algorithme IDA* et les heuristiques H.6 (avec un coefficient de normalisation de $\mathsf{\tfrac{1}{3}}$) ainsi que Taux de Désordre. Sur 10 exécutions on obtient: }
 \begin{itemize}
 \item Un temps moyen de : 57 secondes
 \item Un nombre d'états moyens créés de : 402562,8 états
@@ -300,7 +300,7 @@
 \section{Implémentation d'un autre algorithme de recherche}
 \paragraph{L'algorithme IDA*}{Nous avons choisi d'implémenter une variante de l'algorithme \textbf{A*} : IDA*. Son fonctionnement est similaire à celui de \textbf{A*} mais avec une recherche en profondeur itérative.}
 \paragraph{}{L'algorithme fonctionne comme suit: à chaque itération, on effectue une recherche en profondeur d'abord, en coupant une branche lorsque son coût total
-$\mathsf{f(n) = g(n) + h(n)}$ dépasse un seuil donné. Ce seuil commence à l'estimation du coût à l'état initial et augmente à chaque itération de l'algorithme. Ainsi, le seuil utilisé pour l'itération suivante est le coût minimum de toutes les valeurs dépassant le seuil actuel.
+${f(n) = g(n) + h(n)}$ dépasse un seuil donné. Ce seuil commence à l'estimation du coût à l'état initial et augmente à chaque itération de l'algorithme. Ainsi, le seuil utilisé pour l'itération suivante est le coût minimum de toutes les valeurs dépassant le seuil actuel.
 
 Comme dans \textbf{A*}, l'heuristique doit avoir des propriétés particulières pour garantir l'optimalité de la solution. Nous utiliserons donc les même heuristiques que précédemment.}
 
@@ -315,15 +315,15 @@ Comme dans \textbf{A*}, l'heuristique doit avoir des propriétés particulières
 \section{Création de nouvelles heuristiques}
 \paragraph{}{Afin de permettre une meilleure résolution des taquins (en temps, espace et optimalité), nous avons créé de nouvelles heuristiques : }
 \paragraph{Le taux de désordre}{Cette heuristique calcule le nombre de tuiles mal placées dans le taquin. Comme vu dans les expériences précédentes, cette heuristique combinée à d'autres (H.6 par exemple) s'avère très utile et performante.}
-\paragraph{Une heuristique qui attribue les poids de manière aléatoire}{un algorithme génère des paires de nombres allant de 1 au nombre de tuiles totales dans le taquin. Par exemple pour un taquin 3*3, nous aurons une paire de 1, une paire de 2, 1 paire de 3, une paire de 4. Puis nous mélangeons ces chiffres de façon aléatoire afin de générer les poids. Un exemple de mélange obtenu est le suivant : \lbrack2, 1, 2, 4, 1, 4, 3, 3\rbrack. Nous avions créé cette heuristique à but expérimental, mais cette dernière présente de bonnes performances sur les taquins 3*3, 4*4, et combinée à une autre heuristique (H.6 par exemple) elle peut également résoudre des taquins 5*5.}
+\paragraph{Une heuristique qui attribue les poids de manière aléatoire}{Un algorithme génère des paires de nombres allant de 1 à la moitié de nombre de tuiles total dans le taquin. Par exemple pour un taquin 3*3, nous aurons une paire de 1, une paire de 2, 1 paire de 3, une paire de 4. Puis nous mélangeons ces chiffres de façon aléatoire afin de générer les poids. Un exemple de mélange obtenu est le suivant : \lbrack2, 1, 2, 4, 1, 4, 3, 3\rbrack. Nous avions créé cette heuristique à but expérimental, mais cette dernière présente de bonnes performances sur les taquins 3*3, 4*4, et combinée à une autre heuristique (H.6 par exemple) elle peut également résoudre des taquins 5*5.}
 \section{Interface graphique}
 \paragraph{}{Dans l'intention de mettre en valeur notre programme, nous avons jugé opportun de réaliser une interface graphique en utilisant PyQt5. Cette interface nous permet de générer aléatoirement un Taquin et de le résoudre. Pour cela, on doit renseigner : }
 \begin{itemize}
 \item une largeur de Taquin parmi : 3, 4, 5
-\item un mode : le mode 'Manuel' ou le mode 'Pilot'.
+\item un mode : le mode 'Manuel' ou le mode 'Pilote'.
 \begin{enumerate}
 \item Le mode 'Manuel' permet de générer un taquin jouable.
-\item Le mode 'Pilot' permet de générer un taquin avec des indications du "prochain meilleur coup". En effet, après chaque déplacement de tuiles, il colore en bleu la tuile correspondant au  mouvement suivant à effectuer. Ce mode n'est disponible que pour les taquins 3*3.
+\item Le mode 'Pilote' permet de générer un taquin avec des indications du "meilleur prochain coup". En effet, après chaque déplacement de tuiles, il colore en bleu la tuile correspondant au  mouvement suivant à effectuer. Ce mode n'est disponible que pour les taquins 3*3.
 \end{enumerate}
 \item les heuristiques à utiliser
 \item un algorithme de recherche : IDA* ou \textbf{A*}
@@ -331,6 +331,7 @@ Comme dans \textbf{A*}, l'heuristique doit avoir des propriétés particulières
 \paragraph{}{A partir de ces renseignements, le programme va générer un Taquin aléatoire sur lequel nous pourrons jouer et demander la solution à n'importe quel moment et autant de fois que désiré.}
 \paragraph{}{Une fois le Taquin résolu, une fenêtre s'ouvre récapitulant les performances du joueur : le nombre de mouvements qu'il a effectué, le temps qu'il a mis pour résoudre le Taquin et la séquence de mouvements effectués. S'il s'agit d'un Taquin 3*3, il affichera le chemin minimal calculé par l'algorithme à partir du Taquin initial ainsi que le nombre de coups minimal pour résoudre ce dernier.}
 \section{Interface Web}
+\paragraph{}{Des le départ, une version web du programme a été mise en place pour mettre en forme plus facilement et plus rapidement une maquette de notre programme python. La version web étant totalement fonctionnelle, le langage JavaScript permet de meilleures performances et une plus grande liberté sur la conception de l'interface. Aussi, la version web est une réelle traduction de notre programme python mais disponible sur tout périphérique doté d'un navigateur. {\ttfamily\bfseries https://originecode.github.io/Taquin}}
 \section{Conclusion globale} 
 \paragraph{}{En conclusion, l'algorithme \textbf{A*} parvient toujours à trouver une solution au problème. Cependant selon les heuristiques utilisées les solutions ne sont pas toujours optimales en nombre de coups mais aussi en temps et en espace. On remarque par ailleurs que bien souvent pour atteindre une solution optimale le temps de calcul est très long.}
 \end{document}

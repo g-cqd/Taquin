@@ -196,19 +196,19 @@ class Environment:
 						j += width
 			if index == 6:
 				pi = [1] * length
-				rho = 1 / ((self.sizes[0] - 3) + 1)
+				rho = 1 / ((width - 3) + 1)
 			if index == 7:
 				pass
 			if index == 8:
 				mid = floor(length/2)
-				for i in range(0,mid):
-					pi[i] = mid - i
+				for i in range(0,mid): pi[i] = mid - i
 				if length % 2 == 1:
 					pi[mid] = length
 					mid += 1
-				for i in range(mid,length):
-					pi[i] = i+1
+				for i in range(mid,length): pi[i] = i+1
 				rho = 2.5
+
+
 			if index == 9:
 				rho = 2
 				j = 1
@@ -221,7 +221,7 @@ class Environment:
 				if length % 2 == 1:
 					pi[length-1] = 1
 				shuffle(pi)
-			if not index in [1,2,3,4,5,6,8,9]:
+			if not index in [1,2,3,4,5,6,7,8,9]:
 				pass
 			weightings.append((pi,rho,index))
 		return weightings
@@ -246,7 +246,7 @@ class Environment:
 		while (True):
 			k = list(queue.keys())[0]
 			shouldBeExpanded = queue[k][0]
-			explored[str(queue[k][0].sequence)] = queue[k][0]
+			explored[str(shouldBeExpanded.sequence)] = shouldBeExpanded
 			del queue[k][0]
 			if queue[k] == []: del queue[k]
 			children = shouldBeExpanded.children()
@@ -256,10 +256,11 @@ class Environment:
 				return self.end[-1]
 			else:
 				for child in children :
-					if(str(child.sequence)in explored):
-						if(explored[str(child.sequence)].f<child.f):
+					sequenceString = str(child.sequence)
+					if(sequenceString in explored):
+						if(explored[sequenceString].f<child.f):
 							del child
-						else: del explored[str(child.sequence)]
+						else: del explored[sequenceString]
 					elif(child.f in queue): queue[child.f].append(child)
 					else: queue[child.f] = [child]
 				queue = OrderedDict( sorted( queue.items(), key=lambda t: t[0]))
@@ -350,6 +351,6 @@ class __main__:
 		if move in a.moves[-1].moves:
 			a.play(move)
 		elif move == "E":"""
-	a.expand(a.aStar,decomposition)
-	#a.expand(a.idaStar,decomposition)
+	#a.expand(a.aStar,decomposition)
+	a.expand(a.idaStar,decomposition)
 	exit(0)

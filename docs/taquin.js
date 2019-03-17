@@ -59,9 +59,9 @@ class Taquin {
 					k++;
 				}
 			}
-			stepH /= weighting[1];
-			if ( weighting[2] == 7 ) { h += dis; }
-			else { h += stepH; }
+			if ( weighting[2] == 7 ) { stepH += dis; }
+			stepH = Math.trunc(stepH / weighting[1]);
+			h += stepH;
 		}
 		return [inv,dis,man,h];
 	}
@@ -143,11 +143,31 @@ class Environment {
 		let weightings = [],
 		weight = length;
 		for ( let index of choices ) {
-			const rho = index % 2 != 0 ? 4 : 1;
+			let rho = index % 2 != 0 ? 4 : 1;
 			let pi = new Array(length).fill(0);
 			switch (index) {
 				case 1:
 					if ( width == 3 ) { pi = [36, 12, 12, 4, 1, 1, 4, 1]; }
+					else {
+						for ( let y = 0 ; y < width; y++ ) {
+							for ( let x = 0 ; x < width ; x++ ) {
+								if ( x == y == width-1 ) { continue; }
+								else {
+									if ( x == y == 0 ) {
+										pi[0] = width * ( width * 3 );
+										x++;
+									}
+									if ( y == 0 ) {
+										while ( x < width ) { pi[x++] = width * 3; }
+									}
+									else {
+										if ( x == 0 ) { pi[y*width] = width * 2;}
+										else { pi[y*width+x] = width-y; }
+									}
+								}
+							}
+						}
+					}
 					break;
 				case 2:
 				case 3:
@@ -170,6 +190,33 @@ class Environment {
 					break;
 				case 6:
 					pi = Array( length ).fill( 1 );
+					rho = 1 / ((width - 3) + 1);
+					break;
+				case 7:
+					break;
+				case 8:
+					let mid = Math.floor(length/2);
+					for (let i = 0; i < mid ; i++) { pi[i] = mid - i; }
+					if (length % 2 == 1) {
+						pi[mid] = length;
+						mid++;
+					}
+					for (let i = mid; i < length; i++) { pi[i] = i+1; }
+					rho = 2.5;
+					break;
+				case 9:
+					rho = 2;
+					let j = 1;
+					for (let i = 0; i < length; i++) {
+						pi[i] = Math.abs(Math.floor(length/2) - (Math.floor((j-1)/2)));
+						if (i < length-1) {
+							i++;
+							pi[i] = Math.abs(Math.floor(length/2) - (Math.floor((j-1)/2)));
+						}
+						j++;
+					}
+					if (length % 2 == 1) { pi[length-1] = 1; }
+					pi.shuffle();
 					break;
 				default:
 					break;
@@ -195,14 +242,17 @@ class Environment {
 		}
 		return false;
 	}
-	rocky() {
+	aStar() {
 		const startTime = Date.now();
+		let explored = new Map();
 		let queue = new Map();
 		queue.set(this.moves.last().f,[this.moves.last()]);
 		while (true) {
 			let k = Array.from( queue.keys() )[0];
 			let kArray = queue.get( k );
+
 			let shouldBeExpanded = kArray.shift();
+			explored.set((shouldBeExpanded.sequence).join(''),shouldBeExpanded);
 			if ( kArray.length == 0 ) { queue.delete(k); }
 			else { queue.set( k, kArray ); }
 			const children = shouldBeExpanded.children();
@@ -213,7 +263,16 @@ class Environment {
 			}
 			else {
 				for (let child of children) {
-					if (queue.has(child.f)) {
+					let sequenceString = (child.sequence).join('');
+					if (explored.has(sequenceString)) {
+						if (explored.get(sequenceString).f < child.f) {
+							children.splice(children.indexOf(child),1);
+						}
+						else {
+							explored.delete(sequenceString);
+						}
+					}
+					 else if (queue.has(child.f)) {
 						let cArray = queue.get(child.f);
 						cArray.push(child);
 						queue.set(child.f,cArray);
@@ -234,20 +293,11 @@ class Environment {
 		}
 	}
 
-	charlotte() {
+	idaStar() {
 		const startTime = Date.now();
 		let root = this.moves.last();
 		let bound = root.h;
 		let path = [root];
-		while (true) {
-			let t = search(path,0,bound);
-			if (t instanceof Taquin) {
-				this.end.push(t);
-				return t;
-			}
-			if (t == Infinity) {return false;}
-			bound = t;
-		}
 		function search(path,g,bound) {
 			let node = path.last();
 			let f = g + node.h;
@@ -269,6 +319,15 @@ class Environment {
 				}
 			}
 			return min;
+		}
+		while (true) {
+			let t = search(path,0,bound);
+			if (t instanceof Taquin) {
+				this.end.push(t);
+				return t;
+			}
+			if (t == Infinity) {return false;}
+			bound = t;
 		}
 	}
 

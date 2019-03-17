@@ -141,10 +141,16 @@ class Fenetre(QWidget):
 		h6.move(195,232)
 		h6.stateChanged.connect(self.selectionH6)
 
-		desordre = QCheckBox('Désordre',self)
+		desordre = QCheckBox('H.7',self)
 		desordre.setFont(InterFont("Bold", 14))
 		desordre.move(150,257)
 		desordre.stateChanged.connect(self.selectionDesordre)
+
+		H9 = QCheckBox('H.9',self)
+		H9.setFont(InterFont("Bold", 14))
+		H9.move(195,257)
+		H9.stateChanged.connect(self.selectionH9)
+
 
 		#Radio boutons :
 
@@ -506,6 +512,11 @@ class Fenetre(QWidget):
 			self.heuristiques.append(7)
 		elif state != Qt.Checked:
 			self.heuristiques.remove(7)
+	def selectionH9(self, state):
+		if state == Qt.Checked:
+			self.heuristiques.append(9)
+		elif state != Qt.Checked:
+			self.heuristiques.remove(9)
 
 	def RadioBouttonState(self,Boutton):
 		if Boutton.text() == "Rocky - A*":

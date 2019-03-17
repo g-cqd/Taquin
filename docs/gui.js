@@ -1,6 +1,5 @@
 // push a new environment in games List
-function createEnvironment()
-{
+function createEnvironment() {
 	display.personals.clear();
     display.solutions.clear();
     games.push( new Environment( getWidth(), getHeuristics() ) );
@@ -9,25 +8,20 @@ function createEnvironment()
 // Clear HTML Element Content
 Element.prototype.clear = function() {
 	this.innerHTML = "";
-}
+};
 
 
 // Get Computed Style of an Element
-Element.prototype.getStyle = function( ...properties )
-{
+Element.prototype.getStyle = function( ...properties ) {
 	let styles = {};
-	if ( properties.length )
-	{
-		for ( let property of properties )
-		{
+	if ( properties.length ) {
+		for ( let property of properties ) {
 			styles[property] = window.getComputedStyle( this ).getPropertyValue( property );
 		}
 	} else {
-		for ( let property in window.getComputedStyle( this ) )
-		{
+		for ( let property in window.getComputedStyle( this ) ) {
 			const value = window.getComputedStyle( this ).getPropertyValue( property );
-			if ( value )
-			{
+			if ( value ) {
 				styles[property] = value;
 			}
 		}
@@ -44,20 +38,15 @@ Element.prototype.play = function()
 
 
 // Display Taquin in e parameter/Element
-Taquin.prototype.displayIn = function( e )
-{
+Taquin.prototype.displayIn = function( e ) {
 	const width = this.environment.sizes[0],
 	g = document.createElement( "div" );
 	g.classList.add( "game", `w-${width}` );
-	for ( let value of this.sequence )
-	{
+	for ( let value of this.sequence ) {
 		let c = document.createElement( "div" );
-		if ( value == 0 )
-		{
+		if ( value == 0 ) {
 			c.classList.add( "case", "vide" );
-		}
-		else
-		{
+		} else {
 			c.classList.add( "case" );
 		}
 		c.setAttribute( 'style',`font-size:${
@@ -73,8 +62,7 @@ Taquin.prototype.displayIn = function( e )
 
 
 // Display Taquin informations
-Taquin.prototype.informations = function( g=undefined, i=undefined, d=undefined, m=undefined )
-{
+Taquin.prototype.informations = function( g=undefined, i=undefined, d=undefined, m=undefined ) {
 	if ( !g ) { g = display.coups; }
 	if ( !i ) { i = display.inversions; }
 	if ( !m ) { m = display.manhattan; }
@@ -149,7 +137,7 @@ function moveBlock( taquin, index ) {
 
 function saveIn( e, taquin ) {
 	let next = moveBlock(taquin,taquin.environment.moves.length-1);
-	e.appendChild(next);	
+	e.appendChild(next);
 }
 
 // Display solutions moves
@@ -169,10 +157,6 @@ Array.from( document.getElementsByClassName("toggler") ).forEach( ( e ) => {
 	}, false );
 } );
 
-document.getElementById("menu-toggler").addEventListener("click", function () {
-	document.body.classList.toggle("blurred");
-}, false);
-
 
 const getWidth = () => {
 	let width = parseInt( controls.width.value );
@@ -180,7 +164,7 @@ const getWidth = () => {
 		width = 3;
 	}
 	if ( width > 4 ) {
-		if (getSearch() != "charlotte") {
+		if (getSearch() != "idaStar") {
 			controls.expand.disabled = true;
 		}
 		else if (width > 5) {
@@ -227,10 +211,12 @@ controls.create.addEventListener( "click", function ()
 
 
 // Increment Width Button EventListener
-controls.increment.addEventListener("click", function ()
-{
-	if ( controls.width.value < 10 )
-	{
+controls.increment.addEventListener("click", function () {
+	if ( controls.width.value < 10 ) {
+		if (controls.width.value > 3) {
+			controls.searches[0].disabled = true;controls.searches[0].checled = false;
+			controls.searches[1].checked = true;
+		}
 		controls.width.value++;
 	}
 	controls.create.click();
@@ -241,8 +227,13 @@ controls.increment.addEventListener("click", function ()
 // Decrement Width Button EventListener
 controls.decrement.addEventListener("click", function ()
 {
-	if ( controls.width.value > 3 )
-	{
+	if ( controls.width.value > 3 ) {
+		if (controls.width.value < 7) {
+			controls.expand.disabled = false;
+			if (controls.width.value < 6 ) {
+				controls.searches[0].disabled = false;
+			}
+		}
 		controls.width.value--;
 	}
 	controls.create.click();
@@ -265,7 +256,7 @@ controls.expand.addEventListener("click", function()
 
 // Update Taquin EventListener
 display.taquin.addEventListener( "moved", function()
-{	
+{
 	if (games.last().moves.length==1) {
 		display.personals.clear();
     	display.solutions.clear();

@@ -216,7 +216,7 @@ class Fenetre(QWidget):
 		if(self.algoUtilise == "Rocky"):
 			self.a.expand(self.a.aStar,0)
 		else:
-			self.a.expand(self.a.charlotte,0)
+			self.a.expand(self.a.idaStar,0)
 		caseAColorer = self.a.end[-1].path[self.nbCoupsJoues+1]
 		verif = self.ok()
 		i = 0
@@ -327,7 +327,7 @@ class Fenetre(QWidget):
 				if(self.algoUtilise == "Rocky"):
 					self.a.expand(self.a.aStar,0)
 				if(self.algoUtilise == "Charlotte"):
-					self.a.expand(self.a.charlotte,0)
+					self.a.expand(self.a.idaStar,0)
 				self.nbCoupsOpti = self.a.end[-1].g
 				self.listeCoupsOpti = self.couic(self.traductionEnFleches(self.a.end[-1].path),20)
 
@@ -449,7 +449,7 @@ class Fenetre(QWidget):
 			if(self.algoUtilise == "Rocky"):
 				self.a.expand(self.a.aStar,0)
 			else:
-				self.a.expand(self.a.charlotte,0)
+				self.a.expand(self.a.idaStar,0)
 			self.solution = self.a.end[-1].path[self.nbCoupsJoues+1:len(self.a.end[-1].path)]
 			self.solution = self.traductionEnFleches(self.solution)
 			if(len(self.solution)>45):

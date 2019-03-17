@@ -13,7 +13,7 @@ class Taquin {
 		} else {
 			this.path = previous.path + move;
 			this.g = this.previous.g + 1;
-			this.sequence = previous.sequence.slice();
+			this.sequence = [...previous.sequence];
 			this.moveTile( move );
 			[this.inv,this.dis,this.man,this.h] = this.details();
 		}
@@ -280,7 +280,7 @@ class Environment {
 	}
 	aStar() {
 
-		let explored = new Map();
+		// let explored = new Map();
 		let queue = new Map();
 		queue.set(this.moves.last().f,[this.moves.last()]);
 
@@ -289,7 +289,7 @@ class Environment {
 			let kArray = queue.get( k );
 			let shouldBeExpanded = kArray.shift();
 
-			explored.set(shouldBeExpanded.sequence.toString(),shouldBeExpanded);
+			// explored.set(shouldBeExpanded.sequence.toString(),shouldBeExpanded);
 
 			if ( kArray.length == 0 ) {
 				queue.delete(k);
@@ -303,14 +303,15 @@ class Environment {
 				return this.end.last();
 			} else {
 				for (let child of children) {
-					let sequenceString = child.sequence.toString();
-					if (explored.has(sequenceString)) {
-						if (explored.get(sequenceString).f < child.f) {
-							children.splice(children.indexOf(child),1);
-						} else {
-							explored.delete(sequenceString);
-						}
-					} else if (queue.has(child.f)) {
+					// let sequenceString = child.sequence.toString();
+					// if (explored.has(sequenceString)) {
+					// 	if (explored.get(sequenceString).f < child.f) {
+					// 		children.splice(children.indexOf(child),1);
+					// 	} else {
+					// 		explored.delete(sequenceString);
+					// 	}
+					// } else
+					if (queue.has(child.f)) {
 						let cArray = queue.get(child.f);
 						cArray.push(child);
 						queue.set(child.f,cArray);
@@ -403,7 +404,7 @@ class Environment {
 		return this[func]();
 	}
 	play(move) {
-		lastTaquin = this.moves.last(),
+		const lastTaquin = this.moves.last(),
 		newTaquin = new Taquin(this,lastTaquin,move);
 		newTaquin.moves = newTaquin.findMoves(true);
 		this.moves.push(newTaquin);

@@ -1,0 +1,3 @@
+[submodule "aemijs"]
+	path = aemijs
+	url = https://github.com/aemi-dev/aemijs

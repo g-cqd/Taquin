@@ -706,9 +706,6 @@ input[type="text"]:not(:disabled):focus {
 	min-width: 36px;
 }
 @media screen and (max-width: 900px) {
-	main {
-		/* margin: 0 7.5vw; */
-	}
 	#content {
 		flex-flow: column;
 	}

@@ -23,7 +23,7 @@ const workerOptions = {
     promise: true,
     name: 'Taquin Worker',
     localImports: [
-        `${window.href}aemijs/module/multithread-worker.js`
+        `/Taquin/aemijs/module/multithread-worker.js`
     ]
 };
 

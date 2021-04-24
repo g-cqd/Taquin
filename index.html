@@ -1,110 +1,120 @@
 <!DOCTYPE html>
 <html lang="fr-FR">
+
 <head>
-	<meta charset="utf-8">
-	<title>Le Taquin</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" type="text/css" media="screen" href="fonts.css">
-	<link rel="stylesheet" type="text/css" media="screen" href="css.css">
-	<link rel="icon" href="favico.png" type="image/png">
+    <meta charset="utf-8">
+    <title>Le Taquin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="fonts.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="css.css">
+    <link rel="icon" href="favico.png" type="image/png">
     <link rel="apple-touch-icon" href="favico.png" type="image/png">
     <script src="./index.js" type="module" defer></script>
-	<script src="./gui.js" type="module" defer></script>
+    <script src="./gui.js" type="module" defer></script>
 </head>
-<body>
-	<header>
-		<nav>
-			<a id="menu-toggler" class="toggler" href="javascript:void(0);"></a>
-			<div id="settings">
-				<div id="heuristiques" class="bar form-section rounded-element">
-					<h3 class="part-title">Heuristiques</h3>
-					<h4 class="sub part-title">Manhattan</h4>
-					<label><input data-domain="heuristic" type="checkbox" value="1">H.1</label>
-					<label><input data-domain="heuristic" type="checkbox" value="2">H.2</label>
-					<label><input data-domain="heuristic" type="checkbox" value="3">H.3</label>
-					<label><input data-domain="heuristic" type="checkbox" value="4">H.4</label>
-					<label><input data-domain="heuristic" type="checkbox" value="5" checked>H.5</label>
-					<label><input data-domain="heuristic" type="checkbox" value="6">H.6</label>
-					<h4 class="sub part-title">Autres</h4>
-					<label><input data-domain="heuristic" type="checkbox" value="7">Désordre</label>
-					<label><input data-domain="heuristic" type="checkbox" value="8">180°</label>
-					<label><input data-domain="heuristic" type="checkbox" value="9">Aléatoire</label>
-				</div>
-				<div id="search" class="bar form-section rounded-element">
-					<h3 class="part-title">Searches</h3>
-					<label><input data-domain="search" type="radio" name="searches" value="aStar" checked>Rocky - <em>A*</em></label>
-					<label><input data-domain="search" type="radio" name="searches" value="idaStar">Charlotte - <em>IDA*</em></label>
-					<label class="disabled"><input data-domain="search" type="radio" name="searches" value="hal" disabled>HAL - <em>Hill Climbing</em></label>
-				</div>
-			</div>
-		</nav>
-		<h1 id="title">TA<span id="star">*</span>UIN</h1>
-	</header>
-	<main>
-		<section id="content">
-			<div id="taquin" class="rounded-element"></div>
-			<div id="controls" class="bar form-section rounded-element">
-				<input type="button" value="nouveau" id="button-new">
-				<input type="button" value="solution" id="ex-pand">
-			</div>
-			<div id="width" class="bar form-section rounded-element">
-				<input class="icon" type="button" name="width-mm" value="-" id="button-width-mm">
-				<input type="number" name="width" min="3" value="3" max="10" id="input-width">
-				<input class="icon" type="button" name="width-pp" value="+" id="button-width-pp">
-			</div>
-			<div class="grid" id="grid">
-				<div class="squared toggler" data-content="coups">
-					<span class="title">coups</span>
-					<span class="squared-content" id="coups"></span>
-					<div class="info">
-						<div class="close" data-parent="coups"></div>
-						<div>
-							Coups est tout simplement le nombre de coups que vous avez réalisés pour résoudre le taquin jusqu'à maintenant. Rappelez vous que le but est d'en faire le moins possible.
-						</div>
-					</div>
-				</div>
-				<div class="squared toggler" data-content="manhattan">
-					<span class="title">manhattan</span>
-					<span class="squared-content" id="manhattan"></span>
-					<div class="info">
-						<div class="close" data-parent="manhattan"></div>
-						<div>
-							Manhattan correspond à la distance de Manhattan. C'est en fait le nombre de cases d'écart pour une tuile de sa position actuelle à sa position dans l'état final, la solution.
-						</div>
-					</div>
-				</div>
-				<div class="squared last toggler" data-content="desordre">
-					<span class="title">désordre</span>
-					<span class="squared-content" id="desordre"></span>
-					<div class="info">
-						<div class="close" data-parent="desordre"></div>
-						<div>
-							Désordre est le nombre de cases mal placées. Tant que des cases sont mal placées vous n'avez pas fini le jeu.
-						</div>
-					</div>
-				</div>
-				<div class="squared last toggler" data-content="inversions">
-					<span class="title">inversions</span>
-					<span class="squared-content" id="inversions"></span>
-					<div class="info">
-						<div class="close" data-parent="inversions"></div>
-						<div>
-							Le nombre d'inversions correspond au nombre de fois, pour chaque élément de la liste, où l'élément est plus grand que chacun des suivants.
-						</div>
-					</div>
-				</div>
-			</div>
-			<details class="bar rounded-element">
-				<summary>Mes Mouvements</summary>
-				<div id="self-moves"></div>
-			</details>
-			<details class="bar rounded-element">
-				<summary>Solution Optimale</summary>
-				<div id="opti-moves"></div>
-			</details>
 
-		</section>
-	</main>
+<body>
+    <header>
+        <nav>
+            <a id="menu-toggler" class="toggler" href="javascript:void(0);"></a>
+            <div id="settings">
+                <div id="heuristiques" class="bar form-section rounded-element">
+                    <h3 class="part-title">Heuristiques</h3>
+                    <h4 class="sub part-title">Manhattan</h4>
+                    <label><input data-domain="heuristic" type="checkbox" value="1">H.1</label>
+                    <label><input data-domain="heuristic" type="checkbox" value="2">H.2</label>
+                    <label><input data-domain="heuristic" type="checkbox" value="3">H.3</label>
+                    <label><input data-domain="heuristic" type="checkbox" value="4">H.4</label>
+                    <label><input data-domain="heuristic" type="checkbox" value="5" checked>H.5</label>
+                    <label><input data-domain="heuristic" type="checkbox" value="6">H.6</label>
+                    <h4 class="sub part-title">Autres</h4>
+                    <label><input data-domain="heuristic" type="checkbox" value="7">Désordre</label>
+                    <label><input data-domain="heuristic" type="checkbox" value="8">180°</label>
+                    <label><input data-domain="heuristic" type="checkbox" value="9">Aléatoire</label>
+                </div>
+                <div id="search" class="bar form-section rounded-element">
+                    <h3 class="part-title">Searches</h3>
+                    <label><input data-domain="search" type="radio" name="searches" value="aStar" checked>Rocky -
+                        <em>A*</em></label>
+                    <label><input data-domain="search" type="radio" name="searches" value="idaStar">Charlotte -
+                        <em>IDA*</em></label>
+                    <label class="disabled"><input data-domain="search" type="radio" name="searches" value="hal"
+                            disabled>HAL - <em>Hill Climbing</em></label>
+                </div>
+            </div>
+        </nav>
+        <h1 id="title">TA<span id="star">*</span>UIN</h1>
+    </header>
+    <main>
+        <section id="content">
+            <div id="taquin" class="rounded-element"></div>
+            <div id="controls" class="bar form-section rounded-element">
+                <input type="button" value="nouveau" id="button-new">
+                <input type="button" value="solution" id="ex-pand">
+            </div>
+            <div id="width" class="bar form-section rounded-element">
+                <input class="icon" type="button" name="width-mm" value="-" id="button-width-mm">
+                <input type="number" name="width" min="3" value="3" max="10" id="input-width">
+                <input class="icon" type="button" name="width-pp" value="+" id="button-width-pp">
+            </div>
+            <div class="grid" id="grid">
+                <div class="squared toggler" data-content="coups">
+                    <span class="title">coups</span>
+                    <span class="squared-content" id="coups"></span>
+                    <div class="info">
+                        <div class="close" data-parent="coups"></div>
+                        <div>
+                            Coups est tout simplement le nombre de coups que vous avez réalisés pour résoudre le taquin
+                            jusqu'à maintenant. Rappelez vous que le but est d'en faire le moins possible.
+                        </div>
+                    </div>
+                </div>
+                <div class="squared toggler" data-content="manhattan">
+                    <span class="title">manhattan</span>
+                    <span class="squared-content" id="manhattan"></span>
+                    <div class="info">
+                        <div class="close" data-parent="manhattan"></div>
+                        <div>
+                            Manhattan correspond à la distance de Manhattan. C'est en fait le nombre de cases d'écart
+                            pour une tuile de sa position actuelle à sa position dans l'état final, la solution.
+                        </div>
+                    </div>
+                </div>
+                <div class="squared last toggler" data-content="desordre">
+                    <span class="title">désordre</span>
+                    <span class="squared-content" id="desordre"></span>
+                    <div class="info">
+                        <div class="close" data-parent="desordre"></div>
+                        <div>
+                            Désordre est le nombre de cases mal placées. Tant que des cases sont mal placées vous n'avez
+                            pas fini le jeu.
+                        </div>
+                    </div>
+                </div>
+                <div class="squared last toggler" data-content="inversions">
+                    <span class="title">inversions</span>
+                    <span class="squared-content" id="inversions"></span>
+                    <div class="info">
+                        <div class="close" data-parent="inversions"></div>
+                        <div>
+                            Le nombre d'inversions correspond au nombre de fois, pour chaque élément de la liste, où
+                            l'élément est plus grand que chacun des suivants.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <details class="bar rounded-element">
+                <summary>Mes Mouvements</summary>
+                <div id="self-moves"></div>
+            </details>
+            <details class="bar rounded-element">
+                <summary>Solution Optimale</summary>
+                <div id="opti-moves"></div>
+            </details>
+
+        </section>
+    </main>
 
 </body>
+
 </html>
